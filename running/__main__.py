@@ -4,6 +4,7 @@ import argparse
 
 from running.__version__ import __VERSION__
 from running import fillin
+from running import minheap
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,7 @@ def setup_parser():
                         version="running {}".format(__VERSION__))
     subparsers = parser.add_subparsers()
     fillin.setup_parser(subparsers)
+    minheap.setup_parser(subparsers)
     return parser
 
 
@@ -33,6 +35,8 @@ def main():
         level=log_level)
 
     if fillin.run(args):
+        pass
+    elif minheap.run(args):
         pass
     else:
         parsers.print_help()

@@ -1,0 +1,5 @@
+benchmarks:
+  dacapo2006:
+    type: DaCapo
+    release: "2006"
+    path: /usr/share/benchmarks/dacapo/asdsadasd
