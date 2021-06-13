@@ -3,21 +3,24 @@ import logging
 import argparse
 
 from running.__version__ import __VERSION__
-from running import fillin
-from running import minheap
+from running import fillin, runbms, minheap, benchmark
 
 logger = logging.getLogger(__name__)
+
+MODULES = [fillin, runbms, minheap]
 
 
 def setup_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--verbose", action="store_true",
-                        help="change logging level to DEBUG")               
+                        help="change logging level to DEBUG")
     parser.add_argument("--version", action="version",
                         version="running {}".format(__VERSION__))
+    parser.add_argument("-d", "--dry-run", action="store_true",
+                        help="dry run")
     subparsers = parser.add_subparsers()
-    fillin.setup_parser(subparsers)
-    minheap.setup_parser(subparsers)
+    for m in MODULES:
+        m.setup_parser(subparsers)
     return parser
 
 
@@ -34,10 +37,12 @@ def main():
         format="[%(levelname)s] %(asctime)s %(filename)s:%(lineno)d %(message)s",
         level=log_level)
 
-    if fillin.run(args):
-        pass
-    elif minheap.run(args):
-        pass
+    if args.get("dry_run") == True:
+        benchmark.DRY_RUN = True
+
+    for m in MODULES:
+        if m.run(args):
+            break
     else:
         parsers.print_help()
 

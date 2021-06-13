@@ -37,7 +37,7 @@ def fillin(callback: Callable[[int, Iterable[int]], None], levels: int, start: O
         i += 1
 
 
-def cmd_program(prog):
+def cmd_program(prog) -> Callable[[int, Iterable[int]], None]:
     def callback(end, ns):
         cmd = [prog]
         cmd.append(str(end))

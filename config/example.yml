@@ -1,5 +1,130 @@
-benchmarks:
+suites:
   dacapo2006:
     type: DaCapo
     release: "2006"
-    path: /usr/share/benchmarks/dacapo/asdsadasd
+    path: /usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar
+  dacapobach:
+    type: DaCapo
+    release: "9.12"
+    path: /usr/share/benchmarks/dacapo/dacapo-9.12-bach.jar 
+  dacapobach-mr1:
+    type: DaCapo
+    release: "9.12"
+    path: /usr/share/benchmarks/dacapo/dacapo-9.12-MR1-bach.jar   
+  dacapobach-mr1-java6:
+    type: DaCapo
+    release: "9.12"
+    path: /usr/share/benchmarks/dacapo/dacapo-9.12-MR1-bach-java6.jar
+  dacapobach-69a704e:
+    type: DaCapo
+    release: evaluation
+    path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-69a704e.jar
+
+jvms:
+  jdk-mmtk:
+    type: OpenJDK
+    release: 11
+    home: /home/zixianc/MMTk-Dev/evaluation/build/jdk-mmtk/jdk
+  adoptopenjdk-8:
+    type: OpenJDK
+    release: 8
+    home: /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64
+  adoptopenjdk-11:
+    type: OpenJDK
+    release: 11
+    home: /usr/lib/jvm/adoptopenjdk-11-hotspot-amd64
+  adoptopenjdk-12:
+    type: OpenJDK
+    release: 12
+    home: /usr/lib/jvm/adoptopenjdk-12-hotspot-amd64
+  adoptopenjdk-13:
+    type: OpenJDK
+    release: 13
+    home: /usr/lib/jvm/adoptopenjdk-13-hotspot-amd64
+  adoptopenjdk-14:
+    type: OpenJDK
+    release: 14
+    home: /usr/lib/jvm/adoptopenjdk-14-hotspot-amd64
+  adoptopenjdk-15:
+    type: OpenJDK
+    release: 15
+    home: /usr/lib/jvm/adoptopenjdk-15-hotspot-amd64
+  jikesrvm:
+    type: JikesRVM
+    home: /home/zixianc/MMTk-Dev/mmtk-jikesrvm/repos/jikesrvm/dist/RFastAdaptiveSemiSpace_x86_64_m32-linux
+
+benchmarks:
+  dacapo2006:
+    - "antlr"
+    - "chart"
+    - "eclipse"
+    - "hsqldb"
+  dacapobach-mr1:
+    - "avrora"
+    - "fop"
+    - "jython"
+    - "luindex"
+    - "pmd"
+    - "sunflow"
+    - "xalan"
+  dacapobach-69a704e:
+    - avrora
+    - batik
+    - biojava
+    - cassandra
+    - eclipse
+    - fop
+    - graphchi
+    - h2
+    - h2o
+    - jme
+    - jython
+    - kafka
+    - luindex
+    - lusearch
+    - pmd
+    - sunflow
+    - tomcat
+    - tradebeans
+    - tradesoap
+    - xalan
+    - zxing
+
+modifiers:
+  sgc:
+    type: JVMArg
+    val: "-XX:+UseSerialGC"
+  tph:
+    type: JVMArg
+    val: "-XX:+UseThirdPartyHeap"
+  g1:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops -XX:+UseG1GC"
+  epsilon:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -XX:-EpsilonElasticTLAB -XX:TLABSize=32K -XX:-ResizeTLAB"
+  cms:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops -XX:+UseConcMarkSweepGC -XX:TLABSize=32K -XX:-ResizeTLAB"
+  c2:
+    type: JVMArg
+    val: "-XX:-TieredCompilation -Xcomp"
+  ms:
+    type: JVMArg
+    val: "-XX:MetaspaceSize=500M -XX:+DisableExplicitGC"
+  ss:
+    type: EnvVar
+    val: "MMTK_PLAN=SemiSpace"
+  ix:
+    type: EnvVar
+    val: "MMTK_PLAN=Immix"
+  s:
+    type: JVMArg
+    val: "-server"
+
+
+configs:
+  # - "jdk-mmtk|ms|s|c2|tph|ss"
+  - "adoptopenjdk-11|ms|s|c2|g1"
+
+invocations: 1

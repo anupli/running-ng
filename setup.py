@@ -18,7 +18,7 @@ with open(path.join(here, NAME, '__version__.py')) as f:
 setup(
     name="running-ng",
     version=about["__VERSION__"],
-    description='A library that helps you exercising good benchmarking methodology',
+    description='Running: Next Generation',
     long_description=long_description,
     url='https://github.com/caizixian/running-ng',
     author='Zixian Cai',
