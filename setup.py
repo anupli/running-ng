@@ -16,7 +16,7 @@ with open(path.join(here, NAME, '__version__.py')) as f:
     exec(f.read(), about)
 
 setup(
-    name=NAME,
+    name="running-ng",
     version=about["__VERSION__"],
     description='A library that helps you exercising good benchmarking methodology',
     long_description=long_description,
