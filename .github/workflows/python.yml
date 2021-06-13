@@ -36,12 +36,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+# https://github.com/python/mypy/issues/10600
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install .
-          pip install mypy
-          mypy --install-types
+          pip install mypy types-PyYAML
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test with mypy
         run: |
