@@ -1,9 +1,9 @@
 from sys import stdout
-from typing import Optional, Iterator, Callable
+from typing import Optional, Iterable, Callable
 import subprocess
 
 
-def fillin(callback: Callable[[int, Iterator[int]], None], levels: int, start: Optional[int] = None):
+def fillin(callback: Callable[[int, Iterable[int]], None], levels: int, start: Optional[int] = None):
     """Fill the parameter space
 
     The parameter space is from 0, 1, 2, ..., 2^levels (not right-inclusive).
@@ -14,7 +14,7 @@ def fillin(callback: Callable[[int, Iterator[int]], None], levels: int, start: O
 
     Parameters
     ----------
-    callback : Callable[[int, Iterator[int]], None]
+    callback : Callable[[int, Iterable[int]], None]
         The arguments represent a list of fractions.
         For example, callback(8, [2, 6]) means 2/8 and 6/8.
     levels : int
