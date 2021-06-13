@@ -41,6 +41,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
           pip install mypy
+          mypy --install-types
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test with mypy
         run: |
