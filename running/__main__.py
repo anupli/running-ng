@@ -3,11 +3,11 @@ import logging
 import argparse
 
 from running.__version__ import __VERSION__
-from running import fillin, runbms, minheap, benchmark
+from running import fillin, runbms, minheap, benchmark, log_preprocessor
 
 logger = logging.getLogger(__name__)
 
-MODULES = [fillin, runbms, minheap]
+MODULES = [fillin, runbms, minheap, log_preprocessor]
 
 
 def setup_parser():
