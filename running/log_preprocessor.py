@@ -140,6 +140,7 @@ def process_one_file(logfile: Path):
         shutil.copy2(str(logfile), str(original))
     # XXX DO NOT COPY the content of the log file
     # Tab might not be preserved (especially around line breaks)
+    # https://unix.stackexchange.com/questions/324676/output-tab-character-on-terminal-window
     with gzip.open(original, "rt") as old:
         with gzip.open(logfile, "wt") as new:
             new.writelines(process_lines(old.readlines()))
