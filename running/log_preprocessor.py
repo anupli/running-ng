@@ -26,7 +26,7 @@ def setup_parser(subparsers):
 
 
 def filter_stats(predicate: Callable[[str], bool]):
-    def inner(stats: Dict[str, dict]):
+    def inner(stats: Dict[str, float]):
         return {k: v for (k, v) in stats.items() if predicate(k)}
     return inner
 
@@ -34,7 +34,7 @@ def filter_stats(predicate: Callable[[str], bool]):
 def reduce_stats(pattern: str, new_column: str, func):
     compiled = re.compile(pattern)
 
-    def inner(stats: Dict[str, dict]):
+    def inner(stats: Dict[str, float]):
         to_reduce = [v for (k, v) in stats.items() if compiled.match(k)]
         if not to_reduce:
             return stats
@@ -55,7 +55,7 @@ def ratio_perf_event(event_name: str):
     aggregated_column = "work.{}.total".format(event_name)
     compiled = re.compile(pattern)
 
-    def inner(stats: Dict[str, dict]):
+    def inner(stats: Dict[str, float]):
         new_stats = deepcopy(stats)
         for (k, v) in stats.items():
             if compiled.match(k):
@@ -65,7 +65,7 @@ def ratio_perf_event(event_name: str):
     return inner
 
 
-def calc_ipc(stats: Dict[str, dict]):
+def calc_ipc(stats: Dict[str, float]):
     pattern = "work\\.\\w+\\.PERF_COUNT_HW_INSTRUCTIONS\\.total"
     compiled = re.compile(pattern)
     new_stats = deepcopy(stats)
@@ -99,12 +99,12 @@ def process_lines(lines: List[str]):
         elif editing == EditingMode.Values:
             values = map(float, line.strip().split("\t"))
             stats = dict(zip(names, values))
-            event_names = "PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1"
+            _event_names = "PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1"
             event_names = list(
-                map(lambda x: x.split(",")[0], event_names.split(";")))
-            more_event_names = "MEM_INST_RETIRED:ALL_LOADS,0,-1;MEM_INST_RETIRED:ALL_STORES,0,-1"
+                map(lambda x: x.split(",")[0], _event_names.split(";")))
+            _more_event_names = "MEM_INST_RETIRED:ALL_LOADS,0,-1;MEM_INST_RETIRED:ALL_STORES,0,-1"
             more_event_names = list(
-                map(lambda x: x.split(",")[0], more_event_names.split(";")))
+                map(lambda x: x.split(",")[0], _more_event_names.split(";")))
             event_names.extend(more_event_names)
             fs = []
             for e in event_names:
