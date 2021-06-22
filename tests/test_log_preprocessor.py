@@ -48,5 +48,5 @@ def test_ipc():
         "work.bar.PERF_COUNT_HW_INSTRUCTIONS.total": 5,
     })
     print(ipcs)
-    assert ipcs["work.foo.INSTRUCTIONS_PER_CYCLE"] == 0.2
-    assert ipcs["work.bar.INSTRUCTIONS_PER_CYCLE"] == 0.5
+    assert ipcs["work.foo.INSTRUCTIONS_PER_CYCLE.ratio"] == 0.2
+    assert ipcs["work.bar.INSTRUCTIONS_PER_CYCLE.ratio"] == 0.5
