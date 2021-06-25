@@ -11,7 +11,7 @@ def setup_parser(subparsers):
     f.add_argument("CONFIG", type=Path)
 
 
-def minheap_one_bm(jvm: JVM, bm: JavaProgram, heap: int = 2 ** 12) -> float:
+def minheap_one_bm(jvm: JVM, bm: JavaProgram, heap: int = 2 ** 7) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2

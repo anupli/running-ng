@@ -1,4 +1,4 @@
-from running.fillin import fillin
+from running.command.fillin import fillin
 
 def test_fillin():
     results = []

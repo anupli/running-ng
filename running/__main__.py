@@ -3,7 +3,8 @@ import logging
 import argparse
 
 from running.__version__ import __VERSION__
-from running import fillin, runbms, minheap, benchmark, log_preprocessor
+from running.command import fillin, runbms, minheap, log_preprocessor
+from running import benchmark
 
 logger = logging.getLogger(__name__)
 

@@ -1,4 +1,4 @@
-from running.log_preprocessor import filter_stats, reduce_stats, sum_perf_event, calc_ipc, ratio_perf_event
+from running.command.log_preprocessor import filter_stats, reduce_stats, sum_perf_event, calc_ipc, ratio_perf_event
 
 
 def test_filter():
