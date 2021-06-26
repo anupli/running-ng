@@ -1,0 +1,61 @@
+suites:
+  dacapo2006:
+    type: DaCapo
+    release: "2006"
+    path: /usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar
+    minheap:
+      antlr: 5
+      chart: 21
+      eclipse: 25
+      hsqldb: 135
+  dacapobach:
+    type: DaCapo
+    release: "9.12"
+    path: /usr/share/benchmarks/dacapo/dacapo-9.12-bach.jar
+    minheap:
+      avrora: 5
+      fop: 37
+      jython: 31
+      luindex: 7
+      pmd: 41
+      sunflow: 17
+      xalan: 8
+  dacapobach-mr1:
+    type: DaCapo
+    release: "9.12"
+    path: /usr/share/benchmarks/dacapo/dacapo-9.12-MR1-bach.jar   
+    minheap:
+      avrora: 5
+      fop: 39
+      jython: 32
+      luindex: 9
+      pmd: 41
+      sunflow: 17
+      xalan: 10
+  dacapobach-mr1-java6:
+    type: DaCapo
+    release: "9.12"
+    path: /usr/share/benchmarks/dacapo/dacapo-9.12-MR1-bach-java6.jar
+  dacapo-chopin-69a704e:
+    type: DaCapo
+    release: evaluation
+    path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-69a704e.jar
+    minheap:
+      avrora: 7
+      batik: 253
+      biojava: 191
+      cassandra: 89
+      eclipse: 437
+      fop: 19
+      graphchi: 255
+      h2: 1154
+      h2o: 73
+      jme: 55
+      jython: 37
+      luindex: 42
+      lusearch: 23
+      pmd: 243
+      sunflow: 33
+      tomcat: 25
+      xalan: 9
+      zxing: 96

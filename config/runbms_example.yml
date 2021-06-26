@@ -1,0 +1,19 @@
+includes:
+  - "./base/jvms.yml"
+  - "./base/suites.yml"
+  - "./base/modifiers.yml"
+
+benchmarks:
+  dacapobach:
+    - avrora
+    - fop
+    - jython
+    - luindex
+    - pmd
+    - sunflow
+    - xalan
+
+configs:
+  - "adoptopenjdk-11|ms|s|c2|g1"
+
+invocations: 1

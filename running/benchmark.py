@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Optional
 from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg
 from copy import deepcopy
 import subprocess
+import sys
+import logging
 
 DRY_RUN = False
 
@@ -26,17 +28,20 @@ class DaCapo(JavaBenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.release = kwargs["release"]
-        assert self.release in ["2006", "9.12", "evaluation"]
+        if self.release not in ["2006", "9.12", "evaluation"]:
+            logging.info(
+                "DaCapo release {} not recongized".format(self.release))
         self.path: Path
         self.path = Path(kwargs["path"])
-        assert self.path.exists()
+        if not self.path.exists():
+            logging.info("DaCapo jar {} not found".format(self.path))
 
     def __str__(self) -> str:
         return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
 
     def get_benchmark(self, name) -> 'JavaProgram':
         args = ["-jar", str(self.path), name]
-        return JavaProgram("{} {}".format(self.name, name), args)
+        return JavaProgram("{}-{}".format(self.name, name), args)
 
 
 class JavaProgram(object):
@@ -50,7 +55,8 @@ class JavaProgram(object):
 
     def to_string(self, executable):
         return "{} {} {}".format(
-            " ".join(["{}={}".format(k, v) for (k, v) in self.env_args.items()]),
+            " ".join(["{}={}".format(k, v)
+                     for (k, v) in self.env_args.items()]),
             executable,
             " ".join(self.args)
         )
@@ -75,7 +81,7 @@ class JavaProgram(object):
         cmd = [jvm.executable]
         cmd.extend(self.args)
         if DRY_RUN:
-            print(self.to_string(jvm.executable))
+            print(self.to_string(jvm.executable), file=sys.stderr)
             return ""
         else:
             try:
@@ -89,4 +95,3 @@ class JavaProgram(object):
                 return p.stdout.decode("utf-8")
             except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
                 return e.stdout.decode("utf-8")
-            

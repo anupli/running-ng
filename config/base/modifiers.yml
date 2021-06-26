@@ -1,0 +1,31 @@
+modifiers:
+  sgc:
+    type: JVMArg
+    val: "-XX:+UseSerialGC"
+  tph:
+    type: JVMArg
+    val: "-XX:+UseThirdPartyHeap"
+  g1:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops -XX:+UseG1GC"
+  epsilon:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -XX:-EpsilonElasticTLAB -XX:TLABSize=32K -XX:-ResizeTLAB"
+  cms:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops -XX:+UseConcMarkSweepGC -XX:TLABSize=32K -XX:-ResizeTLAB"
+  c2:
+    type: JVMArg
+    val: "-XX:-TieredCompilation -Xcomp"
+  ms:
+    type: JVMArg
+    val: "-XX:MetaspaceSize=500M -XX:+DisableExplicitGC"
+  ss:
+    type: EnvVar
+    val: "MMTK_PLAN=SemiSpace"
+  ix:
+    type: EnvVar
+    val: "MMTK_PLAN=Immix"
+  s:
+    type: JVMArg
+    val: "-server"

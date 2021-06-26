@@ -1,4 +1,4 @@
-from running.config import load_all
+from running.config import Configuration
 from pathlib import Path
 
 
@@ -11,18 +11,21 @@ def setup_parser(subparsers):
 def run(args):
     if args.get("which") != "runbms":
         return False
-    configuration = load_all(args.get("CONFIG"))
-    for b in configuration.benchmarks:
-        print("{} ".format(b.name), end="")
-        for i in range(0, configuration.invocations):
-            print(i, end="", flush = True)
-            for j, c in enumerate(configuration.configs):
-                jvm = configuration.jvms[c.split('|')[0]]
-                mods = [configuration.modifiers[x] for x in c.split('|')[1:]]
-                mod_b = b.attach_modifiers(mods)
-                if "PASSED" in mod_b.run(jvm):
-                    print(chr(ord('a')+j), end="", flush = True)
-                else:
-                    print(".", end="", flush = True)
-        print()
+    configuration = Configuration.from_file(args.get("CONFIG"))
+    configuration.resolve_class()
+    for suite_name, bms in configuration.get("benchmarks").items():
+        for b in bms:
+            print(b.name, end=" ")
+            for i in range(0, configuration.get("invocations")):
+                print(i, end="", flush=True)
+                for j, c in enumerate(configuration.get("configs")):
+                    jvm = configuration.get("jvms")[c.split('|')[0]]
+                    mods = [configuration.get("modifiers")[x]
+                            for x in c.split('|')[1:]]
+                    mod_b = b.attach_modifiers(mods)
+                    if "PASSED" in mod_b.run(jvm):
+                        print(chr(ord('a')+j), end="", flush=True)
+                    else:
+                        print(".", end="", flush=True)
+            print()
     return True

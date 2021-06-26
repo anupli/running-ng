@@ -1,5 +1,6 @@
 from typing import Any, Dict
 from pathlib import Path
+import logging
 
 
 class JVM(object):
@@ -20,9 +21,12 @@ class OpenJDK(JVM):
         self.release = kwargs["release"]
         self.home: Path
         self.home = Path(kwargs["home"])
-        assert self.home.exists()
+        if not self.home.exists():
+            logging.warn("OpenJDK home {} doesn't exist".format(self.home))
         self.executable = self.home / "bin" / "java"
-        assert self.executable.exists()
+        if not self.executable.exists():
+            logging.warn(
+                "{} not found in OpenJDK home".format(self.executable))
 
     def __str__(self):
         return "{} OpenJDK {} {}".format(super().__str__(), self.release, self.home)
@@ -33,9 +37,12 @@ class JikesRVM(JVM):
         super().__init__(**kwargs)
         self.home: Path
         self.home = Path(kwargs["home"])
-        assert self.home.exists()
+        if not self.home.exists():
+            logging.warn("JikesRVM home {} doesn't exist".format(self.home))
         self.executable = self.home / "rvm"
-        assert self.executable.exists()
+        if not self.home.exists():
+            logging.warn(
+                "{} not found in JikesRVM home".format(self.executable))
 
     def __str__(self):
         return "{} JikesRVM {} {}".format(super().__str__(), self.release, self.home)

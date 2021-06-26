@@ -1,4 +1,4 @@
-from running.config import load_all
+from running.config import Configuration
 from pathlib import Path
 from running.jvm import JVM
 from running.modifier import JVMArg, ProgramArg
@@ -50,13 +50,16 @@ def minheap_one_bm(jvm: JVM, bm: JavaProgram, heap: int = 2 ** 7) -> float:
 def run(args):
     if args.get("which") != "minheap":
         return False
-    configuration = load_all(args.get("CONFIG"))
-    for b in configuration.benchmarks:
-        print("{}".format(b.name))
-        for j, c in enumerate(configuration.configs):
-            jvm = configuration.jvms[c.split('|')[0]]
-            mods = [configuration.modifiers[x] for x in c.split('|')[1:]]
-            mod_b = b.attach_modifiers(mods)
-            minheap = minheap_one_bm(jvm, mod_b)
-            print("minheap {}".format(minheap))
+    configuration = Configuration.from_file(args.get("CONFIG"))
+    configuration.resolve_class()
+    for bms in configuration.get("benchmarks").values():
+        for b in bms:
+            print("{}".format(b.name))
+            for j, c in enumerate(configuration.get("configs")):
+                jvm = configuration.get("jvms")[c.split('|')[0]]
+                mods = [configuration.get("modifiers")[x]
+                        for x in c.split('|')[1:]]
+                mod_b = b.attach_modifiers(mods)
+                minheap = minheap_one_bm(jvm, mod_b)
+                print("minheap {}".format(minheap))
     return True
