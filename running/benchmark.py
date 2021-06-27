@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg
+from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
 from copy import deepcopy
 import subprocess
 import sys
@@ -20,7 +20,13 @@ class JavaBenchmarkSuite(object):
     def __str__(self) -> str:
         return "Benchmark Suite {}".format(self.name)
 
-    def get_benchmark(self, name) -> 'JavaProgram':
+    def get_benchmark(self, bm_name: str) -> 'JavaProgram':
+        raise NotImplementedError()
+
+    def get_minheap(self, bm_name: str) -> int:
+        raise NotImplementedError()
+
+    def get_timeout(self, bm_name: str) -> int:
         raise NotImplementedError()
 
 
@@ -35,31 +41,50 @@ class DaCapo(JavaBenchmarkSuite):
         self.path = Path(kwargs["path"])
         if not self.path.exists():
             logging.info("DaCapo jar {} not found".format(self.path))
+        self.minheap = kwargs.get("minheap", {})
+        self.timing_iteration = int(kwargs.get("timing_iteration"))
+        self.callback = kwargs.get("callback")
 
     def __str__(self) -> str:
         return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
 
-    def get_benchmark(self, name) -> 'JavaProgram':
-        args = ["-jar", str(self.path), name]
-        return JavaProgram("{}-{}".format(self.name, name), args)
+    def get_benchmark(self, bm_name: str) -> 'JavaProgram':
+        if self.callback:
+            cp = [str(self.path)]
+            jvm_args = []
+            progam_args = ["Harness", "-c", self.callback]
+        else:
+            cp = []
+            jvm_args = ["-jar", str(self.path)]
+            progam_args = []
+        progam_args.extend(["-n", str(self.timing_iteration), bm_name])
+        return JavaProgram(self.name, bm_name, jvm_args, progam_args, cp)
+
+    def get_minheap(self, bm_name: str) -> int:
+        if bm_name not in self.minheap:
+            logging.warn("Minheap for {} of {} not set".format(bm_name, self))
+            return 4096
+        return self.minheap[bm_name]
+
+    def get_timeout(self, bm_name: str) -> int:
+        # FIXME
+        return 120
 
 
 class JavaProgram(object):
-    def __init__(self, name: str, args: List[str], env_args: Optional[Dict[str, str]] = None):
-        self.name = name
-        self.args = args
+    def __init__(self, suite_name: str, bm_name: str, jvm_args: List[str], progam_args: List[str], cp: List[str], env_args: Optional[Dict[str, str]] = None):
+        self.name = "{}-{}".format(suite_name, bm_name)
+        self.bm_name = bm_name
+        self.jvm_args = jvm_args
+        self.progam_args = progam_args
+        self.cp = cp
         if env_args is None:
             self.env_args = {}
         else:
             self.env_args = env_args
 
-    def to_string(self, executable):
-        return "{} {} {}".format(
-            " ".join(["{}={}".format(k, v)
-                     for (k, v) in self.env_args.items()]),
-            executable,
-            " ".join(self.args)
-        )
+    def get_classpath_args(self) -> List[str]:
+        return ["-cp", ":".join(self.cp) if self.cp else ""]
 
     def __str__(self) -> str:
         return self.to_string("java")
@@ -68,20 +93,40 @@ class JavaProgram(object):
         jp = deepcopy(self)
         for m in modifiers:
             if type(m) == JVMArg:
-                jp.args = m.val + jp.args
+                jp.jvm_args.extend(m.val)
             elif type(m) == EnvVar:
                 jp.env_args[m.var] = m.val
             elif type(m) == ProgramArg:
-                jp.args.extend(m.val)
+                jp.progam_args.extend(m.val)
+            elif type(m) == JVMClasspath:
+                jp.cp.extend(m.val)
             else:
                 raise ValueError()
         return jp
 
+    def get_full_args(self, executable) -> List[str]:
+        cmd = [executable]
+        cmd.extend(self.jvm_args)
+        cmd.extend(self.get_classpath_args())
+        cmd.extend(self.progam_args)
+        return cmd
+
+    def get_env_str(self) -> str:
+        return " ".join(["{}={}".format(k, v) for (k, v) in self.env_args.items()])
+
+    def to_string(self, executable) -> str:
+        return "{} {}".format(
+            self.get_env_str(),
+            " ".join([str(x) for x in self.get_full_args(executable)])
+        )
+
     def run(self, jvm, timeout: int = None) -> str:
-        cmd = [jvm.executable]
-        cmd.extend(self.args)
+        cmd = self.get_full_args(jvm.executable)
         if DRY_RUN:
-            print(self.to_string(jvm.executable), file=sys.stderr)
+            print(
+                self.to_string(jvm.executable),
+                file=sys.stderr
+            )
             return ""
         else:
             try:

@@ -8,6 +8,7 @@ suites:
       chart: 21
       eclipse: 25
       hsqldb: 135
+    timing_iteration: 3
   dacapobach:
     type: DaCapo
     release: "9.12"
@@ -20,6 +21,7 @@ suites:
       pmd: 41
       sunflow: 17
       xalan: 8
+    timing_iteration: 3
   dacapobach-mr1:
     type: DaCapo
     release: "9.12"
@@ -32,10 +34,12 @@ suites:
       pmd: 41
       sunflow: 17
       xalan: 10
+    timing_iteration: 3
   dacapobach-mr1-java6:
     type: DaCapo
     release: "9.12"
     path: /usr/share/benchmarks/dacapo/dacapo-9.12-MR1-bach-java6.jar
+    timing_iteration: 3
   dacapo-chopin-69a704e:
     type: DaCapo
     release: evaluation
@@ -59,3 +63,4 @@ suites:
       tomcat: 25
       xalan: 9
       zxing: 96
+    timing_iteration: 3

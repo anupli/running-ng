@@ -96,7 +96,7 @@ class Configuration(object):
             base = functools.reduce(
                 lambda left, right: left.combine(right), includes)
             if "overrides" in config:
-                for selector, new_value in config["overrides"]:
+                for selector, new_value in config["overrides"].items():
                     base.override(selector, new_value)
                 del config["overrides"]
             del config["includes"]
