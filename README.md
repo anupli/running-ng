@@ -12,4 +12,4 @@ With more features implemented, you should be able to progressively replace the 
 
 - `running fillin`: should have the same behaviour as `fillin`
 - `running minheap`: should be usable
-- `running runbms`: runs benchmarks but doesn't output in a format digestible by plotty
+- `running runbms`: should have the same behaviour as `runbms`
