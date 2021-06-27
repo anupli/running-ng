@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
+from running.jvm import JVM
 from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
 from copy import deepcopy
 import subprocess
@@ -109,7 +110,7 @@ class JavaProgram(object):
                 raise ValueError()
         return jp
 
-    def get_full_args(self, executable) -> List[str]:
+    def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
         cmd = [executable]
         cmd.extend(self.jvm_args)
         cmd.extend(self.get_classpath_args())
@@ -119,17 +120,17 @@ class JavaProgram(object):
     def get_env_str(self) -> str:
         return " ".join(["{}={}".format(k, v) for (k, v) in self.env_args.items()])
 
-    def to_string(self, executable) -> str:
+    def to_string(self, executable: Union[str, Path]) -> str:
         return "{} {}".format(
             self.get_env_str(),
             " ".join([str(x) for x in self.get_full_args(executable)])
         )
 
-    def run(self, jvm, timeout: int = None) -> str:
-        cmd = self.get_full_args(jvm.executable)
+    def run(self, jvm: JVM, timeout: int = None) -> str:
+        cmd = self.get_full_args(jvm.get_executable())
         if DRY_RUN:
             print(
-                self.to_string(jvm.executable),
+                self.to_string(jvm.get_executable()),
                 file=sys.stderr
             )
             return ""

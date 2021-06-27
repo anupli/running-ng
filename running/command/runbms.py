@@ -24,7 +24,7 @@ def setup_parser(subparsers):
     f.add_argument("-i", "--invocations", type=int)
 
 
-def getid():
+def getid() -> str:
     host = socket.gethostname()
     now = datetime.now()
     timestamp = now.strftime("%Y-%m-%d-%a-%H%M%S")
@@ -84,7 +84,7 @@ def get_heapsize(hfac: float, minheap: int) -> int:
     return round(minheap * hfac)
 
 
-def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]):
+def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> List[float]:
     start = 1.0
     end = float(heap_range)
     divisor = spread(spread_factor, N, N)/(end-start)
@@ -105,7 +105,7 @@ def run_benchmark_with_config(c: str, b: JavaProgram, timeout: int, fd) -> str:
     return output
 
 
-def get_filename(bm: JavaProgram, hfac: float, size: int, config: str):
+def get_filename(bm: JavaProgram, hfac: float, size: int, config: str) -> str:
     return "{}.{}.{}.{}.log".format(
         bm.name,
         hfac_str(hfac),
@@ -114,19 +114,19 @@ def get_filename(bm: JavaProgram, hfac: float, size: int, config: str):
     )
 
 
-def get_log_epilogue(jvm: JVM, bm: JavaProgram):
+def get_log_epilogue(jvm: JVM, bm: JavaProgram) -> str:
     return ""
 
 
-def system(cmd):
+def system(cmd) -> str:
     return subprocess.check_output(cmd, shell=True).decode("utf-8")
 
 
-def hz_to_ghz(hzstr: str):
+def hz_to_ghz(hzstr: str) -> str:
     return "{:.2f} GHz".format(int(hzstr) / 1000 / 1000)
 
 
-def get_log_prologue(jvm: JVM, bm: JavaProgram):
+def get_log_prologue(jvm: JVM, bm: JavaProgram) -> str:
     output = "\n-----\n"
     output += bm.to_string(jvm.get_executable())
     output += "\n"
