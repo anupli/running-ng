@@ -11,6 +11,9 @@ class JVM(object):
     def from_config(name: str, config: Dict[str, str]) -> Any:
         return eval(config["type"])(name=name, **config)
 
+    def get_executable(self) -> Path:
+        raise NotImplementedError
+
     def __str__(self):
         return "JVM {}".format(self.name)
 
@@ -28,6 +31,9 @@ class OpenJDK(JVM):
             logging.warn(
                 "{} not found in OpenJDK home".format(self.executable))
 
+    def get_executable(self) -> Path:
+        return self.executable
+
     def __str__(self):
         return "{} OpenJDK {} {}".format(super().__str__(), self.release, self.home)
 
@@ -43,6 +49,9 @@ class JikesRVM(JVM):
         if not self.home.exists():
             logging.warn(
                 "{} not found in JikesRVM home".format(self.executable))
+
+    def get_executable(self) -> Path:
+        return self.executable
 
     def __str__(self):
         return "{} JikesRVM {} {}".format(super().__str__(), self.release, self.home)

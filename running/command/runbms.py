@@ -11,6 +11,8 @@ import tempfile
 import subprocess
 import os
 
+configuration: Configuration
+
 
 def setup_parser(subparsers):
     f = subparsers.add_parser("runbms")
@@ -78,7 +80,7 @@ def hfac_str(hfac: float) -> str:
     return str(int(hfac*1000))
 
 
-def get_heapsize(hfac: float, minheap: int) -> float:
+def get_heapsize(hfac: float, minheap: int) -> int:
     return round(minheap * hfac)
 
 
@@ -126,11 +128,11 @@ def hz_to_ghz(hzstr: str):
 
 def get_log_prologue(jvm: JVM, bm: JavaProgram):
     output = "\n-----\n"
-    output += bm.to_string(jvm.executable)
+    output += bm.to_string(jvm.get_executable())
     output += "\n"
     output += "Environment variables: \n"
     for k, v in sorted(os.environ.items()):
-        output += "\t{}=\{}\n".format(k, v)
+        output += "\t{}={}\n".format(k, v)
     output += "OS: "
     output += system("uname -a")
     output += "CPU: "
@@ -187,8 +189,9 @@ def run_one_benchmark(
                 else:
                     print(".", end="", flush=True)
     for j, c in enumerate(configs):
-        log_filename = get_filename(bm, hfac, size, c) 
-        subprocess.check_call("gzip {}".format(log_dir / log_filename), shell=True)
+        log_filename = get_filename(bm, hfac, size, c)
+        subprocess.check_call("gzip {}".format(
+            log_dir / log_filename), shell=True)
     print()
 
 

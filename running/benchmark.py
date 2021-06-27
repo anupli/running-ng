@@ -42,7 +42,12 @@ class DaCapo(JavaBenchmarkSuite):
         if not self.path.exists():
             logging.info("DaCapo jar {} not found".format(self.path))
         self.minheap = kwargs.get("minheap", {})
-        self.timing_iteration = int(kwargs.get("timing_iteration"))
+        try:
+            self.timing_iteration = int(kwargs.get("timing_iteration"))
+        except TypeError:
+            logging.warning(
+                "Timing iteration not set for DaCapo {}, use default value 3".format(self.path))
+            self.timing_iteration = 3
         self.callback = kwargs.get("callback")
 
     def __str__(self) -> str:
