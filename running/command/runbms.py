@@ -11,6 +11,8 @@ from running.modifier import JVMArg
 import tempfile
 import subprocess
 import os
+from running.command.fillin import fillin
+import math
 
 configuration: Configuration
 
@@ -21,8 +23,10 @@ def setup_parser(subparsers):
     f.add_argument("LOG_DIR", type=Path)
     f.add_argument("CONFIG", type=Path)
     f.add_argument("N", type=int)
-    f.add_argument("n", type=int, nargs='+')
+    f.add_argument("n", type=int, nargs='*')
     f.add_argument("-i", "--invocations", type=int)
+    f.add_argument("--slice", type=float)
+    f.add_argument("--id")
 
 
 def getid() -> str:
@@ -108,7 +112,7 @@ def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, fd) -> str
 
 def get_filename(bm: JavaBenchmark, hfac: float, size: int, config: str) -> str:
     return "{}.{}.{}.{}.log".format(
-        bm.name,
+        bm.name.replace("-", ""),
         hfac_str(hfac),
         size,
         ".".join(config.split("|"))
@@ -129,6 +133,7 @@ def hz_to_ghz(hzstr: str) -> str:
 
 def get_log_prologue(jvm: JVM, bm: JavaBenchmark) -> str:
     output = "\n-----\n"
+    output += "mkdir -p PLOTTY_WORKAROUND; timedrun "
     output += bm.to_string(jvm.get_executable())
     output += "\n"
     output += "Environment variables: \n"
@@ -165,7 +170,7 @@ def run_one_benchmark(
     log_dir: Path
 ):
     bm_name = bm.bm_name
-    print(bm_name, end=" ")
+    print(bm.name, end=" ")
     print(hfac_str(hfac), end=" ")
     size = get_heapsize(hfac, suite.get_minheap(bm_name))
     print(size, end=" ")
@@ -211,6 +216,15 @@ def run_one_hfac(
             run_one_benchmark(invocations, suite, bm, hfac,
                               configs, runbms_dir, log_dir)
 
+def ensure_remote_dir(remotehost, log_dir):
+    if remotehost:
+        log_dir = log_dir.resolve()
+        system("ssh {} mkdir -p {}".format(remotehost, log_dir))
+
+def rsync(remotehost, log_dir):
+    if remotehost:
+        log_dir = log_dir.resolve()
+        system("rsync -ae ssh {}/ {}:{}".format(log_dir, remotehost, log_dir))
 
 def run(args):
     with tempfile.TemporaryDirectory(prefix="runbms-") as runbms_dir:
@@ -220,7 +234,9 @@ def run(args):
         global configuration
         configuration = Configuration.from_file(args.get("CONFIG"))
         configuration.resolve_class()
-        id = getid()
+        id = args.get("id")
+        if not id:
+            id = getid()
         print("Run id: {}".format(id))
         log_dir = args.get("LOG_DIR") / id
         log_dir.mkdir(parents=True, exist_ok=True)
@@ -234,16 +250,32 @@ def run(args):
         suites = configuration.get("suites")
         benchmarks = configuration.get("benchmarks")
         configs = configuration.get("configs")
-        hfacs = get_hfacs(heap_range, spread_factor, N, ns)
-        logging.info("hfacs: {}".format(
-            ", ".join([
-                hfac_str(hfac)
-                for hfac in hfacs
-            ])
-        ))
-        for hfac in hfacs:
-            run_one_hfac(invocations, hfac, suites, benchmarks,
-                         configs, runbms_dir, log_dir)
-            print()
+        slice = args.get("slice")
+        remotehost = configuration.get("remotehost")
+        ensure_remote_dir(remotehost, log_dir)
+        if slice:
+            run_one_hfac(invocations, slice, suites, benchmarks,
+                             configs, runbms_dir, log_dir)
+            rsync(remotehost, log_dir)
+            return True
+
+        def run_N_ns(N, ns):
+            hfacs = get_hfacs(heap_range, spread_factor, N, ns)
+            logging.info("hfacs: {}".format(
+                ", ".join([
+                    hfac_str(hfac)
+                    for hfac in hfacs
+                ])
+            ))
+            for hfac in hfacs:
+                run_one_hfac(invocations, hfac, suites, benchmarks,
+                             configs, runbms_dir, log_dir)
+                rsync(remotehost, log_dir)
+                print()
+
+        if len(ns) == 0:
+            fillin(run_N_ns, round(math.log2(N)))
+        else:
+            run(N, ns)
 
         return True

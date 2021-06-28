@@ -1,7 +1,4 @@
 includes:
-  - "./base/jvms.yml"
-  - "./base/suites.yml"
-  - "./base/modifiers.yml"
   - "./base/runbms.yml"
 
 overrides:
@@ -35,3 +32,5 @@ benchmarks:
 
 configs:
   - "jdk-mmtk|ms|s|c2|ss|tph|probes_cp|probes_rustmmtk|probes_native"
+
+remotehost: "squirrel.moma"

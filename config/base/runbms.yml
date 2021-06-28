@@ -1,3 +1,8 @@
+includes:
+  - "./jvms.yml"
+  - "./suites.yml"
+  - "./modifiers.yml"
+
 # Can override with command line argument -i
 invocations: 10
 heaprange: 6
