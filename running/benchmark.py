@@ -6,17 +6,21 @@ from copy import deepcopy
 import subprocess
 import sys
 import logging
+from running.util import register
 
 DRY_RUN = False
 
 
 class JavaBenchmarkSuite(object):
+    CLS_MAPPING: Dict[str, Any]
+    CLS_MAPPING = {}
+
     def __init__(self, **kwargs):
         self.name = kwargs["name"]
 
     @staticmethod
     def from_config(name: str, config: Dict[str, str]) -> Any:
-        return eval(config["type"])(name=name, **config)
+        return JavaBenchmarkSuite.CLS_MAPPING[config["type"]](name=name, **config)
 
     def __str__(self) -> str:
         return "Benchmark Suite {}".format(self.name)
@@ -31,6 +35,7 @@ class JavaBenchmarkSuite(object):
         raise NotImplementedError()
 
 
+@register(JavaBenchmarkSuite)
 class DaCapo(JavaBenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
