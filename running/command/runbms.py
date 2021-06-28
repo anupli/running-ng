@@ -232,11 +232,11 @@ def rsync(remote_host, log_dir):
 
 
 def run(args):
+    if args.get("which") != "runbms":
+        return False
     with tempfile.TemporaryDirectory(prefix="runbms-") as runbms_dir:
         logging.info("Temporary directory: {}".format(runbms_dir))
         # Processing command lines args
-        if args.get("which") != "runbms":
-            return False
         prefix = args.get("id_prefix")
         id = getid()
         if prefix:
