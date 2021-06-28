@@ -61,6 +61,7 @@ class DaCapo(JavaBenchmarkSuite):
                 "Timing iteration not set for DaCapo {}, use default value 3".format(self.path))
             self.timing_iteration = 3
         self.callback = kwargs.get("callback")
+        self.timeout = kwargs.get("timeout")
 
     def __str__(self) -> str:
         return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
@@ -83,6 +84,6 @@ class DaCapo(JavaBenchmarkSuite):
             return 4096
         return self.minheap[bm_name]
 
-    def get_timeout(self, bm_name: str) -> int:
-        # FIXME
-        return 120
+    def get_timeout(self, _bm_name: str) -> int:
+        # FIXME have per benchmark timeout
+        return self.timeout

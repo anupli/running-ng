@@ -9,6 +9,7 @@ suites:
       eclipse: 25
       hsqldb: 135
     timing_iteration: 3
+    timeout: 120
   dacapobach:
     type: DaCapo
     release: "9.12"
@@ -22,6 +23,7 @@ suites:
       sunflow: 17
       xalan: 8
     timing_iteration: 3
+    timeout: 120
   dacapobach-mr1:
     type: DaCapo
     release: "9.12"
@@ -35,11 +37,13 @@ suites:
       sunflow: 17
       xalan: 10
     timing_iteration: 3
+    timeout: 120
   dacapobach-mr1-java6:
     type: DaCapo
     release: "9.12"
     path: /usr/share/benchmarks/dacapo/dacapo-9.12-MR1-bach-java6.jar
     timing_iteration: 3
+    timeout: 120
   dacapo-chopin-69a704e:
     type: DaCapo
     release: evaluation
@@ -64,3 +68,4 @@ suites:
       xalan: 9
       zxing: 96
     timing_iteration: 3
+    timeout: 120
