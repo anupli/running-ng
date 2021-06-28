@@ -6,13 +6,16 @@ from running.util import register
 
 __DRY_RUN = False
 
+
 def is_dry_run():
     global __DRY_RUN
     return __DRY_RUN
 
+
 def set_dry_run(val: bool):
     global __DRY_RUN
     __DRY_RUN = val
+
 
 class JavaBenchmarkSuite(object):
     CLS_MAPPING: Dict[str, Any]

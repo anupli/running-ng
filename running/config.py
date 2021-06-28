@@ -26,6 +26,9 @@ class Configuration(object):
         assert "overrides" not in kv_pairs
         self.__items = kv_pairs
 
+    def save_to_file(self, fd):
+        yaml.dump(self.__items, fd)
+
     def resolve_class(self):
         """Resolve the values by instantiating instances of classes
 

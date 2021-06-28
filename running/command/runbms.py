@@ -13,6 +13,7 @@ import subprocess
 import os
 from running.command.fillin import fillin
 import math
+import yaml
 
 configuration: Configuration
 
@@ -26,7 +27,7 @@ def setup_parser(subparsers):
     f.add_argument("n", type=int, nargs='*')
     f.add_argument("-i", "--invocations", type=int)
     f.add_argument("--slice", type=float)
-    f.add_argument("--id")
+    f.add_argument("--id-prefix")
 
 
 def getid() -> str:
@@ -216,30 +217,38 @@ def run_one_hfac(
             run_one_benchmark(invocations, suite, bm, hfac,
                               configs, runbms_dir, log_dir)
 
+
 def ensure_remote_dir(remotehost, log_dir):
     if remotehost:
         log_dir = log_dir.resolve()
         system("ssh {} mkdir -p {}".format(remotehost, log_dir))
+
 
 def rsync(remotehost, log_dir):
     if remotehost:
         log_dir = log_dir.resolve()
         system("rsync -ae ssh {}/ {}:{}".format(log_dir, remotehost, log_dir))
 
+
 def run(args):
     with tempfile.TemporaryDirectory(prefix="runbms-") as runbms_dir:
         logging.info("Temporary directory: {}".format(runbms_dir))
         if args.get("which") != "runbms":
             return False
-        global configuration
-        configuration = Configuration.from_file(args.get("CONFIG"))
-        configuration.resolve_class()
-        id = args.get("id")
-        if not id:
-            id = getid()
+        id = getid()
+        prefix = args.get("id_prefix")
+        if prefix:
+            id = "{}-{}".format(prefix, id)
         print("Run id: {}".format(id))
         log_dir = args.get("LOG_DIR") / id
         log_dir.mkdir(parents=True, exist_ok=True)
+        global configuration
+        configuration = Configuration.from_file(args.get("CONFIG"))
+        with (log_dir / "runbms.yml").open("w") as fd:
+            configuration.save_to_file(fd)
+        with (log_dir / "runbms_args.yml").open("w") as fd:
+            yaml.dump(args, fd)
+        configuration.resolve_class()
         N = args.get("N")
         ns = args.get("n")
         invocations = configuration.get("invocations")
@@ -255,7 +264,7 @@ def run(args):
         ensure_remote_dir(remotehost, log_dir)
         if slice:
             run_one_hfac(invocations, slice, suites, benchmarks,
-                             configs, runbms_dir, log_dir)
+                         configs, runbms_dir, log_dir)
             rsync(remotehost, log_dir)
             return True
 
