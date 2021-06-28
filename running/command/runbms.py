@@ -1,6 +1,6 @@
 import logging
 from typing import Dict, List
-from running.suite import JavaBenchmarkSuite
+from running.suite import JavaBenchmarkSuite, is_dry_run
 from running.benchmark import JavaBenchmark
 from running.config import Configuration
 from pathlib import Path
@@ -105,11 +105,14 @@ def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, runbms_dir
     jvm, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     prologue = get_log_prologue(jvm, mod_b)
-    fd.write(prologue)
+    if fd:
+        fd.write(prologue)
     output = mod_b.run(jvm, timeout, cwd=runbms_dir)
-    fd.write(output)
+    if fd:
+        fd.write(output)
     epilogue = get_log_epilogue(jvm, mod_b)
-    fd.write(epilogue)
+    if fd:
+        fd.write(epilogue)
     return output
 
 
@@ -189,18 +192,24 @@ def run_one_benchmark(
         for j, c in enumerate(configs):
             log_filename = get_filename(bm, hfac, size, c)
             logging.debug("Running with log filename {}".format(log_filename))
-            with (log_dir / log_filename).open("a") as fd:
+            if is_dry_run():
                 output = run_benchmark_with_config(
-                    c, bm_with_heapsize, timeout, runbms_dir, fd
+                    c, bm_with_heapsize, timeout, runbms_dir, None
                 )
-                if "PASSED" in output:
-                    print(chr(ord('a')+j), end="", flush=True)
-                else:
-                    print(".", end="", flush=True)
+            else:
+                with (log_dir / log_filename).open("a") as fd:
+                    output = run_benchmark_with_config(
+                        c, bm_with_heapsize, timeout, runbms_dir, fd
+                    )
+            if "PASSED" in output:
+                print(chr(ord('a')+j), end="", flush=True)
+            else:
+                print(".", end="", flush=True)
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
-        subprocess.check_call("gzip {}".format(
-            log_dir / log_filename), shell=True)
+        if not is_dry_run():
+            subprocess.check_call("gzip {}".format(
+                log_dir / log_filename), shell=True)
     print()
 
 
@@ -221,14 +230,14 @@ def run_one_hfac(
             rsync(log_dir)
 
 
-def ensure_remote_dir(remote_host, log_dir):
-    if remote_host:
+def ensure_remote_dir(log_dir):
+    if not is_dry_run():
         log_dir = log_dir.resolve()
         system("ssh {} mkdir -p {}".format(remote_host, log_dir))
 
 
-def rsync(remote_host, log_dir):
-    if remote_host:
+def rsync(log_dir):
+    if not is_dry_run():
         log_dir = log_dir.resolve()
         system("rsync -ae ssh {}/ {}:{}".format(log_dir, remote_host, log_dir))
 
@@ -245,9 +254,10 @@ def run(args):
             id = "{}-{}".format(prefix, id)
         print("Run id: {}".format(id))
         log_dir = args.get("LOG_DIR") / id
-        log_dir.mkdir(parents=True, exist_ok=True)
-        with (log_dir / "runbms_args.yml").open("w") as fd:
-            yaml.dump(args, fd)
+        if not is_dry_run():
+            log_dir.mkdir(parents=True, exist_ok=True)
+            with (log_dir / "runbms_args.yml").open("w") as fd:
+                yaml.dump(args, fd)
         N = args.get("N")
         ns = args.get("n")
         slice = args.get("slice")
@@ -255,8 +265,9 @@ def run(args):
         global configuration
         configuration = Configuration.from_file(args.get("CONFIG"))
         # Save metadata
-        with (log_dir / "runbms.yml").open("w") as fd:
-            configuration.save_to_file(fd)
+        if not is_dry_run():
+            with (log_dir / "runbms.yml").open("w") as fd:
+                configuration.save_to_file(fd)
         configuration.resolve_class()
         # Read from configuration, override with command line arguments if
         # needed
