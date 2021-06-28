@@ -5,6 +5,7 @@ from running.modifier import JVMArg, ProgramArg
 from running.benchmark import JavaBenchmark
 from running.util import parse_config_str
 
+
 def setup_parser(subparsers):
     f = subparsers.add_parser("minheap")
     f.set_defaults(which="minheap")

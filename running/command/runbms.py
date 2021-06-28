@@ -105,7 +105,7 @@ def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, runbms_dir
     mod_b = b.attach_modifiers(mods)
     prologue = get_log_prologue(jvm, mod_b)
     fd.write(prologue)
-    output = mod_b.run(jvm, timeout, cwd = runbms_dir)
+    output = mod_b.run(jvm, timeout, cwd=runbms_dir)
     fd.write(output)
     epilogue = get_log_epilogue(jvm, mod_b)
     fd.write(epilogue)

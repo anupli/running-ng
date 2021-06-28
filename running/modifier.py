@@ -2,11 +2,12 @@ from typing import Any, Dict
 from running.util import register
 import copy
 
+
 class Modifier(object):
     CLS_MAPPING: Dict[str, Any]
     CLS_MAPPING = {}
 
-    def __init__(self, value_opts = None, **kwargs):
+    def __init__(self, value_opts=None, **kwargs):
         self.name = kwargs["name"]
         if value_opts is None:
             self.value_opts = []
@@ -16,7 +17,7 @@ class Modifier(object):
         self.__original_kwargs = kwargs
         self._kwargs = copy.deepcopy(kwargs)
         if not value_opts:
-             return
+            return
         # Expand value opts
         for k, v in kwargs.items():
             try:
@@ -37,7 +38,7 @@ class Modifier(object):
 
 @register(Modifier)
 class JVMArg(Modifier):
-    def __init__(self, value_opts = None, **kwargs):
+    def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
         self.val = self._kwargs["val"].split()
 
@@ -47,7 +48,7 @@ class JVMArg(Modifier):
 
 @register(Modifier)
 class JVMClasspath(Modifier):
-    def __init__(self, value_opts = None, **kwargs):
+    def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
         self.val = self._kwargs["val"].split()
 
@@ -57,7 +58,7 @@ class JVMClasspath(Modifier):
 
 @register(Modifier)
 class EnvVar(Modifier):
-    def __init__(self, value_opts = None, **kwargs):
+    def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
         self.var = self._kwargs["val"].split("=")[0]
         self.val = self._kwargs["val"][len(self.var)+1:]  # skip '='
@@ -68,7 +69,7 @@ class EnvVar(Modifier):
 
 @register(Modifier)
 class ProgramArg(Modifier):
-    def __init__(self, value_opts = None, **kwargs):
+    def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
         self.val = self._kwargs["val"].split()
 
