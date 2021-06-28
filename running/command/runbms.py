@@ -18,6 +18,7 @@ import yaml
 
 configuration: Configuration
 minheap_multiplier: float
+remote_host: str
 
 
 def setup_parser(subparsers):
@@ -217,6 +218,7 @@ def run_one_hfac(
         for bm in bms:
             run_one_benchmark(invocations, suite, bm, hfac,
                               configs, runbms_dir, log_dir)
+            rsync(log_dir)
 
 
 def ensure_remote_dir(remote_host, log_dir):
@@ -270,13 +272,13 @@ def run(args):
         suites = configuration.get("suites")
         benchmarks = configuration.get("benchmarks")
         configs = configuration.get("configs")
+        global remote_host
         remote_host = configuration.get("remote_host")
 
-        ensure_remote_dir(remote_host, log_dir)
+        ensure_remote_dir(log_dir)
         if slice:
             run_one_hfac(invocations, slice, suites, benchmarks,
                          configs, runbms_dir, log_dir)
-            rsync(remote_host, log_dir)
             return True
 
         def run_N_ns(N, ns):
@@ -290,7 +292,6 @@ def run(args):
             for hfac in hfacs:
                 run_one_hfac(invocations, hfac, suites, benchmarks,
                              configs, runbms_dir, log_dir)
-                rsync(remote_host, log_dir)
                 print()
 
         if len(ns) == 0:
