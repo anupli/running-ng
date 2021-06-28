@@ -57,7 +57,7 @@ class JavaBenchmark(object):
             " ".join([str(x) for x in self.get_full_args(executable)])
         )
 
-    def run(self, jvm: JVM, timeout: int = None) -> str:
+    def run(self, jvm: JVM, timeout: int = None, cwd: Path = None) -> str:
         cmd = self.get_full_args(jvm.get_executable())
         if suite.is_dry_run():
             print(
@@ -72,7 +72,8 @@ class JavaBenchmark(object):
                     env=self.env_args,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
-                    timeout=timeout
+                    timeout=timeout,
+                    cwd=cwd
                 )
                 return p.stdout.decode("utf-8")
             except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:

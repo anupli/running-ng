@@ -4,6 +4,7 @@ from running.suite import JavaBenchmarkSuite
 from running.benchmark import JavaBenchmark
 from running.config import Configuration
 from pathlib import Path
+from running.util import parse_config_str
 import socket
 from datetime import datetime
 from running.jvm import JVM
@@ -99,14 +100,12 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
     return [spread(spread_factor, N, n)/divisor + start for n in ns]
 
 
-def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, fd) -> str:
-    jvm = configuration.get("jvms")[c.split('|')[0]]
-    mods = [configuration.get("modifiers")[x]
-            for x in c.split('|')[1:]]
+def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, runbms_dir: Path, fd) -> str:
+    jvm, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     prologue = get_log_prologue(jvm, mod_b)
     fd.write(prologue)
-    output = mod_b.run(jvm, timeout)
+    output = mod_b.run(jvm, timeout, cwd = runbms_dir)
     fd.write(output)
     epilogue = get_log_epilogue(jvm, mod_b)
     fd.write(epilogue)
@@ -191,7 +190,7 @@ def run_one_benchmark(
             logging.debug("Running with log filename {}".format(log_filename))
             with (log_dir / log_filename).open("a") as fd:
                 output = run_benchmark_with_config(
-                    c, bm_with_heapsize, timeout, fd
+                    c, bm_with_heapsize, timeout, runbms_dir, fd
                 )
                 if "PASSED" in output:
                     print(chr(ord('a')+j), end="", flush=True)

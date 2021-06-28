@@ -17,6 +17,9 @@ modifiers:
   probes_rustmmtk:
     type: JVMArg
     val: "-Dprobes=RustMMTk"
+  value_opts_example:
+    type: EnvVar
+    val: "FOOBAR{0}=BUZZ{1}"
   
 jvms:
   jdk-mmtk:
@@ -31,4 +34,4 @@ benchmarks:
     - fop
 
 configs:
-  - "jdk-mmtk|ms|s|c2|ss|tph|probes_cp|probes_rustmmtk|probes_native"
+  - "jdk-mmtk|ms|s|c2|ss|tph|probes_cp|probes_rustmmtk|probes_native|value_opts_example-42-43"

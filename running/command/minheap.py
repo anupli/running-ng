@@ -3,7 +3,7 @@ from pathlib import Path
 from running.jvm import JVM
 from running.modifier import JVMArg, ProgramArg
 from running.benchmark import JavaBenchmark
-
+from running.util import parse_config_str
 
 def setup_parser(subparsers):
     f = subparsers.add_parser("minheap")
@@ -55,10 +55,8 @@ def run(args):
     for bms in configuration.get("benchmarks").values():
         for b in bms:
             print("{}".format(b.name))
-            for j, c in enumerate(configuration.get("configs")):
-                jvm = configuration.get("jvms")[c.split('|')[0]]
-                mods = [configuration.get("modifiers")[x]
-                        for x in c.split('|')[1:]]
+            for c in configuration.get("configs"):
+                jvm, mods = parse_config_str(configuration, c)
                 mod_b = b.attach_modifiers(mods)
                 minheap = minheap_one_bm(jvm, mod_b)
                 print("minheap {}".format(minheap))
