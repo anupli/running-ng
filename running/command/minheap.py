@@ -2,7 +2,7 @@ from running.config import Configuration
 from pathlib import Path
 from running.jvm import JVM
 from running.modifier import JVMArg, ProgramArg
-from running.benchmark import JavaProgram
+from running.benchmark import JavaBenchmark
 
 
 def setup_parser(subparsers):
@@ -11,7 +11,7 @@ def setup_parser(subparsers):
     f.add_argument("CONFIG", type=Path)
 
 
-def minheap_one_bm(jvm: JVM, bm: JavaProgram, heap: int = 2 ** 7) -> float:
+def minheap_one_bm(jvm: JVM, bm: JavaBenchmark, heap: int = 2 ** 7) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2

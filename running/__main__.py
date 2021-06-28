@@ -4,7 +4,7 @@ import argparse
 
 from running.__version__ import __VERSION__
 from running.command import fillin, runbms, minheap, log_preprocessor
-from running import benchmark
+from running.suite import set_dry_run
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ def main():
         level=log_level)
 
     if args.get("dry_run") == True:
-        benchmark.DRY_RUN = True
+        set_dry_run(True)
 
     for m in MODULES:
         if m.run(args):

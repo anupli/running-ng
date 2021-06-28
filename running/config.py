@@ -1,6 +1,6 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict
 import yaml
-from running.benchmark import JavaBenchmarkSuite
+from running.suite import JavaBenchmarkSuite
 from running.jvm import JVM
 from running.modifier import Modifier
 from pathlib import Path

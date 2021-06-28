@@ -1,6 +1,7 @@
 import logging
 from typing import Dict, List
-from running.benchmark import JavaBenchmarkSuite, JavaProgram
+from running.suite import JavaBenchmarkSuite
+from running.benchmark import JavaBenchmark
 from running.config import Configuration
 from pathlib import Path
 import socket
@@ -91,7 +92,7 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
     return [spread(spread_factor, N, n)/divisor + start for n in ns]
 
 
-def run_benchmark_with_config(c: str, b: JavaProgram, timeout: int, fd) -> str:
+def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, fd) -> str:
     jvm = configuration.get("jvms")[c.split('|')[0]]
     mods = [configuration.get("modifiers")[x]
             for x in c.split('|')[1:]]
@@ -105,7 +106,7 @@ def run_benchmark_with_config(c: str, b: JavaProgram, timeout: int, fd) -> str:
     return output
 
 
-def get_filename(bm: JavaProgram, hfac: float, size: int, config: str) -> str:
+def get_filename(bm: JavaBenchmark, hfac: float, size: int, config: str) -> str:
     return "{}.{}.{}.{}.log".format(
         bm.name,
         hfac_str(hfac),
@@ -114,7 +115,7 @@ def get_filename(bm: JavaProgram, hfac: float, size: int, config: str) -> str:
     )
 
 
-def get_log_epilogue(jvm: JVM, bm: JavaProgram) -> str:
+def get_log_epilogue(jvm: JVM, bm: JavaBenchmark) -> str:
     return ""
 
 
@@ -126,7 +127,7 @@ def hz_to_ghz(hzstr: str) -> str:
     return "{:.2f} GHz".format(int(hzstr) / 1000 / 1000)
 
 
-def get_log_prologue(jvm: JVM, bm: JavaProgram) -> str:
+def get_log_prologue(jvm: JVM, bm: JavaBenchmark) -> str:
     output = "\n-----\n"
     output += bm.to_string(jvm.get_executable())
     output += "\n"
@@ -157,7 +158,7 @@ def get_log_prologue(jvm: JVM, bm: JavaProgram) -> str:
 def run_one_benchmark(
     invocations: int,
     suite: JavaBenchmarkSuite,
-    bm: JavaProgram,
+    bm: JavaBenchmark,
     hfac: float,
     configs: List[str],
     runbms_dir: Path,
@@ -199,7 +200,7 @@ def run_one_hfac(
     invocations: int,
     hfac: float,
     suites: Dict[str, JavaBenchmarkSuite],
-    benchmarks: Dict[str, List[JavaProgram]],
+    benchmarks: Dict[str, List[JavaBenchmark]],
     configs: List[str],
     runbms_dir: Path,
     log_dir: Path
