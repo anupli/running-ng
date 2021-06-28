@@ -16,6 +16,7 @@ import math
 import yaml
 
 configuration: Configuration
+minheap_multiplier: float
 
 
 def setup_parser(subparsers):
@@ -26,8 +27,9 @@ def setup_parser(subparsers):
     f.add_argument("N", type=int)
     f.add_argument("n", type=int, nargs='*')
     f.add_argument("-i", "--invocations", type=int)
-    f.add_argument("--slice", type=float)
-    f.add_argument("--id-prefix")
+    f.add_argument("-s", "--slice", type=float)
+    f.add_argument("-p", "--id-prefix")
+    f.add_argument("-m", "--minheap-multiplier", type=float)
 
 
 def getid() -> str:
@@ -87,7 +89,7 @@ def hfac_str(hfac: float) -> str:
 
 
 def get_heapsize(hfac: float, minheap: int) -> int:
-    return round(minheap * hfac)
+    return round(minheap * hfac * minheap_multiplier)
 
 
 def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> List[float]:
@@ -218,54 +220,64 @@ def run_one_hfac(
                               configs, runbms_dir, log_dir)
 
 
-def ensure_remote_dir(remotehost, log_dir):
-    if remotehost:
+def ensure_remote_dir(remote_host, log_dir):
+    if remote_host:
         log_dir = log_dir.resolve()
-        system("ssh {} mkdir -p {}".format(remotehost, log_dir))
+        system("ssh {} mkdir -p {}".format(remote_host, log_dir))
 
 
-def rsync(remotehost, log_dir):
-    if remotehost:
+def rsync(remote_host, log_dir):
+    if remote_host:
         log_dir = log_dir.resolve()
-        system("rsync -ae ssh {}/ {}:{}".format(log_dir, remotehost, log_dir))
+        system("rsync -ae ssh {}/ {}:{}".format(log_dir, remote_host, log_dir))
 
 
 def run(args):
     with tempfile.TemporaryDirectory(prefix="runbms-") as runbms_dir:
         logging.info("Temporary directory: {}".format(runbms_dir))
+        # Processing command lines args
         if args.get("which") != "runbms":
             return False
-        id = getid()
         prefix = args.get("id_prefix")
+        id = getid()
         if prefix:
             id = "{}-{}".format(prefix, id)
         print("Run id: {}".format(id))
         log_dir = args.get("LOG_DIR") / id
         log_dir.mkdir(parents=True, exist_ok=True)
-        global configuration
-        configuration = Configuration.from_file(args.get("CONFIG"))
-        with (log_dir / "runbms.yml").open("w") as fd:
-            configuration.save_to_file(fd)
         with (log_dir / "runbms_args.yml").open("w") as fd:
             yaml.dump(args, fd)
-        configuration.resolve_class()
         N = args.get("N")
         ns = args.get("n")
+        slice = args.get("slice")
+        # Load from configuration file
+        global configuration
+        configuration = Configuration.from_file(args.get("CONFIG"))
+        # Save metadata
+        with (log_dir / "runbms.yml").open("w") as fd:
+            configuration.save_to_file(fd)
+        configuration.resolve_class()
+        # Read from configuration, override with command line arguments if
+        # needed
         invocations = configuration.get("invocations")
         if args.get("invocations"):
             invocations = args.get("invocations")
-        heap_range = configuration.get("heaprange")
-        spread_factor = configuration.get("spreadfactor")
+        global minheap_multiplier
+        minheap_multiplier = configuration.get("minheap_multiplier")
+        if args.get("minheap_multiplier"):
+            minheap_multiplier = args.get("minheap_multiplier")
+        heap_range = configuration.get("heap_range")
+        spread_factor = configuration.get("spread_factor")
         suites = configuration.get("suites")
         benchmarks = configuration.get("benchmarks")
         configs = configuration.get("configs")
-        slice = args.get("slice")
-        remotehost = configuration.get("remotehost")
-        ensure_remote_dir(remotehost, log_dir)
+        remote_host = configuration.get("remote_host")
+
+        ensure_remote_dir(remote_host, log_dir)
         if slice:
             run_one_hfac(invocations, slice, suites, benchmarks,
                          configs, runbms_dir, log_dir)
-            rsync(remotehost, log_dir)
+            rsync(remote_host, log_dir)
             return True
 
         def run_N_ns(N, ns):
@@ -279,7 +291,7 @@ def run(args):
             for hfac in hfacs:
                 run_one_hfac(invocations, hfac, suites, benchmarks,
                              configs, runbms_dir, log_dir)
-                rsync(remotehost, log_dir)
+                rsync(remote_host, log_dir)
                 print()
 
         if len(ns) == 0:
