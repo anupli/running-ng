@@ -55,7 +55,7 @@ def run(args):
     configuration.resolve_class()
     for bms in configuration.get("benchmarks").values():
         for b in bms:
-            print("{}".format(b.name))
+            print("{}-{}".format(b.suite_name, b.name))
             for c in configuration.get("configs"):
                 jvm, mods = parse_config_str(configuration, c)
                 mod_b = b.attach_modifiers(mods)

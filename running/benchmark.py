@@ -10,8 +10,8 @@ from running import suite
 
 class JavaBenchmark(object):
     def __init__(self, suite_name: str, bm_name: str, jvm_args: List[str], progam_args: List[str], cp: List[str], env_args: Optional[Dict[str, str]] = None):
-        self.name = "{}-{}".format(suite_name, bm_name)
-        self.bm_name = bm_name
+        self.name = bm_name
+        self.suite_name = suite_name
         self.jvm_args = jvm_args
         self.progam_args = progam_args
         self.cp = cp
