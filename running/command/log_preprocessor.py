@@ -109,6 +109,11 @@ def calc_work_ipc(stats: Dict[str, float]):
             new_stats[ipc] = stats[k] / stats[cycles]
     return new_stats
 
+def stat_sort_helper(key: str, value: float):
+    if len(key.split(".")) > 1:
+        return key.split(".")[-2], -value
+    else:
+        return key, -value
 
 def process_lines(configuration: Configuration, lines: List[str]):
     new_lines = []
@@ -159,12 +164,7 @@ def process_lines(configuration: Configuration, lines: List[str]):
                 lambda accum, val: val(accum), funcs, stats)
             if len(new_stats):
                 new_stat_list = list(new_stats.items())
-                def sort_key(key: str, value: float):
-                    if len(key.split(".")) > 1:
-                        return key.split(".")[-2], -value
-                    else:
-                        return key, -value
-                new_stat_list.sort(key=sort_key)
+                new_stat_list.sort(key=lambda x: stat_sort_helper(x[0], x[1]))
                 new_names, new_values = list(zip(*new_stat_list))
                 new_lines.append("{}\n".format("\t".join(new_names)))
                 new_lines.append("{}\n".format(
