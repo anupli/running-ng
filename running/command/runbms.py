@@ -118,7 +118,7 @@ def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, runbms_dir
 
 def get_filename(bm: JavaBenchmark, hfac: float, size: int, config: str) -> str:
     return "{}.{}.{}.{}.log".format(
-        bm.name.replace("-", ""),
+        bm.bm_name,
         hfac_str(hfac),
         size,
         ".".join(config.split("|"))
@@ -176,7 +176,7 @@ def run_one_benchmark(
     log_dir: Path
 ):
     bm_name = bm.bm_name
-    print(bm.name, end=" ")
+    print(bm_name, end=" ")
     print(hfac_str(hfac), end=" ")
     size = get_heapsize(hfac, suite.get_minheap(bm_name))
     print(size, end=" ")
