@@ -70,11 +70,14 @@ def ratio_work_perf_event(event_name: str):
 def ratio_event(event_name: str):
     def inner(stats: Dict[str, float]):
         new_stats = deepcopy(stats)
-        gc = stats["{}.gc".format(event_name)]
-        mu = stats["{}.mu".format(event_name)]
-        total = gc + mu
-        new_stats["{}.gc.ratio".format(event_name)] = gc / total
-        new_stats["{}.mu.ratio".format(event_name)] = mu / total
+        gc_key = "{}.gc".format(event_name)
+        mu_key = "{}.mu".format(event_name)
+        if gc_key in stats and mu_key in stats:
+            gc = stats[gc_key]
+            mu = stats[mu_key]
+            total = gc + mu
+            new_stats["{}.ratio".format(gc_key)] = gc / total
+            new_stats["{}.ratio".format(mu_key)] = mu / total
         return new_stats
     return inner
 
@@ -84,10 +87,10 @@ def calc_ipc(stats: Dict[str, float]):
     for phase in ["mu", "gc"]:
         inst = stats.get("PERF_COUNT_HW_INSTRUCTIONS.{}".format(phase))
         cycles = stats.get("PERF_COUNT_HW_CPU_CYCLES.{}".format(phase))
-        if cycles == 0:
-            assert inst == 0
-            continue
         if inst is not None and cycles is not None:
+            if cycles == 0:
+                assert inst == 0
+                continue
             new_stats["INSTRUCTIONS_PER_CYCLE.{}".format(
                 phase)] = inst / cycles
     return new_stats
