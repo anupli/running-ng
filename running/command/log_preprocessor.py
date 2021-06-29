@@ -84,6 +84,9 @@ def calc_ipc(stats: Dict[str, float]):
     for phase in ["mu", "gc"]:
         inst = stats.get("PERF_COUNT_HW_INSTRUCTIONS.{}".format(phase))
         cycles = stats.get("PERF_COUNT_HW_CPU_CYCLES.{}".format(phase))
+        if cycles == 0:
+            assert inst == 0
+            continue
         if inst is not None and cycles is not None:
             new_stats["INSTRUCTIONS_PER_CYCLE.{}".format(
                 phase)] = inst / cycles
