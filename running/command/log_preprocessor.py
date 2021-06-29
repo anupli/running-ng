@@ -74,7 +74,7 @@ def ratio_event(event_name: str):
         mu = stats["{}.mu".format(event_name)]
         total = gc + mu
         new_stats["{}.gc.ratio".format(event_name)] = gc / total
-        new_stats["{}.mu.ratio".format(event_name)] = gc / total
+        new_stats["{}.mu.ratio".format(event_name)] = mu / total
         return new_stats
     return inner
 
