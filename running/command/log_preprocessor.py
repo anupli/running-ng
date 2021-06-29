@@ -159,7 +159,12 @@ def process_lines(configuration: Configuration, lines: List[str]):
                 lambda accum, val: val(accum), funcs, stats)
             if len(new_stats):
                 new_stat_list = list(new_stats.items())
-                new_stat_list.sort(key=lambda x: (x[0].split(".")[-2], -x[1]))
+                def sort_key(key: str, value: float):
+                    if len(key.split(".")) > 1:
+                        return key.split(".")[-2], -value
+                    else:
+                        return key, -value
+                new_stat_list.sort(key=sort_key)
                 new_names, new_values = list(zip(*new_stat_list))
                 new_lines.append("{}\n".format("\t".join(new_names)))
                 new_lines.append("{}\n".format(
