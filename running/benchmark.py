@@ -49,7 +49,7 @@ class JavaBenchmark(object):
         return cmd
 
     def get_env_str(self) -> str:
-        return " ".join(["{}={}".format(k, v) for (k, v) in self.env_args.items()])
+        return " ".join(["{}=\"{}\"".format(k, v) for (k, v) in self.env_args.items()])
 
     def to_string(self, executable: Union[str, Path]) -> str:
         return "{} {}".format(
