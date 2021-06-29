@@ -1,4 +1,4 @@
-from running.command.log_preprocessor import filter_stats, reduce_stats, sum_perf_event, calc_ipc, ratio_perf_event
+from running.command.log_preprocessor import filter_stats, reduce_stats, sum_work_perf_event, calc_work_ipc, ratio_work_perf_event
 
 
 def test_filter():
@@ -20,7 +20,7 @@ def test_reduce():
 
 
 def test_sum_perf():
-    assert sum_perf_event("PERF_COUNT_HW_CPU_CYCLES")({
+    assert sum_work_perf_event("PERF_COUNT_HW_CPU_CYCLES")({
         "work.ScanUniverseRoots.PERF_COUNT_HW_CPU_CYCLES.total": 1,
         "work.PrepareCollector.PERF_COUNT_HW_CPU_CYCLES.total": 2,
         "work.ScanUniverseRoots.PERF_COUNT_HW_CACHE_L1D:MISS.total": 3
@@ -33,15 +33,15 @@ def test_ratio_perf():
         "work.PrepareCollector.PERF_COUNT_HW_CPU_CYCLES.total": 3,
         "work.foo.PERF_COUNT_HW_CPU_CYCLES.total": 5
     }
-    stats = sum_perf_event("PERF_COUNT_HW_CPU_CYCLES")(stats)
-    ratios = ratio_perf_event("PERF_COUNT_HW_CPU_CYCLES")(stats)
+    stats = sum_work_perf_event("PERF_COUNT_HW_CPU_CYCLES")(stats)
+    ratios = ratio_work_perf_event("PERF_COUNT_HW_CPU_CYCLES")(stats)
     assert ratios["work.ScanUniverseRoots.PERF_COUNT_HW_CPU_CYCLES.ratio"] == 0.2
     assert ratios["work.PrepareCollector.PERF_COUNT_HW_CPU_CYCLES.ratio"] == 0.3
     assert ratios["work.foo.PERF_COUNT_HW_CPU_CYCLES.ratio"] == 0.5
 
 
 def test_ipc():
-    ipcs = calc_ipc({
+    ipcs = calc_work_ipc({
         "work.foo.PERF_COUNT_HW_CPU_CYCLES.total": 20,
         "work.foo.PERF_COUNT_HW_INSTRUCTIONS.total": 4,
         "work.bar.PERF_COUNT_HW_CPU_CYCLES.total": 10,

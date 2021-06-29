@@ -3,10 +3,10 @@ from pathlib import Path
 import shutil
 import gzip
 import enum
-from typing import Callable, Dict, List
+from typing import Any, Callable, Dict, List
 import functools
 import re
-
+from running.config import Configuration
 
 MMTk_HEADER = "============================ MMTk Statistics Totals ============================"
 MMTk_FOOTER = "------------------------------ End MMTk Statistics -----------------------------"
@@ -22,7 +22,9 @@ class EditingMode(enum.Enum):
 def setup_parser(subparsers):
     f = subparsers.add_parser("preproc")
     f.set_defaults(which="preproc")
-    f.add_argument("FOLDER", type=Path)
+    f.add_argument("CONFIG", type=Path)
+    f.add_argument("SOURCE", type=Path)
+    f.add_argument("TARGET", type=Path)
 
 
 def filter_stats(predicate: Callable[[str], bool]):
@@ -44,13 +46,13 @@ def reduce_stats(pattern: str, new_column: str, func):
     return inner
 
 
-def sum_perf_event(event_name):
+def sum_work_perf_event(event_name):
     pattern = "work\\.\\w+\\.{}\\.total".format(event_name)
     new_column = "work.{}.total".format(event_name)
     return reduce_stats(pattern, new_column, lambda x, y: x + y)
 
 
-def ratio_perf_event(event_name: str):
+def ratio_work_perf_event(event_name: str):
     pattern = "work\\.\\w+\\.{}\\.total".format(event_name)
     aggregated_column = "work.{}.total".format(event_name)
     compiled = re.compile(pattern)
@@ -65,7 +67,30 @@ def ratio_perf_event(event_name: str):
     return inner
 
 
+def ratio_event(event_name: str):
+    def inner(stats: Dict[str, float]):
+        new_stats = deepcopy(stats)
+        gc = stats["{}.gc".format(event_name)]
+        mu = stats["{}.mu".format(event_name)]
+        total = gc + mu
+        new_stats["{}.gc.ratio".format(event_name)] = gc / total
+        new_stats["{}.mu.ratio".format(event_name)] = gc / total
+        return new_stats
+    return inner
+
+
 def calc_ipc(stats: Dict[str, float]):
+    new_stats = deepcopy(stats)
+    for phase in ["mu", "gc"]:
+        inst = stats.get("PERF_COUNT_HW_INSTRUCTIONS.{}".format(phase))
+        cycles = stats.get("PERF_COUNT_HW_CPU_CYCLES.{}".format(phase))
+        if inst is not None and cycles is not None:
+            new_stats["INSTRUCTIONS_PER_CYCLE.{}".format(
+                phase)] = inst / cycles
+    return new_stats
+
+
+def calc_work_ipc(stats: Dict[str, float]):
     pattern = "work\\.\\w+\\.PERF_COUNT_HW_INSTRUCTIONS\\.total"
     compiled = re.compile(pattern)
     new_stats = deepcopy(stats)
@@ -79,10 +104,35 @@ def calc_ipc(stats: Dict[str, float]):
     return new_stats
 
 
-def process_lines(lines: List[str]):
+def process_lines(configuration: Configuration, lines: List[str]):
     new_lines = []
     editing = EditingMode.NotEditing
     names = []
+    funcs: List[Any]
+    funcs = []
+    if configuration.get("preprocessing") is None:
+        funcs = []
+    else:
+        for f in configuration.get("preprocessing"):
+            if f["name"] == "sum_work_perf_event":
+                for v in f["val"].split(","):
+                    funcs.append(sum_work_perf_event(v))
+            elif f["name"] == "ratio_work_perf_event":
+                for v in f["val"].split(","):
+                    funcs.append(ratio_work_perf_event(v))
+            elif f["name"] == "calc_work_ipc":
+                funcs.append(calc_work_ipc)
+            elif f["name"] == "ratio_event":
+                for v in f["val"].split(","):
+                    funcs.append(ratio_event(v))
+            elif f["name"] == "filter_stats":
+                patterns_to_keep = f["val"].split(",")
+                funcs.append(filter_stats(lambda n: any(
+                    [p in n for p in patterns_to_keep])))
+            elif f["name"] == "calc_ipc":
+                funcs.append(calc_ipc)
+            else:
+                raise ValueError("Not supported preprocessing functionality")
     for line in lines:
         if line.strip() == MMTk_HEADER:
             new_lines.append(line)
@@ -99,22 +149,8 @@ def process_lines(lines: List[str]):
         elif editing == EditingMode.Values:
             values = map(float, line.strip().split("\t"))
             stats = dict(zip(names, values))
-            _event_names = "PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1"
-            event_names = list(
-                map(lambda x: x.split(",")[0], _event_names.split(";")))
-            _more_event_names = "MEM_INST_RETIRED:ALL_LOADS,0,-1;MEM_INST_RETIRED:ALL_STORES,0,-1"
-            more_event_names = list(
-                map(lambda x: x.split(",")[0], _more_event_names.split(";")))
-            event_names.extend(more_event_names)
-            fs = []
-            for e in event_names:
-                fs.append(sum_perf_event(e))
-                fs.append(ratio_perf_event(e))
-                fs.append(calc_ipc)
-            fs.append(filter_stats(lambda n: (
-                "INSTRUCTIONS_PER_CYCLE" in n or "ratio" in n)))
             new_stats = functools.reduce(
-                lambda accum, val: val(accum), fs, stats)
+                lambda accum, val: val(accum), funcs, stats)
             if len(new_stats):
                 new_stat_list = list(new_stats.items())
                 new_stat_list.sort(key=lambda x: (x[0].split(".")[-2], -x[1]))
@@ -134,25 +170,26 @@ def process_lines(lines: List[str]):
     return new_lines
 
 
-def process_one_file(logfile: Path):
-    original = logfile.with_suffix(".gz.bak")
-    if not original.exists():
-        shutil.copy2(str(logfile), str(original))
+def process_one_file(configuration: Configuration, original: Path, targetfile: Path):
     # XXX DO NOT COPY the content of the log file
     # Tab might not be preserved (especially around line breaks)
     # https://unix.stackexchange.com/questions/324676/output-tab-character-on-terminal-window
     with gzip.open(original, "rt") as old:
-        with gzip.open(logfile, "wt") as new:
-            new.writelines(process_lines(old.readlines()))
+        with gzip.open(targetfile, "wt") as new:
+            new.writelines(process_lines(configuration, old.readlines()))
 
 
-def process(folder: Path):
-    for file in folder.glob("*.log.gz"):
-        process_one_file(file)
+def process(configuration: Configuration, source: Path, target: Path):
+    for file in source.glob("*.log.gz"):
+        process_one_file(configuration, file, target / file.name)
 
 
 def run(args):
     if args.get("which") != "preproc":
         return False
-    process(args.get("FOLDER"))
+    configuration = Configuration.from_file(args.get("CONFIG"))
+    source = args.get("SOURCE")
+    target = args.get("TARGET")
+    target.mkdir(parents=True, exist_ok=True)
+    process(configuration, source, target)
     return True
