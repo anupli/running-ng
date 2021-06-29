@@ -309,6 +309,6 @@ def run(args):
         if len(ns) == 0:
             fillin(run_N_ns, round(math.log2(N)))
         else:
-            run(N, ns)
+            run_N_ns(N, ns)
 
         return True
