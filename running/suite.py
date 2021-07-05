@@ -73,8 +73,8 @@ class DaCapo(JavaBenchmarkSuite):
             progam_args = ["Harness", "-c", self.callback]
         else:
             cp = []
-            jvm_args = ["-jar", str(self.path)]
-            progam_args = []
+            jvm_args = []
+            progam_args = ["-jar", str(self.path)]
         progam_args.extend(["-n", str(self.timing_iteration), bm_name])
         return JavaBenchmark(self.name, bm_name, jvm_args, progam_args, cp)
 

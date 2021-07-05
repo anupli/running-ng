@@ -6,6 +6,7 @@ from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
 from pathlib import Path
 from copy import deepcopy
 from running import suite
+import os
 
 
 class JavaBenchmark(object):
@@ -21,7 +22,7 @@ class JavaBenchmark(object):
             self.env_args = env_args
 
     def get_classpath_args(self) -> List[str]:
-        return ["-cp", ":".join(self.cp) if self.cp else ""]
+        return ["-cp", ":".join(self.cp)] if self.cp else []
 
     def __str__(self) -> str:
         return self.to_string("java")
@@ -67,9 +68,11 @@ class JavaBenchmark(object):
             return ""
         else:
             try:
+                env_args = os.environ.copy()
+                env_args.update(self.env_args)
                 p = subprocess.run(
                     cmd,
-                    env=self.env_args,
+                    env=env_args,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     timeout=timeout,
