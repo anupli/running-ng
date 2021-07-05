@@ -12,7 +12,7 @@ def setup_parser(subparsers):
     f.add_argument("CONFIG", type=Path)
 
 
-def minheap_one_bm(jvm: JVM, bm: JavaBenchmark, heap: int = 2 ** 7) -> float:
+def minheap_one_bm(jvm: JVM, bm: JavaBenchmark, heap: int, timeout: int) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2
@@ -25,12 +25,8 @@ def minheap_one_bm(jvm: JVM, bm: JavaBenchmark, heap: int = 2 ** 7) -> float:
             val="-Xms{} -Xmx{}".format(size_str, size_str)
         )
         print(size_str, end="", flush=True)
-        two_iter = ProgramArg(
-            name="twoiter",
-            val="-n 2"
-        )
-        bm_with_heapsize = bm.attach_modifiers([heapsize, two_iter])
-        output = bm_with_heapsize.run(jvm, timeout=120)
+        bm_with_heapsize = bm.attach_modifiers([heapsize])
+        output = bm_with_heapsize.run(jvm, timeout=timeout)
         if "PASSED" in output:
             print(" o ", end="", flush=True)
             minh = mid
@@ -53,12 +49,16 @@ def run(args):
         return False
     configuration = Configuration.from_file(args.get("CONFIG"))
     configuration.resolve_class()
-    for bms in configuration.get("benchmarks").values():
+    suites = configuration.get("suites")
+    maxheap = configuration.get("maxheap")
+    for suite_name, bms in configuration.get("benchmarks").items():
+        suite = suites[suite_name]
         for b in bms:
             print("{}-{}".format(b.suite_name, b.name))
+            timeout = suite.get_timeout(b.name)
             for c in configuration.get("configs"):
                 jvm, mods = parse_config_str(configuration, c)
                 mod_b = b.attach_modifiers(mods)
-                minheap = minheap_one_bm(jvm, mod_b)
+                minheap = minheap_one_bm(jvm, mod_b, maxheap, timeout)
                 print("minheap {}".format(minheap))
     return True

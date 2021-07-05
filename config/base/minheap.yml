@@ -2,3 +2,5 @@ includes:
   - "./jvms.yml"
   - "./suites.yml"
   - "./modifiers.yml"
+
+maxheap: 4096
