@@ -40,6 +40,12 @@ class JavaBenchmarkSuite(object):
     def get_timeout(self, bm_name: str) -> int:
         raise NotImplementedError()
 
+    def is_oom(self, output: str) -> bool:
+        for pattern in ["Allocation Failed", "OutOfMemoryError", "ran out of memory"]:
+            if pattern in output:
+                return True
+        return False
+
 
 @register(JavaBenchmarkSuite)
 class DaCapo(JavaBenchmarkSuite):

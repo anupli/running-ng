@@ -1,8 +1,9 @@
 from running.config import Configuration
 from pathlib import Path
 from running.jvm import JVM
-from running.modifier import JVMArg, ProgramArg
+from running.modifier import JVMArg
 from running.benchmark import JavaBenchmark
+from running.suite import JavaBenchmarkSuite
 from running.util import parse_config_str
 
 
@@ -12,12 +13,13 @@ def setup_parser(subparsers):
     f.add_argument("CONFIG", type=Path)
 
 
-def minheap_one_bm(jvm: JVM, bm: JavaBenchmark, heap: int, timeout: int) -> float:
+def minheap_one_bm(suite: JavaBenchmarkSuite, jvm: JVM, bm: JavaBenchmark, heap: int) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2
     minh = float('inf')
     print("\t{} ".format(jvm.name), end="")
+    timeout = suite.get_timeout(bm.name)
     while hi - lo > 1:
         size_str = "{}M".format(mid)
         heapsize = JVMArg(
@@ -33,10 +35,9 @@ def minheap_one_bm(jvm: JVM, bm: JavaBenchmark, heap: int, timeout: int) -> floa
             hi = mid
             mid = (lo + hi) // 2
         else:
-            for pattern in ["Allocation Failed", "OutOfMemoryError", "ran out of memory"]:
-                if pattern in output:
-                    print(" x ", end="", flush=True)
-                    break
+            if suite.is_oom(output):
+                print(" x ", end="", flush=True)
+                break
             else:
                 print(" ? ", end="", flush=True)
             lo = mid
@@ -55,10 +56,9 @@ def run(args):
         suite = suites[suite_name]
         for b in bms:
             print("{}-{}".format(b.suite_name, b.name))
-            timeout = suite.get_timeout(b.name)
             for c in configuration.get("configs"):
                 jvm, mods = parse_config_str(configuration, c)
                 mod_b = b.attach_modifiers(mods)
-                minheap = minheap_one_bm(jvm, mod_b, maxheap, timeout)
+                minheap = minheap_one_bm(suite, jvm, mod_b, maxheap)
                 print("minheap {}".format(minheap))
     return True
