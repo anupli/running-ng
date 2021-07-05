@@ -69,14 +69,12 @@ class DaCapo(JavaBenchmarkSuite):
     def get_benchmark(self, bm_name: str) -> 'JavaBenchmark':
         if self.callback:
             cp = [str(self.path)]
-            jvm_args = []
             progam_args = ["Harness", "-c", self.callback]
         else:
             cp = []
-            jvm_args = []
             progam_args = ["-jar", str(self.path)]
         progam_args.extend(["-n", str(self.timing_iteration), bm_name])
-        return JavaBenchmark(self.name, bm_name, jvm_args, progam_args, cp)
+        return JavaBenchmark(self.name, bm_name, [], progam_args, cp)
 
     def get_minheap(self, bm_name: str) -> int:
         if bm_name not in self.minheap:
