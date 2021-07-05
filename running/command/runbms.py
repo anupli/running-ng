@@ -190,6 +190,7 @@ def run_one_benchmark(
         val="-Xms{} -Xmx{}".format(size_str, size_str)
     )
     bm_with_heapsize = bm.attach_modifiers([heapsize])
+    oomed_count: DefaultDict[str, int]
     oomed_count = DefaultDict(int)
     for i in range(0, invocations):
         print(i, end="", flush=True)
