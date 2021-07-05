@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List
+from typing import DefaultDict, Dict, List, Optional
 from running.suite import JavaBenchmarkSuite, is_dry_run
 from running.benchmark import JavaBenchmark
 from running.config import Configuration
@@ -19,6 +19,7 @@ import yaml
 configuration: Configuration
 minheap_multiplier: float
 remote_host: str
+skip_oom: Optional[int]
 
 
 def setup_parser(subparsers):
@@ -32,6 +33,7 @@ def setup_parser(subparsers):
     f.add_argument("-s", "--slice", type=float)
     f.add_argument("-p", "--id-prefix")
     f.add_argument("-m", "--minheap-multiplier", type=float)
+    f.add_argument("--skip-oom", type=int)
 
 
 def getid() -> str:
@@ -188,9 +190,13 @@ def run_one_benchmark(
         val="-Xms{} -Xmx{}".format(size_str, size_str)
     )
     bm_with_heapsize = bm.attach_modifiers([heapsize])
+    oomed_count = DefaultDict(int)
     for i in range(0, invocations):
         print(i, end="", flush=True)
         for j, c in enumerate(configs):
+            if skip_oom is not None and oomed_count[c] >= skip_oom:
+                print(".", end="", flush=True)
+                continue
             log_filename = get_filename(bm, hfac, size, c)
             logging.debug("Running with log filename {}".format(log_filename))
             if is_dry_run():
@@ -202,6 +208,8 @@ def run_one_benchmark(
                     output = run_benchmark_with_config(
                         c, bm_with_heapsize, timeout, runbms_dir, fd
                     )
+            if suite.is_oom(output):
+                oomed_count[c] += 1
             if "PASSED" in output:
                 print(chr(ord('a')+j), end="", flush=True)
             else:
@@ -262,6 +270,8 @@ def run(args):
         N = args.get("N")
         ns = args.get("n")
         slice = args.get("slice")
+        global skip_oom
+        skip_oom = args.get("skip_oom")
         # Load from configuration file
         global configuration
         configuration = Configuration.from_file(args.get("CONFIG"))
