@@ -283,6 +283,8 @@ def run(args):
         slice = args.get("slice")
         global skip_oom
         skip_oom = args.get("skip_oom")
+        global skip_timeout
+        skip_timeout = args.get("skip_timeout")
         # Load from configuration file
         global configuration
         configuration = Configuration.from_file(args.get("CONFIG"))
