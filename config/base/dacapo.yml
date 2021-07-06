@@ -44,7 +44,7 @@ suites:
     path: /usr/share/benchmarks/dacapo/dacapo-9.12-MR1-bach-java6.jar
     timing_iteration: 3
     timeout: 120
-  dacapo-chopin-69a704e:
+  dacapochopin-69a704e:
     type: DaCapo
     release: evaluation
     path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-69a704e.jar

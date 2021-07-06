@@ -6,7 +6,7 @@ modifiers:
     type: JVMArg
     val: "-XX:-TieredCompilation -Xcomp"
     excludes:
-      dacapo-chopin-69a704e:
+      dacapochopin-69a704e:
         - tradebeans
         - tradesoap
   ms:
