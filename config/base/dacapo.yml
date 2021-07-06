@@ -60,10 +60,16 @@ suites:
       h2o: 73
       jme: 55
       jython: 37
+      # Java version '15.0.2' is incompatable with kafka: Kafka currently requires Java 8 due to 'java.lang.NoClassDefFoundError: javax/activation/DataSource' error for more recent Java releases.
+      # kafka: inf
       luindex: 42
       lusearch: 23
       pmd: 243
       sunflow: 33
+      # Doesn't work with -XX:-TieredCompilation -Xcomp
+      # tradebeans: 
+      # Doesn't work with -XX:-TieredCompilation -Xcomp
+      # tradesoap:
       tomcat: 25
       xalan: 9
       zxing: 96

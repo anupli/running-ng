@@ -13,7 +13,7 @@ class Modifier(object):
             self.value_opts = []
         if "-" in self.name:
             raise ValueError(
-                "Modifier {} has - in its name. - is reserved for value modifiers.".format(self.name))
+                "Modifier {} has - in its name. - is reserved for value options.".format(self.name))
         self.__original_kwargs = kwargs
         self._kwargs = copy.deepcopy(kwargs)
         if not value_opts:

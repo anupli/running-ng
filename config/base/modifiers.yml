@@ -1,10 +1,34 @@
 modifiers:
-  sgc:
-    type: JVMArg
-    val: "-XX:+UseSerialGC"
   tph:
     type: JVMArg
     val: "-XX:+UseThirdPartyHeap"
+  c2:
+    type: JVMArg
+    val: "-XX:-TieredCompilation -Xcomp"
+  ms:
+    type: JVMArg
+    val: "-XX:MetaspaceSize=500M -XX:+DisableExplicitGC"
+  s:
+    type: JVMArg
+    val: "-server"
+  # Select GC algorithm
+  ## Rust MMTk
+  mmtk_gc:
+    type: EnvVar
+    val: "MMTK_PLAN={0}"
+  ss:
+    type: EnvVar
+    val: "MMTK_PLAN=SemiSpace"
+  ix:
+    type: EnvVar
+    val: "MMTK_PLAN=Immix"
+  ## OpenJDK HotSpot
+  hotspot_gc:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops -XX:+UnlockExperimentalVMOptions -XX:+Use{0}GC"
+  sgc:
+    type: JVMArg
+    val: "-XX:+UseSerialGC"
   g1:
     type: JVMArg
     val: "-XX:-UseCompressedOops -XX:+UseG1GC"
@@ -14,18 +38,3 @@ modifiers:
   cms:
     type: JVMArg
     val: "-XX:-UseCompressedOops -XX:+UseConcMarkSweepGC -XX:TLABSize=32K -XX:-ResizeTLAB"
-  c2:
-    type: JVMArg
-    val: "-XX:-TieredCompilation -Xcomp"
-  ms:
-    type: JVMArg
-    val: "-XX:MetaspaceSize=500M -XX:+DisableExplicitGC"
-  ss:
-    type: EnvVar
-    val: "MMTK_PLAN=SemiSpace"
-  ix:
-    type: EnvVar
-    val: "MMTK_PLAN=Immix"
-  s:
-    type: JVMArg
-    val: "-server"
