@@ -6,6 +6,7 @@ modifiers:
     type: JVMArg
     val: "-XX:-TieredCompilation -Xcomp"
     excludes:
+      # These two benchmarks exit with code 1
       dacapochopin-69a704e:
         - tradebeans
         - tradesoap
