@@ -9,28 +9,29 @@ class Modifier(object):
 
     def __init__(self, value_opts=None, **kwargs):
         self.name = kwargs["name"]
-        if value_opts is None:
-            self.value_opts = []
+        self.value_opts = value_opts
         if "-" in self.name:
             raise ValueError(
-                "Modifier {} has - in its name. - is reserved for value options.".format(self.name))
+                "Modifier {} has - in its name. - is reserved for value modifiers.".format(self.name))
         self.__original_kwargs = kwargs
         self._kwargs = copy.deepcopy(kwargs)
-        if not value_opts:
-            return
-        # Expand value opts
-        for k, v in kwargs.items():
-            try:
-                self._kwargs[k] = v.format(*value_opts)
-            except IndexError:
-                pass
+        self.excludes = kwargs.get("excludes", {})
+        if self.value_opts is not None:
+            # Expand value opts
+            for k, v in kwargs.items():
+                if type(v) is not str:
+                    continue
+                try:
+                    self._kwargs[k] = v.format(*value_opts)
+                except IndexError:
+                    pass
 
     @staticmethod
     def from_config(name: str, config: Dict[str, str]) -> Any:
         return Modifier.CLS_MAPPING[config["type"]](name=name, **config)
 
     def apply_value_opts(self, value_opts):
-        return type(self)(value_opts, **self.__original_kwargs)
+        return type(self)(value_opts = value_opts, **self.__original_kwargs)
 
     def __str__(self) -> str:
         return "Modifier {}".format(self.name)

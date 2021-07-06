@@ -30,6 +30,9 @@ class JavaBenchmark(object):
     def attach_modifiers(self, modifiers: List[Modifier]) -> 'JavaBenchmark':
         jp = deepcopy(self)
         for m in modifiers:
+            if self.suite_name in m.excludes:
+                if self.name in m.excludes[self.suite_name]:
+                    continue
             if type(m) == JVMArg:
                 jp.jvm_args.extend(m.val)
             elif type(m) == EnvVar:

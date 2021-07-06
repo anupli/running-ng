@@ -5,6 +5,10 @@ modifiers:
   c2:
     type: JVMArg
     val: "-XX:-TieredCompilation -Xcomp"
+    excludes:
+      dacapo-chopin-69a704e:
+        - tradebeans
+        - tradesoap
   ms:
     type: JVMArg
     val: "-XX:MetaspaceSize=500M -XX:+DisableExplicitGC"

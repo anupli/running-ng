@@ -37,7 +37,6 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, jvm: JVM, bm: JavaBenchmark, heap:
         else:
             if suite.is_oom(output):
                 print(" x ", end="", flush=True)
-                break
             else:
                 print(" ? ", end="", flush=True)
             lo = mid

@@ -66,10 +66,8 @@ suites:
       lusearch: 23
       pmd: 243
       sunflow: 33
-      # Doesn't work with -XX:-TieredCompilation -Xcomp
-      # tradebeans: 
-      # Doesn't work with -XX:-TieredCompilation -Xcomp
-      # tradesoap:
+      tradebeans: 169
+      tradesoap: 133
       tomcat: 25
       xalan: 9
       zxing: 96
