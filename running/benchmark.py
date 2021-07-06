@@ -1,13 +1,19 @@
 import subprocess
 import sys
-from typing import List, Optional, Union, Dict
+from typing import List, Optional, Tuple, Union, Dict
 from running.jvm import JVM
 from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
 from pathlib import Path
 from copy import deepcopy
 from running import suite
 import os
+from enum import Enum
 
+class SubprocessrExit(Enum):
+    Normal = 1
+    Error = 2
+    Timeout = 3
+    Dryrun = 4
 
 class JavaBenchmark(object):
     def __init__(self, suite_name: str, bm_name: str, jvm_args: List[str], progam_args: List[str], cp: List[str], env_args: Optional[Dict[str, str]] = None):
@@ -61,14 +67,14 @@ class JavaBenchmark(object):
             " ".join([str(x) for x in self.get_full_args(executable)])
         )
 
-    def run(self, jvm: JVM, timeout: int = None, cwd: Path = None) -> str:
+    def run(self, jvm: JVM, timeout: int = None, cwd: Path = None) -> Tuple[str, SubprocessrExit]:
         cmd = self.get_full_args(jvm.get_executable())
         if suite.is_dry_run():
             print(
                 self.to_string(jvm.get_executable()),
                 file=sys.stderr
             )
-            return ""
+            return "", SubprocessrExit.Dryrun
         else:
             try:
                 env_args = os.environ.copy()
@@ -81,6 +87,8 @@ class JavaBenchmark(object):
                     timeout=timeout,
                     cwd=cwd
                 )
-                return p.stdout.decode("utf-8")
-            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
-                return e.stdout.decode("utf-8")
+                return p.stdout.decode("utf-8"), SubprocessrExit.Normal
+            except subprocess.CalledProcessError as e:
+                return e.stdout.decode("utf-8"), SubprocessrExit.Error
+            except subprocess.TimeoutExpired as e:
+                return e.stdout.decode("utf-8"), SubprocessrExit.Timeout

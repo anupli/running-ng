@@ -1,7 +1,7 @@
 import logging
-from typing import DefaultDict, Dict, List, Optional
+from typing import DefaultDict, Dict, List, Optional, Tuple
 from running.suite import JavaBenchmarkSuite, is_dry_run
-from running.benchmark import JavaBenchmark
+from running.benchmark import JavaBenchmark, SubprocessrExit
 from running.config import Configuration
 from pathlib import Path
 from running.util import parse_config_str
@@ -20,6 +20,7 @@ configuration: Configuration
 minheap_multiplier: float
 remote_host: str
 skip_oom: Optional[int]
+skip_timeout: Optional[int]
 
 
 def setup_parser(subparsers):
@@ -34,6 +35,7 @@ def setup_parser(subparsers):
     f.add_argument("-p", "--id-prefix")
     f.add_argument("-m", "--minheap-multiplier", type=float)
     f.add_argument("--skip-oom", type=int)
+    f.add_argument("--skip-timeout", type=int)
 
 
 def getid() -> str:
@@ -103,19 +105,19 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
     return [spread(spread_factor, N, n)/divisor + start for n in ns]
 
 
-def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, runbms_dir: Path, fd) -> str:
+def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, runbms_dir: Path, fd) -> Tuple[str, SubprocessrExit]:
     jvm, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     prologue = get_log_prologue(jvm, mod_b)
     if fd:
         fd.write(prologue)
-    output = mod_b.run(jvm, timeout, cwd=runbms_dir)
+    output, exit_status = mod_b.run(jvm, timeout, cwd=runbms_dir)
     if fd:
         fd.write(output)
     epilogue = get_log_epilogue(jvm, mod_b)
     if fd:
         fd.write(epilogue)
-    return output
+    return output, exit_status
 
 
 def get_filename(bm: JavaBenchmark, hfac: float, size: int, config: str) -> str:
@@ -192,25 +194,33 @@ def run_one_benchmark(
     bm_with_heapsize = bm.attach_modifiers([heapsize])
     oomed_count: DefaultDict[str, int]
     oomed_count = DefaultDict(int)
+    timeout_count: DefaultDict[str, int]
+    timeout_count = DefaultDict(int)
     for i in range(0, invocations):
         print(i, end="", flush=True)
         for j, c in enumerate(configs):
             if skip_oom is not None and oomed_count[c] >= skip_oom:
                 print(".", end="", flush=True)
                 continue
+            if skip_timeout is not None and timeout_count[c] >= skip_timeout:
+                print(".", end="", flush=True)
+                continue
             log_filename = get_filename(bm, hfac, size, c)
             logging.debug("Running with log filename {}".format(log_filename))
             if is_dry_run():
-                output = run_benchmark_with_config(
+                output, exit_status = run_benchmark_with_config(
                     c, bm_with_heapsize, timeout, runbms_dir, None
                 )
+                assert exit_status is SubprocessrExit.Dryrun
             else:
                 with (log_dir / log_filename).open("a") as fd:
-                    output = run_benchmark_with_config(
+                    output, exit_status = run_benchmark_with_config(
                         c, bm_with_heapsize, timeout, runbms_dir, fd
                     )
             if suite.is_oom(output):
                 oomed_count[c] += 1
+            if exit_status is SubprocessrExit.Timeout:
+                timeout_count[c] += 1
             if "PASSED" in output:
                 print(chr(ord('a')+j), end="", flush=True)
             else:
