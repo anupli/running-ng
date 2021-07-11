@@ -1,6 +1,5 @@
 from copy import deepcopy
 from pathlib import Path
-import shutil
 import gzip
 import enum
 from typing import Any, Callable, Dict, List
@@ -109,11 +108,13 @@ def calc_work_ipc(stats: Dict[str, float]):
             new_stats[ipc] = stats[k] / stats[cycles]
     return new_stats
 
+
 def stat_sort_helper(key: str, value: float):
     if len(key.split(".")) > 1:
         return key.split(".")[-2], -value
     else:
         return key, -value
+
 
 def process_lines(configuration: Configuration, lines: List[str]):
     new_lines = []

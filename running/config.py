@@ -1,7 +1,7 @@
 from typing import Any, Dict
 import yaml
-from running.suite import JavaBenchmarkSuite
-from running.jvm import JVM
+from running.suite import BenchmarkSuite
+from running.runner import Runner
 from running.modifier import Modifier
 from pathlib import Path
 import functools
@@ -14,9 +14,9 @@ def load_class(cls, config):
 
 
 KEY_CLASS_MAPPING = {
-    "suites": JavaBenchmarkSuite,
+    "suites": BenchmarkSuite,
     "modifiers": Modifier,
-    "jvms": JVM
+    "runners": Runner
 }
 
 

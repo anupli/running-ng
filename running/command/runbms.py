@@ -1,13 +1,13 @@
 import logging
 from typing import DefaultDict, Dict, List, Optional, Tuple
-from running.suite import JavaBenchmarkSuite, is_dry_run
-from running.benchmark import JavaBenchmark, SubprocessrExit
+from running.suite import BenchmarkSuite, is_dry_run
+from running.benchmark import Benchmark, SubprocessrExit
 from running.config import Configuration
 from pathlib import Path
 from running.util import parse_config_str
 import socket
 from datetime import datetime
-from running.jvm import JVM
+from running.runner import JVM
 from running.modifier import JVMArg
 import tempfile
 import subprocess
@@ -105,7 +105,7 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
     return [spread(spread_factor, N, n)/divisor + start for n in ns]
 
 
-def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, runbms_dir: Path, fd) -> Tuple[str, SubprocessrExit]:
+def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runbms_dir: Path, fd) -> Tuple[str, SubprocessrExit]:
     jvm, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     prologue = get_log_prologue(jvm, mod_b)
@@ -120,7 +120,7 @@ def run_benchmark_with_config(c: str, b: JavaBenchmark, timeout: int, runbms_dir
     return output, exit_status
 
 
-def get_filename(bm: JavaBenchmark, hfac: float, size: int, config: str) -> str:
+def get_filename(bm: Benchmark, hfac: float, size: int, config: str) -> str:
     return "{}.{}.{}.{}.{}.log".format(
         bm.name,
         hfac_str(hfac),
@@ -130,7 +130,7 @@ def get_filename(bm: JavaBenchmark, hfac: float, size: int, config: str) -> str:
     )
 
 
-def get_log_epilogue(jvm: JVM, bm: JavaBenchmark) -> str:
+def get_log_epilogue(jvm: JVM, bm: Benchmark) -> str:
     return ""
 
 
@@ -142,7 +142,7 @@ def hz_to_ghz(hzstr: str) -> str:
     return "{:.2f} GHz".format(int(hzstr) / 1000 / 1000)
 
 
-def get_log_prologue(jvm: JVM, bm: JavaBenchmark) -> str:
+def get_log_prologue(jvm: JVM, bm: Benchmark) -> str:
     output = "\n-----\n"
     output += "mkdir -p PLOTTY_WORKAROUND; timedrun "
     output += bm.to_string(jvm.get_executable())
@@ -173,8 +173,8 @@ def get_log_prologue(jvm: JVM, bm: JavaBenchmark) -> str:
 
 def run_one_benchmark(
     invocations: int,
-    suite: JavaBenchmarkSuite,
-    bm: JavaBenchmark,
+    suite: BenchmarkSuite,
+    bm: Benchmark,
     hfac: float,
     configs: List[str],
     runbms_dir: Path,
@@ -221,10 +221,18 @@ def run_one_benchmark(
                 oomed_count[c] += 1
             if exit_status is SubprocessrExit.Timeout:
                 timeout_count[c] += 1
-            if "PASSED" in output:
-                print(chr(ord('a')+j), end="", flush=True)
-            else:
                 print(".", end="", flush=True)
+            elif exit_status is SubprocessrExit.Error:
+                print(".", end="", flush=True)
+            elif exit_status is SubprocessrExit.Normal:
+                if suite.is_passed(output):
+                    print(chr(ord('a')+j), end="", flush=True)
+                else:
+                    print(".", end="", flush=True)
+            elif exit_status is SubprocessrExit.Dryrun:
+                print(".", end="", flush=True)
+            else:
+                raise ValueError("Not a valid SubprocessrExit value")
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
         if not is_dry_run():
@@ -236,8 +244,8 @@ def run_one_benchmark(
 def run_one_hfac(
     invocations: int,
     hfac: float,
-    suites: Dict[str, JavaBenchmarkSuite],
-    benchmarks: Dict[str, List[JavaBenchmark]],
+    suites: Dict[str, BenchmarkSuite],
+    benchmarks: Dict[str, List[Benchmark]],
     configs: List[str],
     runbms_dir: Path,
     log_dir: Path
@@ -306,6 +314,8 @@ def run(args):
         spread_factor = configuration.get("spread_factor")
         suites = configuration.get("suites")
         benchmarks = configuration.get("benchmarks")
+        if benchmarks is None:
+            benchmarks = {}
         configs = configuration.get("configs")
         global remote_host
         remote_host = configuration.get("remote_host")

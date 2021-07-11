@@ -1,20 +1,36 @@
-from typing import Any, Dict
+from typing import Any, Dict, Union
 from pathlib import Path
 import logging
 from running.util import register
 
 
-class JVM(object):
+class Runner(object):
     CLS_MAPPING: Dict[str, Any]
     CLS_MAPPING = {}
 
-    def __init__(self, **kwargs):
-        self.CLS_MAPPING[self.__class__.__name__] = self.__class__
-        self.name = kwargs["name"]
+    def __init__(self, name: str, **kwargs):
+        self.name = name
 
     @staticmethod
     def from_config(name: str, config: Dict[str, str]) -> Any:
-        return JVM.CLS_MAPPING[config["type"]](name=name, **config)
+        return Runner.CLS_MAPPING[config["type"]](name=name, **config)
+
+    def get_executable(self) -> Union[str, Path]:
+        raise NotImplementedError
+
+
+@register(Runner)
+class NativeExecutable(Runner):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def get_executable(self) -> Union[str, Path]:
+        return ""
+
+
+class JVM(Runner):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def get_executable(self) -> Path:
         raise NotImplementedError
@@ -23,7 +39,7 @@ class JVM(object):
         return "JVM {}".format(self.name)
 
 
-@register(JVM)
+@register(Runner)
 class OpenJDK(JVM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -44,7 +60,7 @@ class OpenJDK(JVM):
         return "{} OpenJDK {} {}".format(super().__str__(), self.release, self.home)
 
 
-@register(JVM)
+@register(Runner)
 class JikesRVM(JVM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
