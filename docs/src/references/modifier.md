@@ -1,9 +1,9 @@
 # Modifier
 
+## `EnvVar`
+
 ## `JVMArg`
 
 ## `JVMClasspath`
-
-## `EnvVar`
 
 ## `ProgramArg`

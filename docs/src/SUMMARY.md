@@ -4,6 +4,7 @@
     - [Installation](./install.md)
 - [Basics](./basics/index.md)
     - [Design Principles](./basics/design.md)
+    - [Convention](./basics/convention.md)
     - [Configuration File Syntax](./basics/syntax.md)
 - [Core References](./references/index.md)
     - [Benchmark Suite](./references/suite.md)

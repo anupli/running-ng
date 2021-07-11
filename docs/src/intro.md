@@ -24,7 +24,7 @@ But before you do so, please discuss with [Steve](https://github.com/steveblackb
 For non-user-facing changes, please discuss with the [maintainers](#maintainers) first.
 
 ## History
-The predecessor of `running-ng` is `running`, a set of scripts were written in Perl, dating back to 2005.
+The predecessor of `running-ng` is `running`, a set of scripts written in Perl, dating back to 2005.
 However, the type of workloads we are evaluation has changed a bit, and we want a new set of scripts that fit our needs better.
 
 ## Maintainers

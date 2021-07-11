@@ -1,5 +1,5 @@
 # Benchmark Suite
 
-## `DaCapo`
-
 ## `BinaryBenchmarkSuite`  (preview ⚠️)
+
+## `DaCapo`
