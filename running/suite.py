@@ -17,22 +17,27 @@ def set_dry_run(val: bool):
     __DRY_RUN = val
 
 
-class JavaBenchmarkSuite(object):
+class BenchmarkSuite(object):
     CLS_MAPPING: Dict[str, Any]
     CLS_MAPPING = {}
 
     def __init__(self, **kwargs):
         self.name = kwargs["name"]
 
-    @staticmethod
-    def from_config(name: str, config: Dict[str, str]) -> Any:
-        return JavaBenchmarkSuite.CLS_MAPPING[config["type"]](name=name, **config)
-
     def __str__(self) -> str:
         return "Benchmark Suite {}".format(self.name)
 
     def get_benchmark(self, bm_name: str) -> 'JavaBenchmark':
         raise NotImplementedError()
+
+    @staticmethod
+    def from_config(name: str, config: Dict[str, str]) -> Any:
+        return BenchmarkSuite.CLS_MAPPING[config["type"]](name=name, **config)
+
+
+class JavaBenchmarkSuite(BenchmarkSuite):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def get_minheap(self, bm_name: str) -> int:
         raise NotImplementedError()
@@ -47,7 +52,7 @@ class JavaBenchmarkSuite(object):
         return False
 
 
-@register(JavaBenchmarkSuite)
+@register(BenchmarkSuite)
 class DaCapo(JavaBenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
