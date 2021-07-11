@@ -7,7 +7,7 @@ from pathlib import Path
 from running.util import parse_config_str
 import socket
 from datetime import datetime
-from running.jvm import JVM
+from running.runner import JVM
 from running.modifier import JVMArg
 import tempfile
 import subprocess

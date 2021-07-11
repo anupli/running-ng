@@ -1,6 +1,6 @@
 from running.config import Configuration
 from pathlib import Path
-from running.jvm import JVM
+from running.runner import JVM
 from running.modifier import JVMArg
 from running.benchmark import JavaBenchmark
 from running.suite import JavaBenchmarkSuite

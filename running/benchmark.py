@@ -1,7 +1,7 @@
 import subprocess
 import sys
 from typing import List, Optional, Tuple, Union, Dict
-from running.jvm import JVM
+from running.runner import JVM
 from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
 from pathlib import Path
 from copy import deepcopy
@@ -9,16 +9,29 @@ from running import suite
 import os
 from enum import Enum
 
+
 class SubprocessrExit(Enum):
     Normal = 1
     Error = 2
     Timeout = 3
     Dryrun = 4
 
-class JavaBenchmark(object):
-    def __init__(self, suite_name: str, bm_name: str, jvm_args: List[str], progam_args: List[str], cp: List[str], env_args: Optional[Dict[str, str]] = None):
+
+class Benchmark(object):
+    def __init__(self, suite_name: str, bm_name: str, **kwargs):
         self.name = bm_name
         self.suite_name = suite_name
+
+
+class BinaryBenchmark(Benchmark):
+    def __init__(self, program: str, **kwargs):
+        super().__init__(**kwargs)
+        self.program = program
+
+
+class JavaBenchmark(Benchmark):
+    def __init__(self, jvm_args: List[str], progam_args: List[str], cp: List[str], env_args: Optional[Dict[str, str]] = None, **kwargs):
+        super().__init__(**kwargs)
         self.jvm_args = jvm_args
         self.progam_args = progam_args
         self.cp = cp

@@ -1,4 +1,4 @@
-jvms:
+runners:
   adoptopenjdk-8:
     type: OpenJDK
     release: 8
