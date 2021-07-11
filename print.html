@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="basics/design.html"><strong aria-hidden="true">2.1.</strong> Design Principles</a></li><li class="chapter-item expanded "><a href="basics/syntax.html"><strong aria-hidden="true">2.2.</strong> Configuration File Syntax</a></li></ol></li><li class="chapter-item expanded "><a href="references/index.html"><strong aria-hidden="true">3.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="references/suite.html"><strong aria-hidden="true">3.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="references/runner.html"><strong aria-hidden="true">3.2.</strong> Runner</a></li><li class="chapter-item expanded "><a href="references/modifier.html"><strong aria-hidden="true">3.3.</strong> Modifier</a></li><li class="chapter-item expanded "><a href="references/config.html"><strong aria-hidden="true">3.4.</strong> Config Strings</a></li></ol></li><li class="chapter-item expanded "><a href="commands/index.html"><strong aria-hidden="true">4.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="commands/runbms.html"><strong aria-hidden="true">4.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="commands/minheap.html"><strong aria-hidden="true">4.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="commands/fillin.html"><strong aria-hidden="true">4.3.</strong> fillin</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="basics/design.html"><strong aria-hidden="true">2.1.</strong> Design Principles</a></li><li class="chapter-item expanded "><a href="basics/convention.html"><strong aria-hidden="true">2.2.</strong> Convention</a></li><li class="chapter-item expanded "><a href="basics/syntax.html"><strong aria-hidden="true">2.3.</strong> Configuration File Syntax</a></li></ol></li><li class="chapter-item expanded "><a href="references/index.html"><strong aria-hidden="true">3.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="references/suite.html"><strong aria-hidden="true">3.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="references/runner.html"><strong aria-hidden="true">3.2.</strong> Runner</a></li><li class="chapter-item expanded "><a href="references/modifier.html"><strong aria-hidden="true">3.3.</strong> Modifier</a></li><li class="chapter-item expanded "><a href="references/config.html"><strong aria-hidden="true">3.4.</strong> Config Strings</a></li></ol></li><li class="chapter-item expanded "><a href="commands/index.html"><strong aria-hidden="true">4.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="commands/runbms.html"><strong aria-hidden="true">4.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="commands/minheap.html"><strong aria-hidden="true">4.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="commands/fillin.html"><strong aria-hidden="true">4.3.</strong> fillin</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -164,7 +164,7 @@ Please file any bug or feature request on <a href="https://github.com/caizixian/
 But before you do so, please discuss with <a href="https://github.com/steveblackburn">Steve</a> first for major design changes.
 For non-user-facing changes, please discuss with the <a href="intro.html#maintainers">maintainers</a> first.</p>
 <h2 id="history"><a class="header" href="#history">History</a></h2>
-<p>The predecessor of <code>running-ng</code> is <code>running</code>, a set of scripts were written in Perl, dating back to 2005.
+<p>The predecessor of <code>running-ng</code> is <code>running</code>, a set of scripts written in Perl, dating back to 2005.
 However, the type of workloads we are evaluation has changed a bit, and we want a new set of scripts that fit our needs better.</p>
 <h2 id="maintainers"><a class="header" href="#maintainers">Maintainers</a></h2>
 <ul>
@@ -203,25 +203,28 @@ This is also crucial to the first point that people can get a set of sensible de
 <h2 id="human-readable-syntax"><a class="header" href="#human-readable-syntax">Human-readable syntax</a></h2>
 <p>We use YAML as the format for the configuration files.
 Please read the <a href="basics/./commands/syntax.html">syntax reference</a> for more details.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="configuration-file-syntax"><a class="header" href="#configuration-file-syntax">Configuration File Syntax</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="configuration-file-syntax"><a class="header" href="#configuration-file-syntax">Configuration File Syntax</a></h1>
+<p>The configuration file is in YAML format.
+You can find a good YAML tutorial <a href="https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html">here</a>.
+Below is the documentation for all the top-level keys that are common to all commands.</p>
 <h2 id="benchmarks"><a class="header" href="#benchmarks"><code>benchmarks</code></a></h2>
+<h2 id="configs"><a class="header" href="#configs"><code>configs</code></a></h2>
 <h2 id="includes"><a class="header" href="#includes"><code>includes</code></a></h2>
 <h2 id="modifiers"><a class="header" href="#modifiers"><code>modifiers</code></a></h2>
 <h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
 <h2 id="runners"><a class="header" href="#runners"><code>runners</code></a></h2>
 <h2 id="suites"><a class="header" href="#suites"><code>suites</code></a></h2>
-<h2 id="configs"><a class="header" href="#configs"><code>configs</code></a></h2>
 <div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
-<h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
 <h2 id="binarybenchmarksuite--preview-"><a class="header" href="#binarybenchmarksuite--preview-"><code>BinaryBenchmarkSuite</code>  (preview ⚠️)</a></h2>
+<h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="runner"><a class="header" href="#runner">Runner</a></h1>
 <h2 id="jikesrvm"><a class="header" href="#jikesrvm"><code>JikesRVM</code></a></h2>
 <h2 id="nativeexecutable-preview-"><a class="header" href="#nativeexecutable-preview-"><code>NativeExecutable</code> (preview ⚠️)</a></h2>
 <h2 id="openjdk"><a class="header" href="#openjdk"><code>OpenJDK</code></a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
+<h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
 <h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
 <h2 id="jvmclasspath"><a class="header" href="#jvmclasspath"><code>JVMClasspath</code></a></h2>
-<h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
 <h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="config-strings"><a class="header" href="#config-strings">Config Strings</a></h1>
 <p><code>&lt;runner&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;</code></p>
