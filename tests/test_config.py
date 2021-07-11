@@ -59,7 +59,7 @@ def test_resolve_modifiers():
 
 
 def test_resolve_jvms():
-    c = Configuration({"jvms": {
+    c = Configuration({"runners": {
         "adoptopenjdk-8": {
             "type": "OpenJDK",
             "release": "8",
@@ -67,7 +67,7 @@ def test_resolve_jvms():
         }
     }})
     c.resolve_class()
-    jdk8 = c.get("jvms")["adoptopenjdk-8"]
+    jdk8 = c.get("runners")["adoptopenjdk-8"]
     assert str(
         jdk8.executable) == "/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64/bin/java"
     assert jdk8.release == "8"

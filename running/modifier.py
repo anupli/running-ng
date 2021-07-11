@@ -31,7 +31,7 @@ class Modifier(object):
         return Modifier.CLS_MAPPING[config["type"]](name=name, **config)
 
     def apply_value_opts(self, value_opts):
-        return type(self)(value_opts = value_opts, **self.__original_kwargs)
+        return type(self)(value_opts=value_opts, **self.__original_kwargs)
 
     def __str__(self) -> str:
         return "Modifier {}".format(self.name)

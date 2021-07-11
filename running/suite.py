@@ -35,10 +35,11 @@ class BenchmarkSuite(object):
         return BenchmarkSuite.CLS_MAPPING[config["type"]](name=name, **config)
 
 
+@register(BenchmarkSuite)
 class BinaryBenchmarkSuite(BenchmarkSuite):
     def __init__(self, programs: Dict[str, str], **kwargs):
         super().__init__(**kwargs)
-        self.programs = programs
+        self.programs = {k: Path(v) for k, v in programs.items()}
 
     def get_benchmark(self, bm_name: str) -> 'BinaryBenchmark':
         return BinaryBenchmark(self.programs[bm_name], suite_name=self.name, bm_name=bm_name)
@@ -96,12 +97,4 @@ class DaCapo(JavaBenchmarkSuite):
         progam_args.extend(["-n", str(self.timing_iteration), bm_name])
         return JavaBenchmark([], progam_args, cp, suite_name=self.name, bm_name=bm_name)
 
-    def get_minheap(self, bm_name: str) -> int:
-        if bm_name not in self.minheap:
-            logging.warn("Minheap for {} of {} not set".format(bm_name, self))
-            return 4096
-        return self.minheap[bm_name]
 
-    def get_timeout(self, _bm_name: str) -> int:
-        # FIXME have per benchmark timeout
-        return self.timeout

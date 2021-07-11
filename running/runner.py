@@ -1,7 +1,8 @@
-from typing import Any, Dict
+from typing import Any, Dict, Union
 from pathlib import Path
 import logging
 from running.util import register
+
 
 class Runner(object):
     CLS_MAPPING: Dict[str, Any]
@@ -13,6 +14,18 @@ class Runner(object):
     @staticmethod
     def from_config(name: str, config: Dict[str, str]) -> Any:
         return Runner.CLS_MAPPING[config["type"]](name=name, **config)
+
+    def get_executable(self) -> Union[str, Path]:
+        raise NotImplementedError
+
+
+@register(Runner)
+class NativeExecutable(Runner):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def get_executable(self) -> Union[str, Path]:
+        return ""
 
 
 class JVM(Runner):

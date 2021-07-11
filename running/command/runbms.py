@@ -306,6 +306,8 @@ def run(args):
         spread_factor = configuration.get("spread_factor")
         suites = configuration.get("suites")
         benchmarks = configuration.get("benchmarks")
+        if benchmarks is None:
+            benchmarks = {}
         configs = configuration.get("configs")
         global remote_host
         remote_host = configuration.get("remote_host")
