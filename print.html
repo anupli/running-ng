@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="design.html"><strong aria-hidden="true">2.</strong> Design</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="basics/design.html"><strong aria-hidden="true">2.1.</strong> Design Principles</a></li><li class="chapter-item expanded "><a href="basics/syntax.html"><strong aria-hidden="true">2.2.</strong> Configuration File Syntax</a></li></ol></li><li class="chapter-item expanded "><a href="references/index.html"><strong aria-hidden="true">3.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="references/suite.html"><strong aria-hidden="true">3.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="references/runner.html"><strong aria-hidden="true">3.2.</strong> Runner</a></li><li class="chapter-item expanded "><a href="references/modifier.html"><strong aria-hidden="true">3.3.</strong> Modifier</a></li><li class="chapter-item expanded "><a href="references/config.html"><strong aria-hidden="true">3.4.</strong> Config Strings</a></li></ol></li><li class="chapter-item expanded "><a href="commands/index.html"><strong aria-hidden="true">4.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="commands/runbms.html"><strong aria-hidden="true">4.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="commands/minheap.html"><strong aria-hidden="true">4.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="commands/fillin.html"><strong aria-hidden="true">4.3.</strong> fillin</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -179,16 +179,57 @@ pip install -e . --user
 </code></pre>
 <p>The <code>-e</code> option is used to allow quick update of <code>running-ng</code> by running <code>git pull</code>.
 Once the codebase is more stabilized, other installation options, such as installing from PyPI, could be preferable.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="design"><a class="header" href="#design">Design</a></h1>
-<h2 id="principles"><a class="header" href="#principles">Principles</a></h2>
-<ul>
-<li>Sound methodology</li>
-<li>Reproducibility</li>
-<li>Sensible default values</li>
-<li>Encourage reuse</li>
-<li>General and extensible</li>
-<li>Human readable syntax</li>
-</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="basics"><a class="header" href="#basics">Basics</a></h1>
+<p><em>Briefly talk about how basic concepts fit together here...</em></p>
+<p>Before diving into the details, please read <a href="basics/./basics/design.html">the design principles</a> to help you better understand why things are organized in such way.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="design-principles"><a class="header" href="#design-principles">Design Principles</a></h1>
+<h2 id="sound-methodology"><a class="header" href="#sound-methodology">Sound methodology</a></h2>
+<p>Sound methodology is crucial for the type of performance analysis work we do.
+Please see the documentation for each of the command for details.
+We also try to include sensible default values in the base configuration files.</p>
+<h2 id="reproducibility"><a class="header" href="#reproducibility">Reproducibility</a></h2>
+<p>It should be easy to reproduce a set of experiments.
+To this end, various commands will save as much metadata with the results.
+For example, <a href="basics/./commands/runbms.html"><code>runbms</code></a> saves the flattened configuration file and command line arguments in the results folder.
+For each log, basic information about the execution environment, such as <code>uname</code>, the model name of the CPU, and frequencies of CPU cores, is saved as well.</p>
+<h2 id="extensibility"><a class="header" href="#extensibility">Extensibility</a></h2>
+<p>Broadly, the project consists of two parts: the core and the commands.
+The core provides abstractions for core concepts, such as benchmarks and execution environments, and can be extended through class inheritance.</p>
+<p>The commands are the user-facing parts that uses the core to provide concrete functionalities.</p>
+<h2 id="reusability"><a class="header" href="#reusability">Reusability</a></h2>
+<p>The configuration files can be easily reused through the <code>includes</code> and <code>overrides</code> mechanisms.
+For example, people might want to run multiple sets of experiments with minor tweaks, and being able to share a common base configuration file is ergonomic.
+This is also crucial to the first point that people can get a set of sensible default values by including base configuration files shipped with the project.</p>
+<h2 id="human-readable-syntax"><a class="header" href="#human-readable-syntax">Human-readable syntax</a></h2>
+<p>We use YAML as the format for the configuration files.
+Please read the <a href="basics/./commands/syntax.html">syntax reference</a> for more details.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="configuration-file-syntax"><a class="header" href="#configuration-file-syntax">Configuration File Syntax</a></h1>
+<h2 id="benchmarks"><a class="header" href="#benchmarks"><code>benchmarks</code></a></h2>
+<h2 id="includes"><a class="header" href="#includes"><code>includes</code></a></h2>
+<h2 id="modifiers"><a class="header" href="#modifiers"><code>modifiers</code></a></h2>
+<h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
+<h2 id="runners"><a class="header" href="#runners"><code>runners</code></a></h2>
+<h2 id="suites"><a class="header" href="#suites"><code>suites</code></a></h2>
+<h2 id="configs"><a class="header" href="#configs"><code>configs</code></a></h2>
+<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
+<h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
+<h2 id="binarybenchmarksuite--preview-"><a class="header" href="#binarybenchmarksuite--preview-"><code>BinaryBenchmarkSuite</code>  (preview ⚠️)</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="runner"><a class="header" href="#runner">Runner</a></h1>
+<h2 id="jikesrvm"><a class="header" href="#jikesrvm"><code>JikesRVM</code></a></h2>
+<h2 id="nativeexecutable-preview-"><a class="header" href="#nativeexecutable-preview-"><code>NativeExecutable</code> (preview ⚠️)</a></h2>
+<h2 id="openjdk"><a class="header" href="#openjdk"><code>OpenJDK</code></a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
+<h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
+<h2 id="jvmclasspath"><a class="header" href="#jvmclasspath"><code>JVMClasspath</code></a></h2>
+<h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
+<h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="config-strings"><a class="header" href="#config-strings">Config Strings</a></h1>
+<p><code>&lt;runner&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;</code></p>
+<h2 id="value-options"><a class="header" href="#value-options">Value options</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="runbms"><a class="header" href="#runbms"><code>runbms</code></a></h1>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best practices</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="minheap"><a class="header" href="#minheap"><code>minheap</code></a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="fillin"><a class="header" href="#fillin"><code>fillin</code></a></h1>
 
                     </main>
 
