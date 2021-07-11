@@ -7,7 +7,7 @@ We also try to include sensible default values in the base configuration files.
 ## Reproducibility
 It should be easy to reproduce a set of experiments.
 To this end, various commands will save as much metadata with the results.
-For example, [`runbms`](./commands/runbms.md) saves the flattened configuration file and command line arguments in the results folder.
+For example, [`runbms`](../commands/runbms.md) saves the flattened configuration file and command line arguments in the results folder.
 For each log, basic information about the execution environment, such as `uname`, the model name of the CPU, and frequencies of CPU cores, is saved as well.
 
 ## Extensibility
@@ -23,4 +23,4 @@ This is also crucial to the first point that people can get a set of sensible de
 
 ## Human-readable syntax
 We use YAML as the format for the configuration files.
-Please read the [syntax reference](./commands/syntax.md) for more details.
+Please read the [syntax reference](./syntax.md) for more details.
