@@ -7,7 +7,7 @@ from pathlib import Path
 from running.util import parse_config_str
 import socket
 from datetime import datetime
-from running.runner import JVM
+from running.runner import Runner
 from running.modifier import JVMArg
 import tempfile
 import subprocess
@@ -106,15 +106,15 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
 
 
 def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runbms_dir: Path, fd) -> Tuple[str, SubprocessrExit]:
-    jvm, mods = parse_config_str(configuration, c)
+    runner, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
-    prologue = get_log_prologue(jvm, mod_b)
+    prologue = get_log_prologue(runner, mod_b)
     if fd:
         fd.write(prologue)
-    output, exit_status = mod_b.run(jvm, timeout, cwd=runbms_dir)
+    output, exit_status = mod_b.run(runner, timeout, cwd=runbms_dir)
     if fd:
         fd.write(output)
-    epilogue = get_log_epilogue(jvm, mod_b)
+    epilogue = get_log_epilogue(runner, mod_b)
     if fd:
         fd.write(epilogue)
     return output, exit_status
@@ -130,7 +130,7 @@ def get_filename(bm: Benchmark, hfac: float, size: int, config: str) -> str:
     )
 
 
-def get_log_epilogue(jvm: JVM, bm: Benchmark) -> str:
+def get_log_epilogue(runner: Runner, bm: Benchmark) -> str:
     return ""
 
 
@@ -142,10 +142,10 @@ def hz_to_ghz(hzstr: str) -> str:
     return "{:.2f} GHz".format(int(hzstr) / 1000 / 1000)
 
 
-def get_log_prologue(jvm: JVM, bm: Benchmark) -> str:
+def get_log_prologue(runner: Runner, bm: Benchmark) -> str:
     output = "\n-----\n"
     output += "mkdir -p PLOTTY_WORKAROUND; timedrun "
-    output += bm.to_string(jvm.get_executable())
+    output += bm.to_string(runner.get_executable())
     output += "\n"
     output += "Environment variables: \n"
     for k, v in sorted(os.environ.items()):

@@ -1,11 +1,11 @@
 from running.config import Configuration
 from pathlib import Path
-from running.runner import JVM
+from running.runner import NativeExecutable, Runner
 from running.modifier import JVMArg
 from running.benchmark import JavaBenchmark
 from running.suite import JavaBenchmarkSuite
 from running.util import parse_config_str
-
+import logging
 
 def setup_parser(subparsers):
     f = subparsers.add_parser("minheap")
@@ -13,12 +13,12 @@ def setup_parser(subparsers):
     f.add_argument("CONFIG", type=Path)
 
 
-def minheap_one_bm(suite: JavaBenchmarkSuite, jvm: JVM, bm: JavaBenchmark, heap: int) -> float:
+def minheap_one_bm(suite: JavaBenchmarkSuite, runner: Runner, bm: JavaBenchmark, heap: int) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2
     minh = float('inf')
-    print("\t{} ".format(jvm.name), end="")
+    print("\t{} ".format(runner.name), end="")
     timeout = suite.get_timeout(bm.name)
     while hi - lo > 1:
         size_str = "{}M".format(mid)
@@ -28,7 +28,7 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, jvm: JVM, bm: JavaBenchmark, heap:
         )
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers([heapsize])
-        output, _ = bm_with_heapsize.run(jvm, timeout=timeout)
+        output, _ = bm_with_heapsize.run(runner, timeout=timeout)
         if "PASSED" in output:
             print(" o ", end="", flush=True)
             minh = mid
@@ -56,8 +56,11 @@ def run(args):
         for b in bms:
             print("{}-{}".format(b.suite_name, b.name))
             for c in configuration.get("configs"):
-                jvm, mods = parse_config_str(configuration, c)
+                runner, mods = parse_config_str(configuration, c)
+                if isinstance(runner, NativeExecutable):
+                    logging.warning("Minheap measurement not supported for NativeExecutable")
+                    pass
                 mod_b = b.attach_modifiers(mods)
-                minheap = minheap_one_bm(suite, jvm, mod_b, maxheap)
+                minheap = minheap_one_bm(suite, runner, mod_b, maxheap)
                 print("minheap {}".format(minheap))
     return True
