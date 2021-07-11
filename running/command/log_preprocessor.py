@@ -1,6 +1,5 @@
 from copy import deepcopy
 from pathlib import Path
-import shutil
 import gzip
 import enum
 from typing import Any, Callable, Dict, List

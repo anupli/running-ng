@@ -1,6 +1,7 @@
+import logging
 import subprocess
 import sys
-from typing import List, Tuple, Union, Dict
+from typing import Any, List, Tuple, Union, Dict
 from running.runner import Runner
 from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
 from pathlib import Path
@@ -28,6 +29,9 @@ class Benchmark(object):
         return " ".join(["{}=\"{}\"".format(k, v) for (k, v) in self.env_args.items()])
 
     def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
+        raise NotImplementedError
+
+    def attach_modifiers(self, modifiers: List[Modifier]) -> Any:
         raise NotImplementedError
 
     def to_string(self, executable: Union[str, Path]) -> str:
@@ -84,6 +88,9 @@ class BinaryBenchmark(Benchmark):
                 jp.env_args[m.var] = m.val
             elif type(m) == ProgramArg:
                 jp.progam_args.extend(m.val)
+            elif type(m) == JVMArg:
+                logging.warning("JVMArg not respected by BinaryBenchmark")
+                pass
             else:
                 raise ValueError()
         return jp
