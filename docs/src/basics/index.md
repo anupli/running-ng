@@ -1,3 +1,5 @@
 # Basics
 
-The workloads we are running come from 
+*Briefly talk about how basic concepts fit together here...*
+
+Before diving into the details, please read [the design principles](./basics/design.md) to help you better understand why things are organized in such way.
