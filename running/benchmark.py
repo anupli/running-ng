@@ -4,6 +4,7 @@ import sys
 from typing import Any, List, Tuple, Union, Dict
 from running.runner import Runner
 from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
+from running.util import smart_quote
 from pathlib import Path
 from copy import deepcopy
 from running import suite
@@ -26,18 +27,24 @@ class Benchmark(object):
         self.env_args = {}
 
     def get_env_str(self) -> str:
-        return " ".join(["{}=\"{}\"".format(k, v) for (k, v) in self.env_args.items()])
+        return " ".join([
+            "{}={}".format(k, smart_quote(v))
+            for (k, v) in self.env_args.items()
+        ])
 
-    def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
+    def get_full_args(self, _executable: Union[str, Path]) -> List[Union[str, Path]]:
         raise NotImplementedError
 
-    def attach_modifiers(self, modifiers: List[Modifier]) -> Any:
+    def attach_modifiers(self, _modifiers: List[Modifier]) -> Any:
         raise NotImplementedError
 
     def to_string(self, executable: Union[str, Path]) -> str:
         return "{} {}".format(
             self.get_env_str(),
-            " ".join([str(x) for x in self.get_full_args(executable)])
+            " ".join([
+                smart_quote(x)
+                for x in self.get_full_args(executable)
+            ])
         )
 
     def run(self, runner: Runner, timeout: int = None, cwd: Path = None) -> Tuple[str, SubprocessrExit]:
@@ -68,32 +75,31 @@ class Benchmark(object):
 
 
 class BinaryBenchmark(Benchmark):
-    def __init__(self, program: Path, **kwargs):
+    def __init__(self, program: Path, progam_args: List[Union[str, Path]], **kwargs):
         super().__init__(**kwargs)
         self.program = program
-        self.progam_args: List[Union[str, Path]]
-        self.progam_args = []
+        self.progam_args = progam_args
         assert program.exists()
 
     def __str__(self) -> str:
         return self.to_string("")
 
     def attach_modifiers(self, modifiers: List[Modifier]) -> 'BinaryBenchmark':
-        jp = deepcopy(self)
+        bp = deepcopy(self)
         for m in modifiers:
             if self.suite_name in m.excludes:
                 if self.name in m.excludes[self.suite_name]:
                     continue
             elif type(m) == EnvVar:
-                jp.env_args[m.var] = m.val
+                bp.env_args[m.var] = m.val
             elif type(m) == ProgramArg:
-                jp.progam_args.extend(m.val)
+                bp.progam_args.extend(m.val)
             elif type(m) == JVMArg:
                 logging.warning("JVMArg not respected by BinaryBenchmark")
                 pass
             else:
                 raise ValueError()
-        return jp
+        return bp
 
     def get_full_args(self, _executable: Union[str, Path]) -> List[Union[str, Path]]:
         cmd: List[Union[str, Path]]

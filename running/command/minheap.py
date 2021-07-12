@@ -7,6 +7,7 @@ from running.suite import JavaBenchmarkSuite
 from running.util import parse_config_str
 import logging
 
+
 def setup_parser(subparsers):
     f = subparsers.add_parser("minheap")
     f.set_defaults(which="minheap")
@@ -58,7 +59,8 @@ def run(args):
             for c in configuration.get("configs"):
                 runner, mods = parse_config_str(configuration, c)
                 if isinstance(runner, NativeExecutable):
-                    logging.warning("Minheap measurement not supported for NativeExecutable")
+                    logging.warning(
+                        "Minheap measurement not supported for NativeExecutable")
                     pass
                 mod_b = b.attach_modifiers(mods)
                 minheap = minheap_one_bm(suite, runner, mod_b, maxheap)

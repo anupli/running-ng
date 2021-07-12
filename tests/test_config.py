@@ -49,7 +49,8 @@ def test_resolve_modifiers():
     c = Configuration({"modifiers": {
         "ss": {
             "type": "EnvVar",
-            "val": "MMTK_PLAN=SemiSpace"
+            "var": "MMTK_PLAN",
+            "val": "SemiSpace"
         }
     }})
     c.resolve_class()

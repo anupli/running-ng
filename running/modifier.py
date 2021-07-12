@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from running.util import register
+from running.util import register, smart_quote, split_quoted
 import copy
 
 
@@ -41,7 +41,7 @@ class Modifier(object):
 class JVMArg(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
-        self.val = self._kwargs["val"].split()
+        self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
         return "{} JVMArg {}".format(super().__str__(), self.val)
@@ -51,7 +51,7 @@ class JVMArg(Modifier):
 class JVMClasspath(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
-        self.val = self._kwargs["val"].split()
+        self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
         return "{} JVMClasspath {}".format(super().__str__(), self.val)
@@ -61,18 +61,24 @@ class JVMClasspath(Modifier):
 class EnvVar(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
-        self.var = self._kwargs["val"].split("=")[0]
-        self.val = self._kwargs["val"][len(self.var)+1:]  # skip '='
+        if "var" not in self._kwargs:
+            raise ValueError(
+                "Please specify the name of the environment variable for modifier {}".format(self.name))
+        if "val" not in self._kwargs:
+            raise ValueError(
+                "Please specify the value for the environment variable for modifier {}".format(self.name))
+        self.var = self._kwargs["var"]
+        self.val = self._kwargs["val"]
 
     def __str__(self) -> str:
-        return "{} EnvVar {}={}".format(super().__str__(), self.var, self.val)
+        return "{} EnvVar {}={}".format(super().__str__(), self.var, smart_quote(self.val))
 
 
 @register(Modifier)
 class ProgramArg(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
-        self.val = self._kwargs["val"].split()
+        self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
         return "{} ProgramArg {}".format(super().__str__(), self.val)

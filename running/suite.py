@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 from running.benchmark import JavaBenchmark, BinaryBenchmark
 import logging
-from running.util import register
+from running.util import register, split_quoted
 
 __DRY_RUN = False
 
@@ -50,13 +50,25 @@ class BenchmarkSuite(object):
 
 @register(BenchmarkSuite)
 class BinaryBenchmarkSuite(BenchmarkSuite):
-    def __init__(self, programs: Dict[str, str], **kwargs):
+    def __init__(self, programs: Dict[str, Dict[str, str]], **kwargs):
         super().__init__(**kwargs)
-        self.programs = {k: Path(v) for k, v in programs.items()}
+        self.programs: Dict[str, Dict[str, Any]]
+        self.programs = {
+            k: {
+                'path': Path(v['path']),
+                'args': split_quoted(v['args'])
+            }
+            for k, v in programs.items()
+        }
         self.timeout = kwargs.get("timeout")
 
     def get_benchmark(self, bm_name: str) -> 'BinaryBenchmark':
-        return BinaryBenchmark(self.programs[bm_name], suite_name=self.name, bm_name=bm_name)
+        return BinaryBenchmark(
+            self.programs[bm_name]['path'],
+            self.programs[bm_name]['args'],
+            suite_name=self.name,
+            bm_name=bm_name
+        )
 
     def is_oom(self, _output: str) -> bool:
         return False
@@ -66,7 +78,7 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
         return self.timeout
 
     def get_minheap(self, _bm_name: str) -> int:
-        logging.warning("miheap is not respected for BinaryBenchmarkSuite")
+        logging.warning("minheap is not respected for BinaryBenchmarkSuite")
         return 0
 
     def is_passed(self, _output: str) -> bool:
