@@ -27,7 +27,7 @@ def smart_quote(_s: Any) -> str:
     s = str(_s)
     need_quote = False
     for c in s:
-        if not (c.isidentifier() or c == '/'):
+        if not (c.isidentifier() or c in './'):
             need_quote = True
             break
     if need_quote:

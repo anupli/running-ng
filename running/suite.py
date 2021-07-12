@@ -78,7 +78,7 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
         return self.timeout
 
     def get_minheap(self, _bm_name: str) -> int:
-        logging.warning("miheap is not respected for BinaryBenchmarkSuite")
+        logging.warning("minheap is not respected for BinaryBenchmarkSuite")
         return 0
 
     def is_passed(self, _output: str) -> bool:
