@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="basics/design.html"><strong aria-hidden="true">2.1.</strong> Design Principles</a></li><li class="chapter-item expanded "><a href="basics/conventions.html"><strong aria-hidden="true">2.2.</strong> Conventions</a></li></ol></li><li class="chapter-item expanded "><a href="references/index.html"><strong aria-hidden="true">3.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="references/suite.html"><strong aria-hidden="true">3.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="references/runtime.html"><strong aria-hidden="true">3.2.</strong> Runtime</a></li><li class="chapter-item expanded "><a href="references/modifier.html"><strong aria-hidden="true">3.3.</strong> Modifier</a></li><li class="chapter-item expanded "><a href="references/config.html"><strong aria-hidden="true">3.4.</strong> Config Strings</a></li></ol></li><li class="chapter-item expanded "><a href="commands/index.html"><strong aria-hidden="true">4.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="commands/runbms.html"><strong aria-hidden="true">4.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="commands/minheap.html"><strong aria-hidden="true">4.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="commands/fillin.html"><strong aria-hidden="true">4.3.</strong> fillin</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="basics/design.html"><strong aria-hidden="true">2.1.</strong> Design Principles</a></li><li class="chapter-item expanded "><a href="basics/conventions.html"><strong aria-hidden="true">2.2.</strong> Conventions</a></li></ol></li><li class="chapter-item expanded "><a href="references/index.html"><strong aria-hidden="true">3.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="references/suite.html"><strong aria-hidden="true">3.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="references/runtime.html"><strong aria-hidden="true">3.2.</strong> Runtime</a></li><li class="chapter-item expanded "><a href="references/modifier.html"><strong aria-hidden="true">3.3.</strong> Modifier</a></li></ol></li><li class="chapter-item expanded "><a href="commands/index.html"><strong aria-hidden="true">4.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="commands/runbms.html"><strong aria-hidden="true">4.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="commands/minheap.html"><strong aria-hidden="true">4.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="commands/fillin.html"><strong aria-hidden="true">4.3.</strong> fillin</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -206,15 +206,118 @@ Please read the <a href="basics/./syntax.html">syntax reference</a> for more det
 <div style="break-before: page; page-break-before: always;"></div><h1 id="conventions"><a class="header" href="#conventions">Conventions</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="configuration-file-syntax"><a class="header" href="#configuration-file-syntax">Configuration File Syntax</a></h1>
 <p>The configuration file is in YAML format.
-You can find a good YAML tutorial <a href="https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html">here</a>.
-Below is the documentation for all the top-level keys that are common to all commands.</p>
+You can find a good YAML tutorial
+<a href="https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html">here</a>.
+Below is the documentation for all the top-level keys that are common to all
+commands.</p>
 <h2 id="benchmarks"><a class="header" href="#benchmarks"><code>benchmarks</code></a></h2>
+<p>A YAML list of benchmarks to run in each specified <a href="references/index.html#suites">benchmark suite</a>.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">benchmarks:
+  dacapo2006:
+    - eclipse
+  dacapobach:
+    - avrora
+    - fop
+</code></pre>
+<p>specifies <code>running</code> to run the <code>eclipse</code> benchmark from the <code>dacapo2006</code>
+benchmark suite; and the <code>avrora</code> and <code>fop</code> benchmarks from the <code>dacapobach</code>
+benchmark suite. These benchmark suites have to be defined previously (usually
+through an <a href="references/index.html#includes"><code>includes</code> key</a>).</p>
 <h2 id="configs"><a class="header" href="#configs"><code>configs</code></a></h2>
+<p>A YAML list of configuration strings to be used to run the benchmarks. These are
+specified as a <a href="references/index.html#runtimes"><code>runtime</code></a> followed by a <code>'|'</code> separated list of
+<a href="references/./modifier.html">modifiers</a>, i.e. <code>&quot;&lt;runtime&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;&quot;</code>.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">configs:
+  - &quot;openjdk11|ms|s|c2&quot;
+  - &quot;openjdk15|ms|s&quot;
+</code></pre>
+<p>specifies <code>running</code> to use the <code>openjdk11</code> <code>runtime</code> with <code>ms</code>, <code>s</code>, and <code>c2</code>
+modifiers; and the <code>openjdk15</code> <code>runtime</code> with the <code>ms</code>, and <code>s</code> modifiers. In
+the example above, we assume that both the <code>runtimes</code> and modifiers have been
+previously defined (in either the current configuration file or in an <a href="references/index.html#includes"><code>includes</code>
+file</a>).</p>
 <h2 id="includes"><a class="header" href="#includes"><code>includes</code></a></h2>
+<p>A YAML list of paths to YAML files that are to be included into the current
+configuration file for definitions of some keys.</p>
+<p>This is primarily used to provide re-usability and extensibility of
+configuration files. A pre-processor step in <code>running</code> takes care of including
+all the specified files. A flattened version of the final configuration file is
+also generated and placed in the results folder for reproducibility.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">includes:
+ - &quot;./base/suites.yml&quot;
+ - &quot;./base/modifiers.yml&quot;
+</code></pre>
+<p>includes the <code>suites.yml</code> and <code>modifiers.yml</code> files located at <code>./base</code>
+respectively.</p>
 <h2 id="modifiers"><a class="header" href="#modifiers"><code>modifiers</code></a></h2>
+<p>A YAML dictionary of program arguments or environment variables that are to be
+used with <a href="references/index.html#configs">config strings</a>. Cannot use <code>-</code> in the key for a modifier.
+Each modifier requires a <code>type</code> key with other keys being specific to that
+<code>type</code>. For more information regarding the different <code>type</code>s of modifiers,
+please refer to <a href="references/./modifier.html">this page</a>.</p>
+<p><strong>Warning preview feature ⚠️</strong>. We can exclude certain benchmarks from using a
+specific modifier by using an <code>exclude</code> key along with a YAML list of benchmarks
+to be excluded from each benchmark suite.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">modifiers:
+  s:
+    type: JVMArg
+    val: &quot;-server&quot;
+  c2:
+    type: JVMArg
+    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    excludes:
+      dacapo2006:
+        - eclipse
+</code></pre>
+<p>specifies two modifiers, <code>s</code> and <code>c2</code>, both of <code>type</code>
+<a href="references/./modifier.html#JVMArg"><code>JVMArg</code></a> with their respective values. Here, the
+<code>eclipse</code> benchmark from the <code>dacapo2006</code> benchmark suite has been excluded from
+the <code>c2</code> modifier.</p>
+<h3 id="value-options"><a class="header" href="#value-options">Value Options</a></h3>
+<p>These are special modifiers whose values can be specified through their use in a
+<a href="references/index.html#configs">configuration string</a>. Concrete values are specified as <code>-</code> separated
+values after the modifier's name in a configuration string. These values will be
+indexed by the modifier through syntax similar to Python format strings.</p>
+<p>This is best understood via an example:</p>
+<pre><code class="language-yaml">modifiers:
+  env_var:
+    type: EnvVar
+    var: &quot;FOO{0}&quot;
+    val: &quot;{1}&quot;
+
+[...]
+
+configs:
+  - &quot;openjdk11|env_var-42-43&quot;
+</code></pre>
+<p>specifies to run the <code>openjdk11</code> <a href="references/index.html#runtimes"><code>runtime</code></a> with the environment
+variable <code>FOO42</code> set to <code>43</code>. Note that value options are not limited only to
+environment variables, and can be used for all modifier <code>type</code>s.</p>
 <h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.</p>
 <h2 id="runtimes"><a class="header" href="#runtimes"><code>runtimes</code></a></h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.</p>
 <h2 id="suites"><a class="header" href="#suites"><code>suites</code></a></h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
 <h2 id="binarybenchmarksuite--preview-"><a class="header" href="#binarybenchmarksuite--preview-"><code>BinaryBenchmarkSuite</code>  (preview ⚠️)</a></h2>
 <h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
@@ -227,9 +330,6 @@ Below is the documentation for all the top-level keys that are common to all com
 <h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
 <h2 id="jvmclasspath"><a class="header" href="#jvmclasspath"><code>JVMClasspath</code></a></h2>
 <h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="config-strings"><a class="header" href="#config-strings">Config Strings</a></h1>
-<p><code>&lt;runtime&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;</code></p>
-<h2 id="value-options"><a class="header" href="#value-options">Value options</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="runbms"><a class="header" href="#runbms"><code>runbms</code></a></h1>
 <h2 id="best-practices"><a class="header" href="#best-practices">Best practices</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="minheap"><a class="header" href="#minheap"><code>minheap</code></a></h1>
