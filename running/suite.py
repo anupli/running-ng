@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 from running.benchmark import JavaBenchmark, BinaryBenchmark
 import logging
 from running.util import register
@@ -50,13 +50,25 @@ class BenchmarkSuite(object):
 
 @register(BenchmarkSuite)
 class BinaryBenchmarkSuite(BenchmarkSuite):
-    def __init__(self, programs: Dict[str, str], **kwargs):
+    def __init__(self, programs: Dict[str, Dict[str, str]], **kwargs):
         super().__init__(**kwargs)
-        self.programs = {k: Path(v) for k, v in programs.items()}
+        self.programs: Dict[str, Dict[str, Any]]
+        self.programs = {
+            k: {
+                'path': Path(v['path']),
+                'args': v['args'].split()
+            }
+            for k, v in programs.items()
+        }
         self.timeout = kwargs.get("timeout")
 
     def get_benchmark(self, bm_name: str) -> 'BinaryBenchmark':
-        return BinaryBenchmark(self.programs[bm_name], suite_name=self.name, bm_name=bm_name)
+        return BinaryBenchmark(
+            self.programs[bm_name]['path'],
+            self.programs[bm_name]['args'],
+            suite_name=self.name,
+            bm_name=bm_name
+        )
 
     def is_oom(self, _output: str) -> bool:
         return False

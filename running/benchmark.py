@@ -68,11 +68,10 @@ class Benchmark(object):
 
 
 class BinaryBenchmark(Benchmark):
-    def __init__(self, program: Path, **kwargs):
+    def __init__(self, program: Path, progam_args: List[Union[str, Path]], **kwargs):
         super().__init__(**kwargs)
         self.program = program
-        self.progam_args: List[Union[str, Path]]
-        self.progam_args = []
+        self.progam_args = progam_args
         assert program.exists()
 
     def __str__(self) -> str:
