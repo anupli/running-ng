@@ -1,5 +1,5 @@
 # Config Strings
 
-`<runner>|<modifier>|...|<modifier>`
+`<runtime>|<modifier>|...|<modifier>`
 
 ## Value options

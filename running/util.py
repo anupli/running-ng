@@ -13,10 +13,10 @@ def register(parent_class):
 
 
 def parse_config_str(configuration: 'Configuration', c: str):
-    runner = configuration.get("runners")[c.split('|')[0]]
+    runtime = configuration.get("runtimes")[c.split('|')[0]]
     mods = [configuration.get("modifiers")[x.split("-")[0]].apply_value_opts(x.split("-")[1:])
             for x in c.split('|')[1:]]
-    return runner, mods
+    return runtime, mods
 
 
 def split_quoted(s: str) -> List[str]:
@@ -29,7 +29,7 @@ def smart_quote(_s: Any) -> str:
         return "\"\""
     need_quote = False
     for c in s:
-        if not (c.isalnum() or c in './-_'):
+        if not (c.isalnum() or c in '.:/+=-_'):
             need_quote = True
             break
     if need_quote:

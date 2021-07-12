@@ -1,4 +1,4 @@
-# Runner
+# Runtime
 
 ## `JikesRVM`
 

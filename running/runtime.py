@@ -4,7 +4,7 @@ import logging
 from running.util import register
 
 
-class Runner(object):
+class Runtime(object):
     CLS_MAPPING: Dict[str, Any]
     CLS_MAPPING = {}
 
@@ -13,14 +13,14 @@ class Runner(object):
 
     @staticmethod
     def from_config(name: str, config: Dict[str, str]) -> Any:
-        return Runner.CLS_MAPPING[config["type"]](name=name, **config)
+        return Runtime.CLS_MAPPING[config["type"]](name=name, **config)
 
     def get_executable(self) -> Union[str, Path]:
         raise NotImplementedError
 
 
-@register(Runner)
-class NativeExecutable(Runner):
+@register(Runtime)
+class NativeExecutable(Runtime):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -28,7 +28,7 @@ class NativeExecutable(Runner):
         return ""
 
 
-class JVM(Runner):
+class JVM(Runtime):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -39,7 +39,7 @@ class JVM(Runner):
         return "JVM {}".format(self.name)
 
 
-@register(Runner)
+@register(Runtime)
 class OpenJDK(JVM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -60,7 +60,7 @@ class OpenJDK(JVM):
         return "{} OpenJDK {} {}".format(super().__str__(), self.release, self.home)
 
 
-@register(Runner)
+@register(Runtime)
 class JikesRVM(JVM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -2,7 +2,7 @@ import logging
 import subprocess
 import sys
 from typing import Any, List, Tuple, Union, Dict
-from running.runner import Runner
+from running.runtime import Runtime
 from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
 from running.util import smart_quote
 from pathlib import Path
@@ -47,11 +47,11 @@ class Benchmark(object):
             ])
         )
 
-    def run(self, runner: Runner, timeout: int = None, cwd: Path = None) -> Tuple[str, SubprocessrExit]:
-        cmd = self.get_full_args(runner.get_executable())
+    def run(self, runtime: Runtime, timeout: int = None, cwd: Path = None) -> Tuple[str, SubprocessrExit]:
+        cmd = self.get_full_args(runtime.get_executable())
         if suite.is_dry_run():
             print(
-                self.to_string(runner.get_executable()),
+                self.to_string(runtime.get_executable()),
                 file=sys.stderr
             )
             return "", SubprocessrExit.Dryrun

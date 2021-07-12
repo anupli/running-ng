@@ -1,7 +1,7 @@
 from typing import Any, Dict
 import yaml
 from running.suite import BenchmarkSuite
-from running.runner import Runner
+from running.runtime import Runtime
 from running.modifier import Modifier
 from pathlib import Path
 import functools
@@ -16,7 +16,7 @@ def load_class(cls, config):
 KEY_CLASS_MAPPING = {
     "suites": BenchmarkSuite,
     "modifiers": Modifier,
-    "runners": Runner
+    "runtimes": Runtime
 }
 
 

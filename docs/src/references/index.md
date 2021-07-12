@@ -13,6 +13,6 @@ Below is the documentation for all the top-level keys that are common to all com
 
 ## `overrides`
 
-## `runners`
+## `runtimes`
 
 ## `suites`

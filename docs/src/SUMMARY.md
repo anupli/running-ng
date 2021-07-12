@@ -7,7 +7,7 @@
     - [Conventions](./basics/conventions.md)
 - [Core References](./references/index.md)
     - [Benchmark Suite](./references/suite.md)
-    - [Runner](./references/runner.md)
+    - [Runtime](./references/runtime.md)
     - [Modifier](./references/modifier.md)
     - [Config Strings](./references/config.md)
 - [Command References](./commands/index.md)
