@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from running.util import register
+from running.util import register, split_quoted
 import copy
 
 
@@ -41,7 +41,7 @@ class Modifier(object):
 class JVMArg(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
-        self.val = self._kwargs["val"].split()
+        self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
         return "{} JVMArg {}".format(super().__str__(), self.val)
@@ -51,7 +51,7 @@ class JVMArg(Modifier):
 class JVMClasspath(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
-        self.val = self._kwargs["val"].split()
+        self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
         return "{} JVMClasspath {}".format(super().__str__(), self.val)
@@ -72,7 +72,7 @@ class EnvVar(Modifier):
 class ProgramArg(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
-        self.val = self._kwargs["val"].split()
+        self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
         return "{} ProgramArg {}".format(super().__str__(), self.val)

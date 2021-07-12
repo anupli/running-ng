@@ -4,6 +4,7 @@ import sys
 from typing import Any, List, Tuple, Union, Dict
 from running.runner import Runner
 from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
+from running.util import smart_quote
 from pathlib import Path
 from copy import deepcopy
 from running import suite
@@ -26,7 +27,10 @@ class Benchmark(object):
         self.env_args = {}
 
     def get_env_str(self) -> str:
-        return " ".join(["{}=\"{}\"".format(k, v) for (k, v) in self.env_args.items()])
+        return " ".join([
+            "{}={}".format(k, smart_quote(v))
+            for (k, v) in self.env_args.items()
+        ])
 
     def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
         raise NotImplementedError
@@ -37,7 +41,10 @@ class Benchmark(object):
     def to_string(self, executable: Union[str, Path]) -> str:
         return "{} {}".format(
             self.get_env_str(),
-            " ".join([str(x) for x in self.get_full_args(executable)])
+            " ".join([
+                smart_quote(x)
+                for x in self.get_full_args(executable)
+            ])
         )
 
     def run(self, runner: Runner, timeout: int = None, cwd: Path = None) -> Tuple[str, SubprocessrExit]:

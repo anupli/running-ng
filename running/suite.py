@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional
 from running.benchmark import JavaBenchmark, BinaryBenchmark
 import logging
-from running.util import register
+from running.util import register, split_quoted
 
 __DRY_RUN = False
 
@@ -56,7 +56,7 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
         self.programs = {
             k: {
                 'path': Path(v['path']),
-                'args': v['args'].split()
+                'args': split_quoted(v['args'])
             }
             for k, v in programs.items()
         }
