@@ -6,7 +6,7 @@ overrides:
   "suites.dacapobach.timing_iteration": 5
   "suites.dacapo2006.callback": "probe.Dacapo2006Callback"
   "suites.dacapobach.callback": "probe.DacapoBachCallback"
-  
+
 modifiers:
   probes_cp:
     type: JVMClasspath
@@ -19,9 +19,10 @@ modifiers:
     val: "-Dprobes=RustMMTk"
   value_opts_example:
     type: EnvVar
-    val: "FOOBAR{0}=BUZZ{1}"
-  
-jvms:
+    var: "FOOBAR{0}"
+    val: "BUZZ{1}"
+
+runtimes:
   jdk-mmtk:
     type: OpenJDK
     release: 11

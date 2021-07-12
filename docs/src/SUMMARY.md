@@ -9,7 +9,6 @@
     - [Benchmark Suite](./references/suite.md)
     - [Runtime](./references/runtime.md)
     - [Modifier](./references/modifier.md)
-    - [Config Strings](./references/config.md)
 - [Command References](./commands/index.md)
     - [`runbms`](./commands/runbms.md)
     - [`minheap`](./commands/minheap.md)
