@@ -25,9 +25,11 @@ def split_quoted(s: str) -> List[str]:
 
 def smart_quote(_s: Any) -> str:
     s = str(_s)
+    if s == "":
+        return "\"\""
     need_quote = False
     for c in s:
-        if not (c.isidentifier() or c in './'):
+        if not (c.isalnum() or c in './-_'):
             need_quote = True
             break
     if need_quote:
