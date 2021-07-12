@@ -32,10 +32,10 @@ class Benchmark(object):
             for (k, v) in self.env_args.items()
         ])
 
-    def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
+    def get_full_args(self, _executable: Union[str, Path]) -> List[Union[str, Path]]:
         raise NotImplementedError
 
-    def attach_modifiers(self, modifiers: List[Modifier]) -> Any:
+    def attach_modifiers(self, _modifiers: List[Modifier]) -> Any:
         raise NotImplementedError
 
     def to_string(self, executable: Union[str, Path]) -> str:
@@ -85,21 +85,21 @@ class BinaryBenchmark(Benchmark):
         return self.to_string("")
 
     def attach_modifiers(self, modifiers: List[Modifier]) -> 'BinaryBenchmark':
-        jp = deepcopy(self)
+        bp = deepcopy(self)
         for m in modifiers:
             if self.suite_name in m.excludes:
                 if self.name in m.excludes[self.suite_name]:
                     continue
             elif type(m) == EnvVar:
-                jp.env_args[m.var] = m.val
+                bp.env_args[m.var] = m.val
             elif type(m) == ProgramArg:
-                jp.progam_args.extend(m.val)
+                bp.progam_args.extend(m.val)
             elif type(m) == JVMArg:
                 logging.warning("JVMArg not respected by BinaryBenchmark")
                 pass
             else:
                 raise ValueError()
-        return jp
+        return bp
 
     def get_full_args(self, _executable: Union[str, Path]) -> List[Union[str, Path]]:
         cmd: List[Union[str, Path]]

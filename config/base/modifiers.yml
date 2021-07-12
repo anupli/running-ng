@@ -20,13 +20,16 @@ modifiers:
   ## Rust MMTk
   mmtk_gc:
     type: EnvVar
-    val: "MMTK_PLAN={0}"
+    var: "MMTK_PLAN"
+    val: "{0}"
   ss:
     type: EnvVar
-    val: "MMTK_PLAN=SemiSpace"
+    var: "MMTK_PLAN"
+    val: "SemiSpace"
   ix:
     type: EnvVar
-    val: "MMTK_PLAN=Immix"
+    var: "MMTK_PLAN"
+    val: "Immix"
   ## OpenJDK HotSpot
   hotspot_gc:
     type: JVMArg
