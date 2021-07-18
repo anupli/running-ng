@@ -98,8 +98,17 @@ class Configuration(object):
     @staticmethod
     def from_file(path: Path) -> "Configuration":
         logging.info("Loading config {}".format(path))
+        if not path.exists():
+            raise ValueError("Configuration not found at path '{}'".format(path))
+        if not path.is_file():
+            raise ValueError("Configuration at path '{}' is not a file".format(path))
         with path.open("r") as fd:
-            config = yaml.safe_load(fd)
+            try:
+                config = yaml.safe_load(fd)
+            except yaml.YAMLError as e:
+                raise SyntaxError("Not able to parse the configuration file, {}".format(e))
+        if config is None:
+            raise ValueError("Parsed configuration file is None")
         if "includes" in config:
             includes = [Configuration.from_file(
                 path.parent.joinpath(p)) for p in config["includes"]]
