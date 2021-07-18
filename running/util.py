@@ -1,6 +1,8 @@
-from typing import Any, List, TYPE_CHECKING
+from typing import Any, List, TYPE_CHECKING, Tuple
 if TYPE_CHECKING:
     from running.config import Configuration
+    from running.modifier import Modifier
+    from running.runtime import Runtime
 
 import shlex
 
@@ -12,7 +14,7 @@ def register(parent_class):
     return inner
 
 
-def parse_config_str(configuration: 'Configuration', c: str):
+def parse_config_str(configuration: 'Configuration', c: str) -> Tuple['Runtime', List['Modifier']]:
     runtime = configuration.get("runtimes")[c.split('|')[0]]
     mods = [configuration.get("modifiers")[x.split("-")[0]].apply_value_opts(x.split("-")[1:])
             for x in c.split('|')[1:]]

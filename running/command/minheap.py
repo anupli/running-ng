@@ -1,7 +1,6 @@
 from running.config import Configuration
 from pathlib import Path
 from running.runtime import NativeExecutable, Runtime
-from running.modifier import JVMArg
 from running.benchmark import JavaBenchmark
 from running.suite import JavaBenchmarkSuite
 from running.util import parse_config_str
@@ -22,11 +21,8 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
     print("\t{} ".format(runtime.name), end="")
     timeout = suite.get_timeout(bm.name)
     while hi - lo > 1:
+        heapsize = runtime.get_heapsize_modifier(mid)
         size_str = "{}M".format(mid)
-        heapsize = JVMArg(
-            name="heap{}".format(size_str),
-            val="-Xms{} -Xmx{}".format(size_str, size_str)
-        )
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers([heapsize])
         output, _ = bm_with_heapsize.run(runtime, timeout=timeout)

@@ -1,3 +1,4 @@
+from running.modifier import JVMArg, Modifier
 from typing import Any, Dict, Union
 from pathlib import Path
 import logging
@@ -16,6 +17,9 @@ class Runtime(object):
         return Runtime.CLS_MAPPING[config["type"]](name=name, **config)
 
     def get_executable(self) -> Union[str, Path]:
+        raise NotImplementedError
+
+    def get_heapsize_modifier(self, size: int) -> Modifier:
         raise NotImplementedError
 
 
@@ -37,6 +41,14 @@ class JVM(Runtime):
 
     def __str__(self):
         return "JVM {}".format(self.name)
+    
+    def get_heapsize_modifier(self, size: int) -> Modifier:
+        size_str = "{}M".format(size)
+        heapsize = JVMArg(
+            name="heap{}".format(size_str),
+            val="-Xms{} -Xmx{}".format(size_str, size_str)
+        )
+        return heapsize
 
 
 @register(Runtime)

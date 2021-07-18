@@ -8,7 +8,6 @@ from running.util import parse_config_str
 import socket
 from datetime import datetime
 from running.runtime import Runtime
-from running.modifier import JVMArg
 import tempfile
 import subprocess
 import os
@@ -18,7 +17,7 @@ import yaml
 
 configuration: Configuration
 minheap_multiplier: float
-remote_host: str
+remote_host: Optional[str]
 skip_oom: Optional[int]
 skip_timeout: Optional[int]
 
@@ -28,7 +27,7 @@ def setup_parser(subparsers):
     f.set_defaults(which="runbms")
     f.add_argument("LOG_DIR", type=Path)
     f.add_argument("CONFIG", type=Path)
-    f.add_argument("N", type=int)
+    f.add_argument("N", type=int, nargs='?')
     f.add_argument("n", type=int, nargs='*')
     f.add_argument("-i", "--invocations", type=int)
     f.add_argument("-s", "--slice", type=float)
@@ -105,9 +104,11 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
     return [spread(spread_factor, N, n)/divisor + start for n in ns]
 
 
-def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runbms_dir: Path, fd) -> Tuple[str, SubprocessrExit]:
+def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runbms_dir: Path, size: Optional[int], fd) -> Tuple[str, SubprocessrExit]:
     runtime, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
+    if size is not None:
+        mod_b = mod_b.attach_modifiers([runtime.get_heapsize_modifier(size)])
     prologue = get_log_prologue(runtime, mod_b)
     if fd:
         fd.write(prologue)
@@ -120,11 +121,13 @@ def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runb
     return output, exit_status
 
 
-def get_filename(bm: Benchmark, hfac: float, size: int, config: str) -> str:
+def get_filename(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
     return "{}.{}.{}.{}.{}.log".format(
         bm.name,
-        hfac_str(hfac),
-        size,
+        # plotty uses "^(\w+)\.(\d+)\.(\d+)\.([a-zA-Z0-9_\-\.\:\,]+)\.log\.gz$"
+        # to match filenames
+        hfac_str(hfac) if hfac is not None else "0",
+        size if size is not None else "0",
         ".".join(config.split("|")),
         bm.suite_name,
     )
@@ -144,7 +147,7 @@ def hz_to_ghz(hzstr: str) -> str:
 
 def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output = "\n-----\n"
-    output += "mkdir -p PLOTTY_WORKAROUND; timedrun "
+    output += "mkdir -p PLOTTY_WORKAROUND; timedrun; "
     output += bm.to_string(runtime.get_executable())
     output += "\n"
     output += "Environment variables: \n"
@@ -175,23 +178,21 @@ def run_one_benchmark(
     invocations: int,
     suite: BenchmarkSuite,
     bm: Benchmark,
-    hfac: float,
+    hfac: Optional[float],
     configs: List[str],
     runbms_dir: Path,
     log_dir: Path
 ):
     bm_name = bm.name
     print(bm_name, end=" ")
-    print(hfac_str(hfac), end=" ")
-    size = get_heapsize(hfac, suite.get_minheap(bm_name))
-    print(size, end=" ")
-    timeout = suite.get_timeout(bm_name)
-    size_str = "{}M".format(size)
-    heapsize = JVMArg(
-        name="heap{}".format(size_str),
-        val="-Xms{} -Xmx{}".format(size_str, size_str)
-    )
-    bm_with_heapsize = bm.attach_modifiers([heapsize])
+    size: Optional[int] # heap size measured in MB
+    if hfac is not None:
+        print(hfac_str(hfac), end=" ")
+        size = get_heapsize(hfac, suite.get_minheap(bm_name))
+        print(size, end=" ")
+    else:
+        size = None
+    timeout = suite.get_timeout(bm_name)   
     oomed_count: DefaultDict[str, int]
     oomed_count = DefaultDict(int)
     timeout_count: DefaultDict[str, int]
@@ -209,13 +210,13 @@ def run_one_benchmark(
             logging.debug("Running with log filename {}".format(log_filename))
             if is_dry_run():
                 output, exit_status = run_benchmark_with_config(
-                    c, bm_with_heapsize, timeout, runbms_dir, None
+                    c, bm, timeout, runbms_dir, size, None
                 )
                 assert exit_status is SubprocessrExit.Dryrun
             else:
                 with (log_dir / log_filename).open("a") as fd:
                     output, exit_status = run_benchmark_with_config(
-                        c, bm_with_heapsize, timeout, runbms_dir, fd
+                        c, bm, timeout, runbms_dir, size, fd
                     )
             if suite.is_oom(output):
                 oomed_count[c] += 1
@@ -243,7 +244,7 @@ def run_one_benchmark(
 
 def run_one_hfac(
     invocations: int,
-    hfac: float,
+    hfac: Optional[float],
     suites: Dict[str, BenchmarkSuite],
     benchmarks: Dict[str, List[Benchmark]],
     configs: List[str],
@@ -259,13 +260,13 @@ def run_one_hfac(
 
 
 def ensure_remote_dir(log_dir):
-    if not is_dry_run():
+    if not is_dry_run() and remote_host is not None:
         log_dir = log_dir.resolve()
         system("ssh {} mkdir -p {}".format(remote_host, log_dir))
 
 
 def rsync(log_dir):
-    if not is_dry_run():
+    if not is_dry_run() and remote_host is not None:
         log_dir = log_dir.resolve()
         system("rsync -ae ssh {}/ {}:{}".format(log_dir, remote_host, log_dir))
 
@@ -319,12 +320,8 @@ def run(args):
         configs = configuration.get("configs")
         global remote_host
         remote_host = configuration.get("remote_host")
-
-        ensure_remote_dir(log_dir)
-        if slice:
-            run_one_hfac(invocations, slice, suites, benchmarks,
-                         configs, runbms_dir, log_dir)
-            return True
+        if not is_dry_run() and remote_host is not None:
+                ensure_remote_dir(log_dir)
 
         def run_N_ns(N, ns):
             hfacs = get_hfacs(heap_range, spread_factor, N, ns)
@@ -338,6 +335,16 @@ def run(args):
                 run_one_hfac(invocations, hfac, suites, benchmarks,
                              configs, runbms_dir, log_dir)
                 print()
+
+        if slice:
+            run_one_hfac(invocations, slice, suites, benchmarks,
+                         configs, runbms_dir, log_dir)
+            return True
+
+        if N is None:
+            run_one_hfac(invocations, None, suites, benchmarks,
+                         configs, runbms_dir, log_dir)
+            return True
 
         if len(ns) == 0:
             fillin(run_N_ns, round(math.log2(N)))
