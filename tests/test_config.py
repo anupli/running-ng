@@ -1,4 +1,5 @@
 from running.config import Configuration
+import pytest
 
 
 def test_override():
@@ -29,6 +30,21 @@ def test_combine():
     assert c.get("a") == {"b": 2, "c": 42, "e": 43}
     assert c.get("d") == ["foo", "bar", "fizz", "buzz"]
     assert c.get("f") == 100
+
+
+def test_combine_fail():
+    c1 = Configuration({
+        "a": "val1",
+        "b": "b"
+    })
+
+    c2 = Configuration({
+        "a": "val2",
+        "c": "c"
+    })
+
+    with pytest.raises(TypeError):
+        c1.combine(c2)
 
 
 def test_resolve_suites():

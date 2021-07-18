@@ -82,7 +82,14 @@ class Configuration(object):
                 if type(new_values[k]) is list:
                     new_values[k].extend(copy.deepcopy(other.__items[k]))
                 else:
-                    assert type(new_values[k]) is dict
+                    if type(new_values[k]) is not dict:
+                        raise TypeError(
+                            "Key `{}` has been defined in one of the "
+                            "included files, and the value of `{}`, {}, "
+                            "is not an array or a dictionary. "
+                            "Please use overrides instead.".format(
+                                k, k, repr(v)
+                        ))
                     new_values[k].update(copy.deepcopy(other.__items[k]))
             else:
                 new_values[k] = copy.deepcopy(other.__items[k])
