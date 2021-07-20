@@ -165,9 +165,17 @@ For non-user-facing changes, please discuss with the <a href="#maintainers">main
 <h2 id="history"><a class="header" href="#history">History</a></h2>
 <p>The predecessor of <code>running-ng</code> is <code>running</code>, a set of scripts written in Perl, dating back to 2005.
 However, the type of workloads we are evaluation has changed a bit, and we want a new set of scripts that fit our needs better.</p>
+<p>Two major sources of inspiration are <a href="https://gitlab.anu.edu.au/mu/mu-perf-benchmarks"><code>mu-perf-benchmarks</code></a> and <a href="https://github.com/caizixian/menthol"><code>menthol</code></a>.</p>
+<p><code>mu-perf-benchmarks</code> is a performance regression framework built for <a href="http://microvm.github.io/">The Mu Micro Virtual Machine</a>.
+Zixian coauthored the framework with <a href="https://github.com/john5f35">John Zhang</a> in 2017.
+It features <a href="https://gitlab.anu.edu.au/mu/mu-perf-benchmarks/-/tree/master/mubench">a web frontend</a> for displaying results.
+You can see the live instance <a href="https://squirrel.anu.edu.au/mubench/">here</a>.</p>
+<p><code>menthol</code> is a benchmarking framework built for running benchmarks in high-performance computing (HPC) settings.
+Zixian built it for his <a href="https://www.zcai.org/cv/#chapel-scnc2101-2018">research project</a> about evaluating Chapel's performance in 2018.
+The framework can run benchmarks in different languages on either single node or on a cluster through PBS job scheduler.</p>
 <h2 id="maintainers"><a class="header" href="#maintainers">Maintainers</a></h2>
 <ul>
-<li>Zixian Cai</li>
+<li><a href="https://www.zcai.org">Zixian Cai</a></li>
 </ul>
 
                     </main>
