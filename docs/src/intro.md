@@ -27,5 +27,16 @@ For non-user-facing changes, please discuss with the [maintainers](#maintainers)
 The predecessor of `running-ng` is `running`, a set of scripts written in Perl, dating back to 2005.
 However, the type of workloads we are evaluation has changed a bit, and we want a new set of scripts that fit our needs better.
 
+Two major sources of inspiration are [`mu-perf-benchmarks`](https://gitlab.anu.edu.au/mu/mu-perf-benchmarks) and [`menthol`](https://github.com/caizixian/menthol).
+
+`mu-perf-benchmarks` is a performance regression framework built for [The Mu Micro Virtual Machine](http://microvm.github.io/).
+Zixian coauthored the framework with [John Zhang](https://github.com/john5f35) in 2017.
+It features [a web frontend](https://gitlab.anu.edu.au/mu/mu-perf-benchmarks/-/tree/master/mubench) for displaying results.
+You can see the live instance [here](https://squirrel.anu.edu.au/mubench/).
+
+`menthol` is a benchmarking framework built for running benchmarks in high-performance computing (HPC) settings.
+Zixian built it for his [research project](https://www.zcai.org/cv/#chapel-scnc2101-2018) about evaluating Chapel's performance in 2018.
+The framework can run benchmarks in different languages on either single node or on a cluster through PBS job scheduler.
+
 ## Maintainers
-- Zixian Cai
+- [Zixian Cai](https://www.zcai.org)
