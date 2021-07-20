@@ -89,7 +89,7 @@ class Configuration(object):
                             "is not an array or a dictionary. "
                             "Please use overrides instead.".format(
                                 k, k, repr(v)
-                        ))
+                            ))
                     new_values[k].update(copy.deepcopy(other.__items[k]))
             else:
                 new_values[k] = copy.deepcopy(other.__items[k])
@@ -99,14 +99,17 @@ class Configuration(object):
     def from_file(path: Path) -> "Configuration":
         logging.info("Loading config {}".format(path))
         if not path.exists():
-            raise ValueError("Configuration not found at path '{}'".format(path))
+            raise ValueError(
+                "Configuration not found at path '{}'".format(path))
         if not path.is_file():
-            raise ValueError("Configuration at path '{}' is not a file".format(path))
+            raise ValueError(
+                "Configuration at path '{}' is not a file".format(path))
         with path.open("r") as fd:
             try:
                 config = yaml.safe_load(fd)
             except yaml.YAMLError as e:
-                raise SyntaxError("Not able to parse the configuration file, {}".format(e))
+                raise SyntaxError(
+                    "Not able to parse the configuration file, {}".format(e))
         if config is None:
             raise ValueError("Parsed configuration file is None")
         if "includes" in config:

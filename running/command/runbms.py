@@ -185,14 +185,14 @@ def run_one_benchmark(
 ):
     bm_name = bm.name
     print(bm_name, end=" ")
-    size: Optional[int] # heap size measured in MB
+    size: Optional[int]  # heap size measured in MB
     if hfac is not None:
         print(hfac_str(hfac), end=" ")
         size = get_heapsize(hfac, suite.get_minheap(bm_name))
         print(size, end=" ")
     else:
         size = None
-    timeout = suite.get_timeout(bm_name)   
+    timeout = suite.get_timeout(bm_name)
     oomed_count: DefaultDict[str, int]
     oomed_count = DefaultDict(int)
     timeout_count: DefaultDict[str, int]
@@ -321,7 +321,7 @@ def run(args):
         global remote_host
         remote_host = configuration.get("remote_host")
         if not is_dry_run() and remote_host is not None:
-                ensure_remote_dir(log_dir)
+            ensure_remote_dir(log_dir)
 
         def run_N_ns(N, ns):
             hfacs = get_hfacs(heap_range, spread_factor, N, ns)

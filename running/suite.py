@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 from running.benchmark import JavaBenchmark, BinaryBenchmark
 import logging
 from running.util import register, split_quoted
@@ -46,6 +46,9 @@ class BenchmarkSuite(object):
 
     def is_passed(self, _output: str) -> bool:
         raise NotImplementedError
+
+    def get_wrapper(self, _bm_name: str) -> Optional[str]:
+        return None
 
 
 @register(BenchmarkSuite)
@@ -124,6 +127,8 @@ class DaCapo(JavaBenchmarkSuite):
             self.timing_iteration = 3
         self.callback = kwargs.get("callback")
         self.timeout = kwargs.get("timeout")
+        self.wrapper: Optional[Union[Dict[str, str], str]]
+        self.wrapper = kwargs.get("wrapper")
 
     def __str__(self) -> str:
         return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
@@ -131,12 +136,19 @@ class DaCapo(JavaBenchmarkSuite):
     def get_benchmark(self, bm_name: str) -> 'JavaBenchmark':
         if self.callback:
             cp = [str(self.path)]
-            progam_args = ["Harness", "-c", self.callback]
+            program_args = ["Harness", "-c", self.callback]
         else:
             cp = []
-            progam_args = ["-jar", str(self.path)]
-        progam_args.extend(["-n", str(self.timing_iteration), bm_name])
-        return JavaBenchmark([], progam_args, cp, suite_name=self.name, bm_name=bm_name)
+            program_args = ["-jar", str(self.path)]
+        program_args.extend(["-n", str(self.timing_iteration), bm_name])
+        return JavaBenchmark(
+            jvm_args=[],
+            program_args=program_args,
+            cp=cp,
+            wrapper=self.get_wrapper(bm_name),
+            suite_name=self.name,
+            bm_name=bm_name
+        )
 
     def get_minheap(self, bm_name: str) -> int:
         if bm_name not in self.minheap:
@@ -150,3 +162,16 @@ class DaCapo(JavaBenchmarkSuite):
 
     def is_passed(self, output: str) -> bool:
         return "PASSED" in output
+
+    def get_wrapper(self, bm_name: str) -> Optional[str]:
+        if self.wrapper is None:
+            return None
+        elif type(self.wrapper) == str:
+            return self.wrapper
+        elif type(self.wrapper) == dict:
+            return self.wrapper.get(bm_name)
+        else:
+            raise TypeError("wrapper of {} must be either null, "
+                            "a string (the same wrapper for all benchmarks), "
+                            "or a dictionary (different wrappers for"
+                            "differerent benchmarks)".format(self.name))

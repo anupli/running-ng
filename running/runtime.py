@@ -41,7 +41,7 @@ class JVM(Runtime):
 
     def __str__(self):
         return "JVM {}".format(self.name)
-    
+
     def get_heapsize_modifier(self, size: int) -> Modifier:
         size_str = "{}M".format(size)
         heapsize = JVMArg(
