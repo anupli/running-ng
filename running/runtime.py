@@ -64,6 +64,7 @@ class OpenJDK(JVM):
         if not self.executable.exists():
             logging.warn(
                 "{} not found in OpenJDK home".format(self.executable))
+        self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
         return self.executable
@@ -84,6 +85,7 @@ class JikesRVM(JVM):
         if not self.home.exists():
             logging.warn(
                 "{} not found in JikesRVM home".format(self.executable))
+        self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
         return self.executable
