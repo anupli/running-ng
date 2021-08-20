@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="basics/design.html"><strong aria-hidden="true">2.1.</strong> Design Principles</a></li><li class="chapter-item expanded "><a href="basics/conventions.html"><strong aria-hidden="true">2.2.</strong> Conventions</a></li></ol></li><li class="chapter-item expanded "><a href="references/index.html"><strong aria-hidden="true">3.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="references/suite.html"><strong aria-hidden="true">3.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="references/runtime.html"><strong aria-hidden="true">3.2.</strong> Runtime</a></li><li class="chapter-item expanded "><a href="references/modifier.html"><strong aria-hidden="true">3.3.</strong> Modifier</a></li></ol></li><li class="chapter-item expanded "><a href="commands/index.html"><strong aria-hidden="true">4.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="commands/runbms.html"><strong aria-hidden="true">4.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="commands/minheap.html"><strong aria-hidden="true">4.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="commands/fillin.html"><strong aria-hidden="true">4.3.</strong> fillin</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="quickstart.html"><strong aria-hidden="true">2.</strong> Quickstart</a></li><li class="chapter-item expanded "><a href="basics/index.html"><strong aria-hidden="true">3.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="basics/design.html"><strong aria-hidden="true">3.1.</strong> Design Principles</a></li><li class="chapter-item expanded "><a href="basics/conventions.html"><strong aria-hidden="true">3.2.</strong> Conventions</a></li></ol></li><li class="chapter-item expanded "><a href="references/index.html"><strong aria-hidden="true">4.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="references/suite.html"><strong aria-hidden="true">4.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="references/runtime.html"><strong aria-hidden="true">4.2.</strong> Runtime</a></li><li class="chapter-item expanded "><a href="references/modifier.html"><strong aria-hidden="true">4.3.</strong> Modifier</a></li></ol></li><li class="chapter-item expanded "><a href="commands/index.html"><strong aria-hidden="true">5.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="commands/runbms.html"><strong aria-hidden="true">5.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="commands/minheap.html"><strong aria-hidden="true">5.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="commands/fillin.html"><strong aria-hidden="true">5.3.</strong> fillin</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -182,11 +182,115 @@ The framework can run benchmarks in different languages on either single node or
 <p>For now, the best way to install <code>running-ng</code> is via source.</p>
 <pre><code class="language-bash">git clone https://github.com/anupli/running-ng
 cd running-ng
-pip install -e . --user
+pip3 install -e . --user
 # Add Python user install directory to your PATH
 </code></pre>
 <p>The <code>-e</code> option is used to allow quick update of <code>running-ng</code> by running <code>git pull</code>.
 Once the codebase is more stabilized, other installation options, such as installing from PyPI, could be preferable.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="quickstart"><a class="header" href="#quickstart">Quickstart</a></h1>
+<p>This guide will show you how to use <code>running-ng</code> to compare two different builds of JVMs.</p>
+<h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
+<p>Please follow the <a href="./install.html">installation guide</a> to install <code>running-ng</code>.
+You will need Python 3.6+.</p>
+<p>Then, create a file <code>two_builds.yml</code> with the following content.</p>
+<pre><code class="language-yaml">includes:
+  - &quot;/path/to/running-ng/config/base/runbms.yml&quot;
+</code></pre>
+<p>The <a href="./references/index.html">YAML file</a> represents a dictionary (key-value pairs) that defines the experiments you are running.
+The <code>includes</code> directive here will populate the dictionary with some default values shipped with <code>running-ng</code>.</p>
+<h2 id="prepare-benchmarks"><a class="header" href="#prepare-benchmarks">Prepare Benchmarks</a></h2>
+<p>Add the following to <code>two_builds.yml</code>.</p>
+<pre><code class="language-yaml">benchmarks:
+  dacapochopin-69a704e:
+    - avrora
+    - batik
+    - biojava
+    - cassandra
+    - eclipse
+    - fop
+    - graphchi
+    - h2
+    - h2o
+    - jme
+    - jython
+    - luindex
+    - lusearch
+    - pmd
+    - sunflow
+    - tradebeans 
+    - tradesoap
+    - tomcat
+    - xalan
+    - zxing
+</code></pre>
+<p>This specify a list of benchmarks used in this experiment from the <a href="./references/suite.html">benchmark suite</a> <code>dacapochopin-69a704e</code>.
+The benchmark suite is defined in <code>/path/to/running-ng/config/base/dacapo.yml</code>.
+The <code>minheap</code> value of <code>dacapochopin-69a704e</code> is measured with AdoptOpenJDK 11 using G1 GC.</p>
+<p>Then, add the following to <code>two_builds.yml</code>.</p>
+<pre><code class="language-yaml">overrides:
+  &quot;suites.dacapochopin-69a704e.timing_iteration&quot;: 5
+  &quot;suites.dacapochopin-69a704e.callback&quot;: &quot;probe.DacapoChopinCallback&quot;
+</code></pre>
+<p>That is, we want to run five iterations for each invocation, and use <code>DacapoChopinCallback</code> because it is the appropriate callback for this release of DaCapo.</p>
+<h2 id="prepare-your-builds"><a class="header" href="#prepare-your-builds">Prepare Your Builds</a></h2>
+<p>In this guide, we assume you use <a href="https://github.com/mmtk/mmtk-openjdk"><code>mmtk-openjdk</code></a>.
+Please follow its build guide.</p>
+<p>I assume you produced two different builds you want to compare.
+Add the following to <code>two_builds.yml</code>.</p>
+<pre><code class="language-yaml">runtimes:
+  build1:
+    type: OpenJDK
+    release: 11
+    home: &quot;/path/to/build1/jdk&quot; # make sure /path/to/build1/jdk/bin/java exists
+  build2:
+    type: OpenJDK
+    release: 11
+    home: &quot;/path/to/build2/jdk&quot; # make sure /path/to/build2/jdk/bin/java exists
+</code></pre>
+<p>This defines two builds of <a href="./references/runtime.html">runtimes</a>.</p>
+<p>I strongly recommend you rename the builds (both the name in the configuration file and the folder name) to something more sensible, preferably with the commit hash for easy troubleshooting and performance debugging later.</p>
+<h2 id="prepare-probes"><a class="header" href="#prepare-probes">Prepare Probes</a></h2>
+<p>Please clone <a href="https://github.com/anupli/probes"><code>probes</code></a>, and run <code>make</code>.</p>
+<p>Add the following to <code>two_builds.yml</code>.</p>
+<pre><code class="language-yaml">modifiers:
+  probes_cp:
+    type: JVMClasspath
+    val: &quot;/path/to/probes /path/to/probes/probes.jar&quot;
+  probes:
+    type: JVMArg
+    val: &quot;-Djava.library.path=/path/to/probes -Dprobes=RustMMTk&quot;
+</code></pre>
+<p>This defines two <a href="./references/modifier.html">modifiers</a>, which will be used later to modify the JVM command line arguments.</p>
+<h2 id="prepare-configs"><a class="header" href="#prepare-configs">Prepare Configs</a></h2>
+<p>Finally, add he following to <code>two_builds.yml</code>.</p>
+<pre><code class="language-yaml">configs:
+  - &quot;build1|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes&quot;
+  - &quot;build2|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes&quot;
+</code></pre>
+<p>The syntax is described <a href="./references/index.html#configs">here</a>.</p>
+<h2 id="sanity-checks"><a class="header" href="#sanity-checks">Sanity Checks</a></h2>
+<p>The basic form of usage looks like this.</p>
+<pre><code class="language-console">running runbms /path/to/log two_builds.yml 8
+</code></pre>
+<p>That is, run the experiments as specified by <code>two_builds.yml</code>, store the results in <code>/path/to/log</code>, and explore eight different heap sizes (with careful arrangement of which size to run first and which to run later).</p>
+<p>See <a href="./commands/runbms.html">here</a> for a complete reference of <code>runbms</code>.</p>
+<h3 id="dry-run"><a class="header" href="#dry-run">Dry run</a></h3>
+<p>A dry run (by supplying <code>-d</code> to <code>running</code> <strong>NOT</strong> <code>runbms</code>) allows you to see the commands to be executed.</p>
+<pre><code class="language-console">running -d runbms /path/to/log two_builds.yml 8 -i 1
+</code></pre>
+<p>Make sure it looks like what you want.</p>
+<h3 id="single-invocation"><a class="header" href="#single-invocation">Single Invocation</a></h3>
+<p>Now, actually run the experiment, but only for one invocation (by supplying <code>-i 1</code> to <code>runbms</code>).</p>
+<pre><code class="language-console">running runbms /path/to/log two_builds.yml 8 -i 1
+</code></pre>
+<p>This allows you to see any issue before wasting several days only realizing that something didn't work.</p>
+<h2 id="run-it"><a class="header" href="#run-it">Run It</a></h2>
+<p>Once you are happy with everything, run the experiments.</p>
+<pre><code class="language-console">running runbms /path/to/log two_builds.yml 8 -p &quot;two_builds&quot;
+</code></pre>
+<p>Don't forget to give the results folder a prefix so that you can later tell what the experiment was for.</p>
+<h3 id="analysing-results"><a class="header" href="#analysing-results">Analysing Results</a></h3>
+<p>This is outside the scope of this quickstart guide.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="basics"><a class="header" href="#basics">Basics</a></h1>
 <p><em>Briefly talk about how basic concepts fit together here...</em></p>
 <p>Before diving into the details, please read <a href="basics/./design.html">the design principles</a> to help you better understand why things are organized in such way.</p>
