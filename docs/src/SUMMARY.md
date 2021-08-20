@@ -2,6 +2,7 @@
 
 - [Introduction](./intro.md)
     - [Installation](./install.md)
+- [Quickstart](./quickstart.md)
 - [Basics](./basics/index.md)
     - [Design Principles](./basics/design.md)
     - [Conventions](./basics/conventions.md)
