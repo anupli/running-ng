@@ -69,14 +69,14 @@ def ratio_work_perf_event(event_name: str):
 def ratio_event(event_name: str):
     def inner(stats: Dict[str, float]):
         new_stats = deepcopy(stats)
-        gc_key = "{}.gc".format(event_name)
-        mu_key = "{}.mu".format(event_name)
-        if gc_key in stats and mu_key in stats:
-            gc = stats[gc_key]
-            mu = stats[mu_key]
+        stw_key = "{}.stw".format(event_name)
+        other_key = "{}.other".format(event_name)
+        if stw_key in stats and other_key in stats:
+            gc = stats[stw_key]
+            mu = stats[other_key]
             total = gc + mu
-            new_stats["{}.ratio".format(gc_key)] = gc / total
-            new_stats["{}.ratio".format(mu_key)] = mu / total
+            new_stats["{}.ratio".format(stw_key)] = gc / total
+            new_stats["{}.ratio".format(other_key)] = mu / total
         return new_stats
     return inner
 
