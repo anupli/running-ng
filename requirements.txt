@@ -2,4 +2,4 @@ autopep8==1.5.7
 mypy==0.910
 pytest==6.2.4
 PyYAML==5.4.1
-types-PyYAML==5.4.7
+types-PyYAML==5.4.8
