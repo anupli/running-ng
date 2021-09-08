@@ -314,7 +314,7 @@ For example, people might want to run multiple sets of experiments with minor tw
 This is also crucial to the first point that people can get a set of sensible default values by including base configuration files shipped with the project.</p>
 <h2 id="human-readable-syntax"><a class="header" href="#human-readable-syntax">Human-readable syntax</a></h2>
 <p>We use YAML as the format for the configuration files.
-Please read the <a href="basics/./syntax.html">syntax reference</a> for more details.</p>
+Please read the <a href="basics/../references/index.html">syntax reference</a> for more details.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="conventions"><a class="header" href="#conventions">Conventions</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="configuration-file-syntax"><a class="header" href="#configuration-file-syntax">Configuration File Syntax</a></h1>
 <p>The configuration file is in YAML format.
@@ -439,9 +439,37 @@ culpa qui officia deserunt mollit anim id est laborum.</p>
 <h2 id="openjdk"><a class="header" href="#openjdk"><code>OpenJDK</code></a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
 <h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
+<h3 id="keys"><a class="header" href="#keys">Keys</a></h3>
+<p><code>var</code>: name of the variable.</p>
+<p><code>val</code>: value of the variable.</p>
+<h3 id="description"><a class="header" href="#description">Description</a></h3>
+<p>Set an environment variable. Might override an environment variable inherited from the parent process.</p>
 <h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
+<p><code>JavaBenchmarkSuite</code> specific.</p>
+<h3 id="keys-1"><a class="header" href="#keys-1">Keys</a></h3>
+<p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
+Multiple arguments are space separated.</p>
+<h3 id="description-1"><a class="header" href="#description-1">Description</a></h3>
+<p>Specify arguments to a JVM, as opposed to the runtime.</p>
 <h2 id="jvmclasspath"><a class="header" href="#jvmclasspath"><code>JVMClasspath</code></a></h2>
+<p><code>JavaBenchmarkSuite</code> specific.</p>
+<h3 id="keys-2"><a class="header" href="#keys-2">Keys</a></h3>
+<p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
+Multiple classpaths are space separated.</p>
+<h3 id="description-2"><a class="header" href="#description-2">Description</a></h3>
+<p>Specify Java Classpaths.</p>
 <h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
+<h3 id="keys-3"><a class="header" href="#keys-3">Keys</a></h3>
+<p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
+Multiple arguments are space separated.</p>
+<h3 id="description-3"><a class="header" href="#description-3">Description</a></h3>
+<p>Specify arguments to a program, as opposed to the runtime.</p>
+<h2 id="modifierset-preview-"><a class="header" href="#modifierset-preview-"><code>ModifierSet</code> (preview ⚠️)</a></h2>
+<h3 id="keys-4"><a class="header" href="#keys-4">Keys</a></h3>
+<p><code>val</code>: <code>|</code> separated values, with possible value options. See <a href="references/./index.html#value-options">here</a> for details.</p>
+<h3 id="description-4"><a class="header" href="#description-4">Description</a></h3>
+<p>Specify a set of modifiers, including other <code>ModifierSet</code>s.
+That is, you can use <code>ModifierSet</code> recursively.</p>
 <div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="runbms"><a class="header" href="#runbms"><code>runbms</code></a></h1>
 <h2 id="best-practices"><a class="header" href="#best-practices">Best practices</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="minheap"><a class="header" href="#minheap"><code>minheap</code></a></h1>

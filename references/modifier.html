@@ -145,9 +145,37 @@
                     <main>
                         <h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
 <h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
+<h3 id="keys"><a class="header" href="#keys">Keys</a></h3>
+<p><code>var</code>: name of the variable.</p>
+<p><code>val</code>: value of the variable.</p>
+<h3 id="description"><a class="header" href="#description">Description</a></h3>
+<p>Set an environment variable. Might override an environment variable inherited from the parent process.</p>
 <h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
+<p><code>JavaBenchmarkSuite</code> specific.</p>
+<h3 id="keys-1"><a class="header" href="#keys-1">Keys</a></h3>
+<p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
+Multiple arguments are space separated.</p>
+<h3 id="description-1"><a class="header" href="#description-1">Description</a></h3>
+<p>Specify arguments to a JVM, as opposed to the runtime.</p>
 <h2 id="jvmclasspath"><a class="header" href="#jvmclasspath"><code>JVMClasspath</code></a></h2>
+<p><code>JavaBenchmarkSuite</code> specific.</p>
+<h3 id="keys-2"><a class="header" href="#keys-2">Keys</a></h3>
+<p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
+Multiple classpaths are space separated.</p>
+<h3 id="description-2"><a class="header" href="#description-2">Description</a></h3>
+<p>Specify Java Classpaths.</p>
 <h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
+<h3 id="keys-3"><a class="header" href="#keys-3">Keys</a></h3>
+<p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
+Multiple arguments are space separated.</p>
+<h3 id="description-3"><a class="header" href="#description-3">Description</a></h3>
+<p>Specify arguments to a program, as opposed to the runtime.</p>
+<h2 id="modifierset-preview-"><a class="header" href="#modifierset-preview-"><code>ModifierSet</code> (preview ⚠️)</a></h2>
+<h3 id="keys-4"><a class="header" href="#keys-4">Keys</a></h3>
+<p><code>val</code>: <code>|</code> separated values, with possible value options. See <a href="./index.html#value-options">here</a> for details.</p>
+<h3 id="description-4"><a class="header" href="#description-4">Description</a></h3>
+<p>Specify a set of modifiers, including other <code>ModifierSet</code>s.
+That is, you can use <code>ModifierSet</code> recursively.</p>
 
                     </main>
 
