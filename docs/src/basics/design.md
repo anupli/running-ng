@@ -23,4 +23,4 @@ This is also crucial to the first point that people can get a set of sensible de
 
 ## Human-readable syntax
 We use YAML as the format for the configuration files.
-Please read the [syntax reference](./syntax.md) for more details.
+Please read the [syntax reference](../references/index.md) for more details.

@@ -1,6 +1,8 @@
-from typing import Any, Dict
-from running.util import register, smart_quote, split_quoted
+from typing import Any, Dict, List, TYPE_CHECKING
+from running.util import register, smart_quote, split_quoted, parse_modifier_strs
 import copy
+if TYPE_CHECKING:
+    from running.config import Configuration
 
 
 class Modifier(object):
@@ -35,6 +37,19 @@ class Modifier(object):
 
     def __str__(self) -> str:
         return "Modifier {}".format(self.name)
+
+
+@register(Modifier)
+class ModifierSet(Modifier):
+    def __init__(self, value_opts=None, **kwargs):
+        super().__init__(value_opts, **kwargs)
+        self.val = self._kwargs["val"].split("|")
+
+    def flatten(self, configuration: 'Configuration') -> List[Modifier]:
+        return parse_modifier_strs(configuration, self.val)
+
+    def __str__(self) -> str:
+        return "{} ModifierSet {}".format(super().__str__(), "|".join(self.val))
 
 
 @register(Modifier)

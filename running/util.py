@@ -14,10 +14,28 @@ def register(parent_class):
     return inner
 
 
+def parse_modifier_strs(configuration: 'Configuration', mod_strs: List[str]) -> List['Modifier']:
+    # Some modifiers could be a modifier set, and we need to flatten it
+    from running.modifier import ModifierSet
+    mods = []
+    for m in mod_strs:
+        mod_name = m.split("-")[0]
+        mod_value_opts = m.split("-")[1:]
+        mod = configuration.get("modifiers").get(mod_name)
+        if mod is None:
+            raise KeyError("Modifier '{}' not defined".format(mod_name))
+        mod = mod.apply_value_opts(mod_value_opts)
+        if isinstance(mod, ModifierSet):
+            for m_inner in mod.flatten(configuration):
+                mods.append(m_inner)
+        else:
+            mods.append(mod)
+    return mods
+
+
 def parse_config_str(configuration: 'Configuration', c: str) -> Tuple['Runtime', List['Modifier']]:
     runtime = configuration.get("runtimes")[c.split('|')[0]]
-    mods = [configuration.get("modifiers")[x.split("-")[0]].apply_value_opts(x.split("-")[1:])
-            for x in c.split('|')[1:]]
+    mods = parse_modifier_strs(configuration, c.split('|')[1:])
     return runtime, mods
 
 
