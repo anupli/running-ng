@@ -91,4 +91,4 @@ class JikesRVM(JVM):
         return self.executable
 
     def __str__(self):
-        return "{} JikesRVM {} {}".format(super().__str__(), self.release, self.home)
+        return "{} JikesRVM {}".format(super().__str__(), self.home)
