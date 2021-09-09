@@ -42,3 +42,12 @@ Specify arguments to a program, as opposed to the runtime.
 ### Description
 Specify a set of modifiers, including other `ModifierSet`s.
 That is, you can use `ModifierSet` recursively.
+
+## `Wrapper` (preview ⚠️)
+### Keys
+`val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
+Multiple arguments are space separated.
+
+### Description
+Specify a wrapper.
+If a wrapper also exist for the benchmark suite you use, this wrapper will follow that.

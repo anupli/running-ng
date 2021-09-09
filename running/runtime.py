@@ -59,10 +59,10 @@ class OpenJDK(JVM):
         self.home: Path
         self.home = Path(kwargs["home"])
         if not self.home.exists():
-            logging.warn("OpenJDK home {} doesn't exist".format(self.home))
+            logging.warning("OpenJDK home {} doesn't exist".format(self.home))
         self.executable = self.home / "bin" / "java"
         if not self.executable.exists():
-            logging.warn(
+            logging.warning(
                 "{} not found in OpenJDK home".format(self.executable))
         self.executable = self.executable.absolute()
 
@@ -80,10 +80,10 @@ class JikesRVM(JVM):
         self.home: Path
         self.home = Path(kwargs["home"])
         if not self.home.exists():
-            logging.warn("JikesRVM home {} doesn't exist".format(self.home))
+            logging.warning("JikesRVM home {} doesn't exist".format(self.home))
         self.executable = self.home / "rvm"
         if not self.home.exists():
-            logging.warn(
+            logging.warning(
                 "{} not found in JikesRVM home".format(self.executable))
         self.executable = self.executable.absolute()
 

@@ -126,6 +126,7 @@ class Configuration(object):
             final_config = base.combine(final_config)
         else:
             if "overrides" in config:
-                raise KeyError('You specified "overrides" but not "includes". This does not make sense.')
+                raise KeyError(
+                    'You specified "overrides" but not "includes". This does not make sense.')
             final_config = Configuration(config)
         return final_config

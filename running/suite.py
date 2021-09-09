@@ -120,7 +120,8 @@ class DaCapo(JavaBenchmarkSuite):
             logging.info("DaCapo jar {} not found".format(self.path))
         self.minheap = kwargs.get("minheap", {})
         if not isinstance(self.minheap, dict):
-            raise TypeError("The minheap of {} should be a dictionary".format(self.name))
+            raise TypeError(
+                "The minheap of {} should be a dictionary".format(self.name))
         try:
             self.timing_iteration = int(kwargs.get("timing_iteration"))
         except TypeError:
@@ -154,7 +155,8 @@ class DaCapo(JavaBenchmarkSuite):
 
     def get_minheap(self, bm_name: str) -> int:
         if bm_name not in self.minheap:
-            logging.warn("Minheap for {} of {} not set".format(bm_name, self))
+            logging.warning(
+                "Minheap for {} of {} not set".format(bm_name, self))
             return 4096
         return self.minheap[bm_name]
 

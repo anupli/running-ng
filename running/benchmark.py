@@ -3,7 +3,7 @@ import subprocess
 import sys
 from typing import Any, List, Optional, Tuple, Union, Dict
 from running.runtime import Runtime
-from running.modifier import JVMArg, EnvVar, Modifier, ProgramArg, JVMClasspath
+from running.modifier import *
 from running.util import smart_quote, split_quoted
 from pathlib import Path
 from copy import deepcopy
@@ -42,8 +42,19 @@ class Benchmark(object):
         # also to type check https://mypy.readthedocs.io/en/stable/common_issues.html#variance
         return list(self.wrapper)
 
-    def attach_modifiers(self, _modifiers: List[Modifier]) -> Any:
-        raise NotImplementedError
+    def attach_modifiers(self, modifiers: List[Modifier]) -> Any:
+        b = deepcopy(self)
+        for m in modifiers:
+            if self.suite_name in m.excludes:
+                if self.name in m.excludes[self.suite_name]:
+                    continue
+            elif type(m) == Wrapper:
+                b.wrapper.extend(m.val)
+            elif type(m) == EnvVar:
+                b.env_args[m.var] = m.val
+            elif type(m) == ModifierSet:
+                logging.warning("ModifierSet should have been flattened")
+        return b
 
     def to_string(self, executable: Union[str, Path]) -> str:
         return "{} {}".format(
@@ -92,21 +103,19 @@ class BinaryBenchmark(Benchmark):
         return self.to_string("")
 
     def attach_modifiers(self, modifiers: List[Modifier]) -> 'BinaryBenchmark':
-        bp = deepcopy(self)
+        bb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if self.suite_name in m.excludes:
                 if self.name in m.excludes[self.suite_name]:
                     continue
-            elif type(m) == EnvVar:
-                bp.env_args[m.var] = m.val
             elif type(m) == ProgramArg:
-                bp.program_args.extend(m.val)
+                bb.program_args.extend(m.val)
             elif type(m) == JVMArg:
                 logging.warning("JVMArg not respected by BinaryBenchmark")
-                pass
-            else:
-                raise ValueError()
-        return bp
+            elif type(m) == JVMClasspath:
+                logging.warning(
+                    "JVMClasspath not respected by BinaryBenchmark")
+        return bb
 
     def get_full_args(self, _executable: Union[str, Path]) -> List[Union[str, Path]]:
         cmd = super().get_full_args(_executable)
@@ -129,22 +138,18 @@ class JavaBenchmark(Benchmark):
         return self.to_string("java")
 
     def attach_modifiers(self, modifiers: List[Modifier]) -> 'JavaBenchmark':
-        jp = deepcopy(self)
+        jb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if self.suite_name in m.excludes:
                 if self.name in m.excludes[self.suite_name]:
                     continue
             if type(m) == JVMArg:
-                jp.jvm_args.extend(m.val)
-            elif type(m) == EnvVar:
-                jp.env_args[m.var] = m.val
+                jb.jvm_args.extend(m.val)
             elif type(m) == ProgramArg:
-                jp.program_args.extend(m.val)
+                jb.program_args.extend(m.val)
             elif type(m) == JVMClasspath:
-                jp.cp.extend(m.val)
-            else:
-                raise ValueError()
-        return jp
+                jb.cp.extend(m.val)
+        return jb
 
     def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
         cmd = super().get_full_args(executable)
