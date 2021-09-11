@@ -35,7 +35,7 @@ It features [a web frontend](https://gitlab.anu.edu.au/mu/mu-perf-benchmarks/-/t
 You can see the live instance [here](https://squirrel.anu.edu.au/mubench/).
 
 `menthol` is a benchmarking framework built for running benchmarks in high-performance computing (HPC) settings.
-Zixian built it for his [research project](https://www.zcai.org/cv/#chapel-scnc2101-2018) about evaluating Chapel's performance in 2018.
+Zixian built it for his [research project](https://www.zcai.org/cv#chapel-scnc2101-2018) about evaluating Chapel's performance in 2018.
 The framework can run benchmarks in different languages on either single node or on a cluster through PBS job scheduler.
 
 ## Maintainers
