@@ -146,6 +146,31 @@
                         <h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
 <h2 id="binarybenchmarksuite--preview-"><a class="header" href="#binarybenchmarksuite--preview-"><code>BinaryBenchmarkSuite</code>  (preview ⚠️)</a></h2>
 <h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
+<p><a href="http://dacapo-bench.org/">DaCapo benchmark suite</a>.</p>
+<h3 id="keys"><a class="header" href="#keys">Keys</a></h3>
+<p><code>release</code>: one of the possible values <code>[&quot;2006&quot;, &quot;9.12&quot;, &quot;evaluation&quot;]</code>.
+The value is required.</p>
+<p><code>path</code>: path to the DaCapo <code>jar</code>.
+The value is required.</p>
+<p><code>minheap</code>: a dictionary containing the minimal heap size in megabytes to execute a benchmark from the suite without triggering <code>OutOfMemoryError</code>.
+The default value is an empty dictionary.
+The minheap values are used only when running <code>runbms</code> with a valid <code>N</code> value.
+If the minheap value for a benchmark is not specified, a default of <code>4096</code> is used.</p>
+<p><code>timing_iteration</code>: specifying the timing iteration.
+The value is passed to DaCapo as <code>-n</code>.
+The default value is 3.</p>
+<p><code>callback</code>: the class (possibly within some packages) for the DaCapo callback. The value is passed to DaCapo as <code>-c</code>.
+The default value is <code>null</code>.</p>
+<p><code>timeout</code>: timeout for one invocation of a benchmark in seconds.
+The default value is <code>null</code>.</p>
+<p><code>wrapper</code> (preview ⚠️): specifying a wrapper (i.e., extra stuff on the command line before <code>java</code>) when running benchmarks.
+The default value is <code>null</code>, a no-op.
+There are two possible ways to specify <code>wrapper</code>.
+First, a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
+Multiple arguments are space separated.
+This wrapper is used for all benchmarks in the benchmark suite.
+Second, a dictionary of strings with shell-like syntax to specify possibly different wrappers for different benchmarks.
+If a benchmark doesn't have a wrapper in the dictionary, it is treated as <code>null</code>.</p>
 
                     </main>
 
