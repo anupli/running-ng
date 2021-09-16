@@ -204,6 +204,7 @@ Add the following to <code>two_builds.yml</code>.</p>
     home: &quot;/path/to/build2/jdk&quot; # make sure /path/to/build2/jdk/bin/java exists
 </code></pre>
 <p>This defines two builds of <a href="./references/runtime.html">runtimes</a>.</p>
+<p>I recommend that you use absolute paths for the builds, although relative paths will work, and will be relative to where you run <code>running</code>.</p>
 <p>I strongly recommend you rename the builds (both the name in the configuration file and the folder name) to something more sensible, preferably with the commit hash for easy troubleshooting and performance debugging later.</p>
 <h2 id="prepare-probes"><a class="header" href="#prepare-probes">Prepare Probes</a></h2>
 <p>Please clone <a href="https://github.com/anupli/probes"><code>probes</code></a>, and run <code>make</code>.</p>
@@ -217,6 +218,7 @@ Add the following to <code>two_builds.yml</code>.</p>
     val: &quot;-Djava.library.path=/path/to/probes -Dprobes=RustMMTk&quot;
 </code></pre>
 <p>This defines two <a href="./references/modifier.html">modifiers</a>, which will be used later to modify the JVM command line arguments.</p>
+<p>Please only use absolute paths for all the above.</p>
 <h2 id="prepare-configs"><a class="header" href="#prepare-configs">Prepare Configs</a></h2>
 <p>Finally, add he following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">configs:

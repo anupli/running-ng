@@ -266,6 +266,7 @@ Add the following to <code>two_builds.yml</code>.</p>
     home: &quot;/path/to/build2/jdk&quot; # make sure /path/to/build2/jdk/bin/java exists
 </code></pre>
 <p>This defines two builds of <a href="./references/runtime.html">runtimes</a>.</p>
+<p>I recommend that you use absolute paths for the builds, although relative paths will work, and will be relative to where you run <code>running</code>.</p>
 <p>I strongly recommend you rename the builds (both the name in the configuration file and the folder name) to something more sensible, preferably with the commit hash for easy troubleshooting and performance debugging later.</p>
 <h2 id="prepare-probes"><a class="header" href="#prepare-probes">Prepare Probes</a></h2>
 <p>Please clone <a href="https://github.com/anupli/probes"><code>probes</code></a>, and run <code>make</code>.</p>
@@ -279,6 +280,7 @@ Add the following to <code>two_builds.yml</code>.</p>
     val: &quot;-Djava.library.path=/path/to/probes -Dprobes=RustMMTk&quot;
 </code></pre>
 <p>This defines two <a href="./references/modifier.html">modifiers</a>, which will be used later to modify the JVM command line arguments.</p>
+<p>Please only use absolute paths for all the above.</p>
 <h2 id="prepare-configs"><a class="header" href="#prepare-configs">Prepare Configs</a></h2>
 <p>Finally, add he following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">configs:
@@ -381,6 +383,8 @@ also generated and placed in the results folder for reproducibility.</p>
 </code></pre>
 <p>includes the <code>suites.yml</code> and <code>modifiers.yml</code> files located at <code>./base</code>
 respectively.</p>
+<h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
+<p>Under construction 🚧.</p>
 <h2 id="modifiers"><a class="header" href="#modifiers"><code>modifiers</code></a></h2>
 <p>A YAML dictionary of program arguments or environment variables that are to be
 used with <a href="references/index.html#configs">config strings</a>. Cannot use <code>-</code> in the key for a modifier.
@@ -426,27 +430,16 @@ configs:
 <p>specifies to run the <code>openjdk11</code> <a href="references/index.html#runtimes"><code>runtime</code></a> with the environment
 variable <code>FOO42</code> set to <code>43</code>. Note that value options are not limited only to
 environment variables, and can be used for all modifier <code>type</code>s.</p>
-<h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.</p>
 <h2 id="runtimes"><a class="header" href="#runtimes"><code>runtimes</code></a></h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>A YAML dictionary of runtime definitions that are to be used with <a href="references/index.html#configs">config strings</a>.
+Each runtime requires a <code>type</code> key with other keys being specific to that
+<code>type</code>. For more information regarding the different <code>type</code>s of modifiers,
+please refer to <a href="references/./runtime.html">this page</a>.</p>
 <h2 id="suites"><a class="header" href="#suites"><code>suites</code></a></h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>A YAML dictionary of benchmark suite definitions that are to be used as keys of <code>benchmarks</code>.
+Each benchmark suite requires a <code>type</code> key with other keys being specific to that
+<code>type</code>. For more information regarding the different <code>type</code>s of modifiers,
+please refer to <a href="references/./suite.html">this page</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
 <h2 id="binarybenchmarksuite--preview-"><a class="header" href="#binarybenchmarksuite--preview-"><code>BinaryBenchmarkSuite</code>  (preview ⚠️)</a></h2>
 <h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
@@ -522,7 +515,7 @@ If a wrapper also exist for the benchmark suite you use, this wrapper will follo
 <div style="break-before: page; page-break-before: always;"></div><h1 id="command-references"><a class="header" href="#command-references">Command References</a></h1>
 <p>Please see the sections in this chapter for the references for each of the subcommands.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
-<pre><code class="language-console">running [-h] [-v|--verbose] [-d|--dry-run] [--version] subcommand
+<pre><code class="language-console">running [-h|--help] [-v|--verbose] [-d|--dry-run] [--version] subcommand
 </code></pre>
 <p><code>-h</code>: print help message.</p>
 <p><code>-v</code>: use <code>DEBUG</code> for logging level.

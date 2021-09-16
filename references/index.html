@@ -191,6 +191,8 @@ also generated and placed in the results folder for reproducibility.</p>
 </code></pre>
 <p>includes the <code>suites.yml</code> and <code>modifiers.yml</code> files located at <code>./base</code>
 respectively.</p>
+<h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
+<p>Under construction 🚧.</p>
 <h2 id="modifiers"><a class="header" href="#modifiers"><code>modifiers</code></a></h2>
 <p>A YAML dictionary of program arguments or environment variables that are to be
 used with <a href="#configs">config strings</a>. Cannot use <code>-</code> in the key for a modifier.
@@ -236,27 +238,16 @@ configs:
 <p>specifies to run the <code>openjdk11</code> <a href="#runtimes"><code>runtime</code></a> with the environment
 variable <code>FOO42</code> set to <code>43</code>. Note that value options are not limited only to
 environment variables, and can be used for all modifier <code>type</code>s.</p>
-<h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.</p>
 <h2 id="runtimes"><a class="header" href="#runtimes"><code>runtimes</code></a></h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>A YAML dictionary of runtime definitions that are to be used with <a href="#configs">config strings</a>.
+Each runtime requires a <code>type</code> key with other keys being specific to that
+<code>type</code>. For more information regarding the different <code>type</code>s of modifiers,
+please refer to <a href="./runtime.html">this page</a>.</p>
 <h2 id="suites"><a class="header" href="#suites"><code>suites</code></a></h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>A YAML dictionary of benchmark suite definitions that are to be used as keys of <code>benchmarks</code>.
+Each benchmark suite requires a <code>type</code> key with other keys being specific to that
+<code>type</code>. For more information regarding the different <code>type</code>s of modifiers,
+please refer to <a href="./suite.html">this page</a>.</p>
 
                     </main>
 
