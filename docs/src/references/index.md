@@ -115,11 +115,11 @@ environment variables, and can be used for all modifier `type`s.
 ## `runtimes`
 A YAML dictionary of runtime definitions that are to be used with [config strings](#configs).
 Each runtime requires a `type` key with other keys being specific to that
-`type`. For more information regarding the different `type`s of modifiers,
+`type`. For more information regarding the different `type`s of runtimes,
 please refer to [this page](./runtime.md).
 
 ## `suites`
 A YAML dictionary of benchmark suite definitions that are to be used as keys of `benchmarks`.
 Each benchmark suite requires a `type` key with other keys being specific to that
-`type`. For more information regarding the different `type`s of modifiers,
+`type`. For more information regarding the different `type`s of benchmark suites,
 please refer to [this page](./suite.md).
