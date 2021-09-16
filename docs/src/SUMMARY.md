@@ -5,7 +5,6 @@
 - [Quickstart](./quickstart.md)
 - [Basics](./basics/index.md)
     - [Design Principles](./basics/design.md)
-    - [Conventions](./basics/conventions.md)
 - [Core References](./references/index.md)
     - [Benchmark Suite](./references/suite.md)
     - [Runtime](./references/runtime.md)
@@ -14,3 +13,5 @@
     - [`runbms`](./commands/runbms.md)
     - [`minheap`](./commands/minheap.md)
     - [`fillin`](./commands/fillin.md)
+- [Frequently Asked Questions](./faq.md)
+- [Changelog](./changelog.md)
