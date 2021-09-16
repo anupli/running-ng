@@ -57,6 +57,9 @@ includes:
 includes the `suites.yml` and `modifiers.yml` files located at `./base`
 respectively.
 
+## `overrides`
+Under construction 🚧.
+
 ## `modifiers`
 A YAML dictionary of program arguments or environment variables that are to be
 used with [config strings](#configs). Cannot use `-` in the key for a modifier.
@@ -109,26 +112,14 @@ specifies to run the `openjdk11` [`runtime`](#runtimes) with the environment
 variable `FOO42` set to `43`. Note that value options are not limited only to
 environment variables, and can be used for all modifier `type`s.
 
-## `overrides`
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.
-
 ## `runtimes`
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.
+A YAML dictionary of runtime definitions that are to be used with [config strings](#configs).
+Each runtime requires a `type` key with other keys being specific to that
+`type`. For more information regarding the different `type`s of modifiers,
+please refer to [this page](./runtime.md).
 
 ## `suites`
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.
+A YAML dictionary of benchmark suite definitions that are to be used as keys of `benchmarks`.
+Each benchmark suite requires a `type` key with other keys being specific to that
+`type`. For more information regarding the different `type`s of modifiers,
+please refer to [this page](./suite.md).
