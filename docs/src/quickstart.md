@@ -70,6 +70,8 @@ runtimes:
 ```
 This defines two builds of [runtimes](./references/runtime.md).
 
+I recommend that you use absolute paths for the builds, although relative paths will work, and will be relative to where you run `running`.
+
 I strongly recommend you rename the builds (both the name in the configuration file and the folder name) to something more sensible, preferably with the commit hash for easy troubleshooting and performance debugging later.
 
 ## Prepare Probes
@@ -86,6 +88,8 @@ modifiers:
     val: "-Djava.library.path=/path/to/probes -Dprobes=RustMMTk"
 ```
 This defines two [modifiers](./references/modifier.md), which will be used later to modify the JVM command line arguments.
+
+Please only use absolute paths for all the above.
 
 ## Prepare Configs
 Finally, add he following to `two_builds.yml`.
