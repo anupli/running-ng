@@ -26,7 +26,7 @@ Generally, `$PATH` already exists and is exported to child processes.
 Please check whether your `~/.bash_profile` or `~/.profile` `source`s `~/.bashrc`.
 If not, when you use a login shell (e.g., in the case of tmux), the content of `~/.bashrc` might not be applied.
 
-To ensure `~/.bashrc` is always sourced, you can write add the following to `~/.bash_profile`.
+To ensure `~/.bashrc` is always sourced, you can add the following to `~/.bash_profile`.
 ```bash
 if [ -f ~/.bashrc ]; then
   . ~/.bashrc
