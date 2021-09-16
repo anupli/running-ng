@@ -148,10 +148,28 @@
 <pre><code class="language-bash">git clone https://github.com/anupli/running-ng
 cd running-ng
 pip3 install -e . --user
-# Add Python user install directory to your PATH
 </code></pre>
 <p>The <code>-e</code> option is used to allow quick update of <code>running-ng</code> by running <code>git pull</code>.
 Once the codebase is more stabilized, other installation options, such as installing from PyPI, could be preferable.</p>
+<h2 id="adding-running-to-path"><a class="header" href="#adding-running-to-path">Adding <code>running</code> to <code>PATH</code></a></h2>
+<p>You will need to add the folder where <code>running</code> is installed to your <code>PATH</code>.
+On a typical Linux installation, <code>running</code> is installed to <code>~/.local/bin</code>.</p>
+<p>You will need to refer to the documentation of the shell you are using.</p>
+<p>Here is an example for bash.</p>
+<pre><code class="language-bash"># Add the following to ~/.bashrc
+PATH=$PATH:$HOME/.local/bin
+</code></pre>
+<p>You don't need to use <code>export</code>.
+Generally, <code>$PATH</code> already exists and is exported to child processes.</p>
+<p>Please check whether your <code>~/.bash_profile</code> or <code>~/.profile</code> <code>source</code>s <code>~/.bashrc</code>.
+If not, when you use a login shell (e.g., in the case of tmux), the content of <code>~/.bashrc</code> might not be applied.</p>
+<p>To ensure <code>~/.bashrc</code> is always sourced, you can write add the following to <code>~/.bash_profile</code>.</p>
+<pre><code class="language-bash">if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
+</code></pre>
+<p>If you are a moma user, please change these dotfiles on <code>squirrel.moma</code>, and then run <code>sudo /moma-admin/config/update_self.fish</code>.
+Please check <a href="https://squirrel.anu.edu.au/#customization">here</a> for how to setup a UNIX password for <code>sudo</code>.</p>
 
                     </main>
 
