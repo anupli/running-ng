@@ -3,7 +3,7 @@ Please see the sections in this chapter for the references for each of the subco
 
 ## Usage
 ```console
-running [-h] [-v|--verbose] [-d|--dry-run] [--version] subcommand
+running [-h|--help] [-v|--verbose] [-d|--dry-run] [--version] subcommand
 ```
 
 `-h`: print help message.
