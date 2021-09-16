@@ -144,7 +144,61 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="runbms"><a class="header" href="#runbms"><code>runbms</code></a></h1>
-<h2 id="best-practices"><a class="header" href="#best-practices">Best practices</a></h2>
+<p>This subcommand runs benchmarks with different configs, possibly with varying heap sizes.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<pre><code class="language-console">runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-prefix ID_PREFIX] [-m|--minheap-multiplier MINHEAP_MULTIPLIER] [--skip-oom SKIP_OOM] [--skip-timeout SKIP_TIMEOUT] LOG_DIR CONFIG [N] [n [n ...]]
+</code></pre>
+<p><code>-h</code>: print help message.</p>
+<p><code>-i</code>: set the number of invocations.
+Overrides <code>invocations</code> in the config file.</p>
+<p><code>-s</code>: only use one heap size, <code>SLICE * minheap</code>, to run benchmarks.
+That is, <code>N</code> and <code>n</code>s are ignored.
+You can use an integer or a floating point number.</p>
+<p><code>-p</code>: add a prefix to the folder names where the results are stored.
+By default, the folder that stores the result is named using the host name and the timestamp.
+However, you can add a prefix to the folder name to signify which experiments the results belong to.</p>
+<p><code>-m</code> (preview ⚠️): multiple the minheap value for each benchmark by <code>MINHEAP_MULTIPLIER</code>.
+Do <strong>NOT</strong> use this unless you know what you are doing.
+Override <code>minheap_multiplier</code> in the config file.</p>
+<p><code>--skip-oom</code> (preview ⚠️): skip the remaining invocations if a benchmark under a <code>config</code> has run out of memory more than <code>SKIP_OOM</code> times.</p>
+<p><code>--skip-oom</code> (preview ⚠️): skip the remaining invocations if a benchmark under a <code>config</code>  has timed out more than <code>SKIP_TIMEOUT</code> times.</p>
+<p><code>LOG_DIR</code>: where to store the results.
+This is required.</p>
+<p><code>CONFIG</code>: the path to the configuration file.
+This is required.</p>
+<p><code>N</code>: the number of different heap sizes to explore.
+Must be powers of two.
+Explore heap sizes denoted by 0, 1, ..., and <code>N</code> (<code>N + 1</code> different sizes in total).
+The heap size 0 represents <code>1.0 * minheap</code>, and the heap size <code>N</code> represents <code>heap_range * minheap</code> (by default, <code>6.0 * minheap</code>).
+If <code>N</code> is omitted, then the script will run benchmarks without explicit explicitly setting heap sizes, unless you specify <code>-s</code> or use a modifier that sets the heap size.</p>
+<p><code>n</code>: the heap sizes to explore.
+Instead of exploring 0, 1, ..., and <code>N</code>, only explore the <code>n</code>s specified.</p>
+<h2 id="keys"><a class="header" href="#keys">Keys</a></h2>
+<p><code>invocations</code>: see above.</p>
+<p><code>minheap_multiplier</code>: see above.</p>
+<p><code>heap_range</code>: the heap size relative to the minheap when <code>n = N</code>.</p>
+<p><code>spread_factor</code>: changes how 0, 1, ..., and <code>N</code> are spread out.
+When <code>spread_factor</code> is zero, the differences between 0, 1, ..., and <code>N</code> are the same.
+The larger the <code>spread_factor</code> is, the coarser the spacing is at the end relative to start.
+Please do <strong>NOT</strong> change this unless you understand how it works.</p>
+<p><code>remote_host</code>: the remote host to <code>rsync</code> the results to.
+The exact absolute path of <code>LOG_DIR</code> is used on both the local and the remote machine.</p>
+<h2 id="interpreting-the-outputs"><a class="header" href="#interpreting-the-outputs">Interpreting the Outputs</a></h2>
+<p>Under construction 🚧.</p>
+<h3 id="console-outputs"><a class="header" href="#console-outputs">Console Outputs</a></h3>
+<h3 id="log-directory"><a class="header" href="#log-directory">Log directory</a></h3>
+<h2 id="heap-size-calculations"><a class="header" href="#heap-size-calculations">Heap Size Calculations</a></h2>
+<p>Please refer to the source code like <a href="https://github.com/anupli/running-ng/blob/master/running/command/runbms.py#L47">here</a> and <a href="https://github.com/anupli/running-ng/blob/master/running/command/fillin.py#L5">here</a> for the actual algorithm.</p>
+<p>But the basic idea is as follow.
+First, we start with the ends and the middle and gradually fill the gap.
+This is to make sure you can see the big picture trend.
+Second, the difference between sizes are smaller for smaller sizes and larger for large sizes, because the performance is much more sensitive to the change in heap sizes when the heap is small.</p>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<p>Under construction 🚧.</p>
+<h3 id="continuously-monitor-your-experiments"><a class="header" href="#continuously-monitor-your-experiments">Continuously Monitor Your Experiments</a></h3>
+<p>The results are <code>rsynced</code> to <code>remote_host</code> once all invocations for a benchmark at a heap size are finished.
+You shouldn't log into the experiment machine so not to disturb the experiments.
+You should log into the remote host and check the <code>LOG_DIR</code> there and see the new results that came in.</p>
 
                     </main>
 

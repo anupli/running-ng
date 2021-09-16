@@ -163,7 +163,7 @@ PATH=$PATH:$HOME/.local/bin
 Generally, <code>$PATH</code> already exists and is exported to child processes.</p>
 <p>Please check whether your <code>~/.bash_profile</code> or <code>~/.profile</code> <code>source</code>s <code>~/.bashrc</code>.
 If not, when you use a login shell (e.g., in the case of tmux), the content of <code>~/.bashrc</code> might not be applied.</p>
-<p>To ensure <code>~/.bashrc</code> is always sourced, you can write add the following to <code>~/.bash_profile</code>.</p>
+<p>To ensure <code>~/.bashrc</code> is always sourced, you can add the following to <code>~/.bash_profile</code>.</p>
 <pre><code class="language-bash">if [ -f ~/.bashrc ]; then
   . ~/.bashrc
 fi
