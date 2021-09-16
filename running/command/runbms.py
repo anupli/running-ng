@@ -1,5 +1,5 @@
 import logging
-from typing import DefaultDict, Dict, List, Optional, Tuple
+from typing import DefaultDict, Dict, List, Optional, Tuple, BinaryIO
 from running.suite import BenchmarkSuite, is_dry_run
 from running.benchmark import Benchmark, SubprocessrExit
 from running.config import Configuration
@@ -104,20 +104,20 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
     return [spread(spread_factor, N, n)/divisor + start for n in ns]
 
 
-def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runbms_dir: Path, size: Optional[int], fd) -> Tuple[str, SubprocessrExit]:
+def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runbms_dir: Path, size: Optional[int], fd: Optional[BinaryIO]) -> Tuple[bytes, SubprocessrExit]:
     runtime, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     if size is not None:
         mod_b = mod_b.attach_modifiers([runtime.get_heapsize_modifier(size)])
     prologue = get_log_prologue(runtime, mod_b)
     if fd:
-        fd.write(prologue)
+        fd.write(prologue.encode("ascii"))
     output, exit_status = mod_b.run(runtime, timeout, cwd=runbms_dir)
     if fd:
         fd.write(output)
     epilogue = get_log_epilogue(runtime, mod_b)
     if fd:
-        fd.write(epilogue)
+        fd.write(epilogue.encode("ascii"))
     return output, exit_status
 
 
@@ -214,7 +214,8 @@ def run_one_benchmark(
                 )
                 assert exit_status is SubprocessrExit.Dryrun
             else:
-                with (log_dir / log_filename).open("a") as fd:
+                fd: BinaryIO
+                with (log_dir / log_filename).open("ab") as fd:
                     output, exit_status = run_benchmark_with_config(
                         c, bm, timeout, runbms_dir, size, fd
                     )

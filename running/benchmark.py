@@ -65,13 +65,13 @@ class Benchmark(object):
             ])
         )
 
-    def run(self, runtime: Runtime, timeout: int = None, cwd: Path = None) -> Tuple[str, SubprocessrExit]:
+    def run(self, runtime: Runtime, timeout: int = None, cwd: Path = None) -> Tuple[bytes, SubprocessrExit]:
         if suite.is_dry_run():
             print(
                 self.to_string(runtime.get_executable()),
                 file=sys.stderr
             )
-            return "", SubprocessrExit.Dryrun
+            return b"", SubprocessrExit.Dryrun
         else:
             cmd = self.get_full_args(runtime.get_executable())
             env_args = os.environ.copy()
@@ -85,11 +85,11 @@ class Benchmark(object):
                     timeout=timeout,
                     cwd=cwd
                 )
-                return p.stdout.decode("utf-8"), SubprocessrExit.Normal
+                return p.stdout, SubprocessrExit.Normal
             except subprocess.CalledProcessError as e:
-                return e.stdout.decode("utf-8"), SubprocessrExit.Error
+                return e.stdout, SubprocessrExit.Error
             except subprocess.TimeoutExpired as e:
-                return e.stdout.decode("utf-8"), SubprocessrExit.Timeout
+                return e.stdout, SubprocessrExit.Timeout
 
 
 class BinaryBenchmark(Benchmark):

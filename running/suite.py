@@ -34,7 +34,7 @@ class BenchmarkSuite(object):
     def from_config(name: str, config: Dict[str, str]) -> Any:
         return BenchmarkSuite.CLS_MAPPING[config["type"]](name=name, **config)
 
-    def is_oom(self, _output: str) -> bool:
+    def is_oom(self, _output: bytes) -> bool:
         raise NotImplementedError
 
     def get_minheap(self, _bm_name: str) -> int:
@@ -44,7 +44,7 @@ class BenchmarkSuite(object):
         # No timeout by default
         return None
 
-    def is_passed(self, _output: str) -> bool:
+    def is_passed(self, _output: bytes) -> bool:
         raise NotImplementedError
 
     def get_wrapper(self, _bm_name: str) -> Optional[str]:
@@ -73,7 +73,7 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
             bm_name=bm_name
         )
 
-    def is_oom(self, _output: str) -> bool:
+    def is_oom(self, _output: bytes) -> bool:
         return False
 
     def get_timeout(self, _bm_name: str) -> Optional[int]:
@@ -84,7 +84,7 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
         logging.warning("minheap is not respected for BinaryBenchmarkSuite")
         return 0
 
-    def is_passed(self, _output: str) -> bool:
+    def is_passed(self, _output: bytes) -> bool:
         # FIXME no generic way to know
         return True
 
@@ -99,8 +99,8 @@ class JavaBenchmarkSuite(BenchmarkSuite):
     def get_timeout(self, bm_name: str) -> Optional[int]:
         raise NotImplementedError()
 
-    def is_oom(self, output: str) -> bool:
-        for pattern in ["Allocation Failed", "OutOfMemoryError", "ran out of memory"]:
+    def is_oom(self, output: bytes) -> bool:
+        for pattern in [b"Allocation Failed", b"OutOfMemoryError", b"ran out of memory"]:
             if pattern in output:
                 return True
         return False
@@ -164,8 +164,8 @@ class DaCapo(JavaBenchmarkSuite):
         # FIXME have per benchmark timeout
         return self.timeout
 
-    def is_passed(self, output: str) -> bool:
-        return "PASSED" in output
+    def is_passed(self, output: bytes) -> bool:
+        return b"PASSED" in output
 
     def get_wrapper(self, bm_name: str) -> Optional[str]:
         if self.wrapper is None:

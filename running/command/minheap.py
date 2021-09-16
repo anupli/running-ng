@@ -26,7 +26,7 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers([heapsize])
         output, _ = bm_with_heapsize.run(runtime, timeout=timeout)
-        if "PASSED" in output:
+        if b"PASSED" in output:
             print(" o ", end="", flush=True)
             minh = mid
             hi = mid
