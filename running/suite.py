@@ -100,7 +100,7 @@ class JavaBenchmarkSuite(BenchmarkSuite):
         raise NotImplementedError()
 
     def is_oom(self, output: bytes) -> bool:
-        for pattern in [b"Allocation Failed", b"OutOfMemoryError", b"ran out of memory"]:
+        for pattern in [b"Allocation Failed", b"OutOfMemoryError", b"ran out of memory", b"panicked at 'Out of memory!'"]:
             if pattern in output:
                 return True
         return False
