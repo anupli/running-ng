@@ -57,6 +57,35 @@ Please do **NOT** change this unless you understand how it works.
 `remote_host`: the remote host to `rsync` the results to.
 The exact absolute path of `LOG_DIR` is used on both the local and the remote machine.
 
+`plugins` (preview ⚠️): plugins of this command.
+Must be a dictionary, similar to how modifiers are declared.
+
+## Plugins (preview ⚠️)
+### `Zulip`
+Zulip integration for notifying when experiments start or end.
+No message will be sent if it'a dry run.
+
+Here is an example.
+```yaml
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: private
+      to: ["your user id here"]
+```
+#### Keys
+`request`: please follow the [Zulip API documentation](https://zulip.com/api/send-message).
+Note that you don't need to put in `content` here.
+Please contact the administrators of your organization for your user ID.
+
+`config_file`: an optional string to the path of config file.
+If not specified, the default is `~/.zuliprc`.
+Please make sure that this file can only be accessed by you (e.g., `chmod 600 ~/.zulip`).
+If you are a moma user, please create this file on `squirrel`, and it will then be synced to other machines.
+Please follow the Zulip documentation for the [syntax](https://zulip.com/api/configuring-python-bindings) of the config file and for [obtaining an API key](https://zulip.com/api/api-keys).
+If you can't create a new bot, please contact the administrators of your organization.
+
 ## Interpreting the Outputs
 Under construction 🚧.
 ### Console Outputs
