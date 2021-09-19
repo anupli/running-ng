@@ -3,7 +3,7 @@ from codecs import open
 from os import path
 
 NAME = 'running'
-REQUIRED = ["pyyaml"]
+REQUIRED = ["pyyaml", "zulip"]
 
 here = path.abspath(path.dirname(__file__))
 

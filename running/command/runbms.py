@@ -1,5 +1,5 @@
 import logging
-from typing import DefaultDict, Dict, List, Optional, Tuple, BinaryIO
+from typing import DefaultDict, Dict, List, Any, Optional, Tuple, BinaryIO, TYPE_CHECKING
 from running.suite import BenchmarkSuite, is_dry_run
 from running.benchmark import Benchmark, SubprocessrExit
 from running.config import Configuration
@@ -14,13 +14,15 @@ import os
 from running.command.fillin import fillin
 import math
 import yaml
+if TYPE_CHECKING:
+    from running.plugin.runbms import RunbmsPlugin
 
 configuration: Configuration
 minheap_multiplier: float
 remote_host: Optional[str]
 skip_oom: Optional[int]
 skip_timeout: Optional[int]
-
+plugins: Dict[str, Any]
 
 def setup_parser(subparsers):
     f = subparsers.add_parser("runbms")
@@ -182,7 +184,10 @@ def run_one_benchmark(
     configs: List[str],
     runbms_dir: Path,
     log_dir: Path
-):
+):  
+    p: "RunbmsPlugin"
+    for p in plugins.values():
+        p.start_benchmark(hfac, bm)
     bm_name = bm.name
     print(bm_name, end=" ")
     size: Optional[int]  # heap size measured in MB
@@ -241,6 +246,8 @@ def run_one_benchmark(
             subprocess.check_call("gzip {}".format(
                 log_dir / log_filename), shell=True)
     print()
+    for p in plugins.values():
+        p.end_benchmark(hfac, bm)
 
 
 def run_one_hfac(
@@ -252,13 +259,17 @@ def run_one_hfac(
     runbms_dir: Path,
     log_dir: Path
 ):
+    p: "RunbmsPlugin"
+    for p in plugins.values():
+        p.start_hfac(hfac)
     for suite_name, bms in benchmarks.items():
         suite = suites[suite_name]
         for bm in bms:
             run_one_benchmark(invocations, suite, bm, hfac,
                               configs, runbms_dir, log_dir)
             rsync(log_dir)
-
+    for p in plugins.values():
+        p.end_hfac(hfac)
 
 def ensure_remote_dir(log_dir):
     if not is_dry_run() and remote_host is not None:
@@ -279,11 +290,11 @@ def run(args):
         logging.info("Temporary directory: {}".format(runbms_dir))
         # Processing command lines args
         prefix = args.get("id_prefix")
-        id = getid()
+        run_id = getid()
         if prefix:
-            id = "{}-{}".format(prefix, id)
-        print("Run id: {}".format(id))
-        log_dir = args.get("LOG_DIR") / id
+            run_id = "{}-{}".format(prefix, run_id)
+        print("Run id: {}".format(run_id))
+        log_dir = args.get("LOG_DIR") / run_id
         if not is_dry_run():
             log_dir.mkdir(parents=True, exist_ok=True)
             with (log_dir / "runbms_args.yml").open("w") as fd:
@@ -323,6 +334,17 @@ def run(args):
         remote_host = configuration.get("remote_host")
         if not is_dry_run() and remote_host is not None:
             ensure_remote_dir(log_dir)
+        global plugins
+        plugins = configuration.get("plugins")
+        if plugins is None:
+            plugins = {}
+        else:
+            from running.plugin.runbms import RunbmsPlugin
+            if type(plugins) is not dict:
+                raise TypeError("plugins must be a dictionary")
+            plugins = {k: RunbmsPlugin.from_config(k, v) for k,v in plugins.items()}
+            for p in plugins.values():
+                p.set_run_id(run_id)
 
         def run_N_ns(N, ns):
             hfacs = get_hfacs(heap_range, spread_factor, N, ns)
