@@ -563,6 +563,30 @@ The larger the <code>spread_factor</code> is, the coarser the spacing is at the 
 Please do <strong>NOT</strong> change this unless you understand how it works.</p>
 <p><code>remote_host</code>: the remote host to <code>rsync</code> the results to.
 The exact absolute path of <code>LOG_DIR</code> is used on both the local and the remote machine.</p>
+<p><code>plugins</code> (preview ⚠️): plugins of this command.
+Must be a dictionary, similar to how modifiers are declared.</p>
+<h2 id="plugins-preview-"><a class="header" href="#plugins-preview-">Plugins (preview ⚠️)</a></h2>
+<h3 id="zulip"><a class="header" href="#zulip"><code>Zulip</code></a></h3>
+<p>Zulip integration for notifying when experiments start or end.
+No message will be sent if it'a dry run.</p>
+<p>Here is an example.</p>
+<pre><code class="language-yaml">plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: private
+      to: [&quot;your user id here&quot;]
+</code></pre>
+<h4 id="keys-8"><a class="header" href="#keys-8">Keys</a></h4>
+<p><code>request</code>: please follow the <a href="https://zulip.com/api/send-message">Zulip API documentation</a>.
+Note that you don't need to put in <code>content</code> here.
+Please contact the administrators of your organization for your user ID.</p>
+<p><code>config_file</code>: an optional string to the path of config file.
+If not specified, the default is <code>~/.zuliprc</code>.
+Please make sure that this file can only be accessed by you (e.g., <code>chmod 600 ~/.zulip</code>).
+If you are a moma user, please create this file on <code>squirrel</code>, and it will then be synced to other machines.
+Please follow the Zulip documentation for the <a href="https://zulip.com/api/configuring-python-bindings">syntax</a> of the config file and for <a href="https://zulip.com/api/api-keys">obtaining an API key</a>.
+If you can't create a new bot, please contact the administrators of your organization.</p>
 <h2 id="interpreting-the-outputs"><a class="header" href="#interpreting-the-outputs">Interpreting the Outputs</a></h2>
 <p>Under construction 🚧.</p>
 <h3 id="console-outputs"><a class="header" href="#console-outputs">Console Outputs</a></h3>
