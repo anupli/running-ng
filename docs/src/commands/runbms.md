@@ -104,6 +104,6 @@ Second, the difference between sizes are smaller for smaller sizes and larger fo
 Under construction 🚧.
 
 ### Continuously Monitor Your Experiments
-The results are `rsynced` to `remote_host` once all invocations for a benchmark at a heap size are finished.
+The results are `rsync`ed to `remote_host` once all invocations for a benchmark at a heap size are finished.
 You shouldn't log into the experiment machine so not to disturb the experiments.
 You should log into the remote host and check the `LOG_DIR` there and see the new results that came in.
