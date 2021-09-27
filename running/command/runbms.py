@@ -211,6 +211,7 @@ def run_one_benchmark(
     timeout_count = DefaultDict(int)
     if len(get_logged_in_users()) > 1:
         logging.warning("More than one user logged in!")
+    ever_ran = [False] * len(configs)
     for i in range(0, invocations):
         print(i, end="", flush=True)
         for j, c in enumerate(configs):
@@ -239,6 +240,7 @@ def run_one_benchmark(
                     output, exit_status = run_benchmark_with_config(
                         c, bm, timeout, runbms_dir, size, fd
                     )
+                ever_ran[j] = True
             if suite.is_oom(output):
                 oomed_count[c] += 1
             if exit_status is SubprocessrExit.Timeout:
@@ -257,7 +259,7 @@ def run_one_benchmark(
                 raise ValueError("Not a valid SubprocessrExit value")
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
-        if not is_dry_run():
+        if not is_dry_run() and ever_ran[j]:
             subprocess.check_call("gzip {}".format(
                 log_dir / log_filename), shell=True)
     print()
