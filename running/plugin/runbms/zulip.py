@@ -73,18 +73,18 @@ class Zulip(RunbmsPlugin):
     def get_reservation_message(self) -> str:
         reservation = self.moma.get_reservation()
         if reservation.status is MomaReservationStatus.NOT_MOMA:
-            return "** Warning: not running on a moma machine. **\n"
+            return "# ** Warning: not running on a moma machine. **\n"
         elif reservation.status is MomaReservationStatus.NOT_RESERVED:
-            return "** Warning: machine not reserved. **\n"
+            return "# ** Warning: machine not reserved. **\n"
         elif reservation.status is MomaReservationStatus.RESERVED_BY_OTHERS:
-            return "** Warning: machine reserved by {}, ends at {}. **\n".format(
+            return "# ** Warning: machine reserved by {}, ends at {}. **\n".format(
                 reservation.user,
                 reservation.end
             )
         elif reservation.status is MomaReservationStatus.RESERVED_BY_ME:
             delta = reservation.end - datetime.now()
             if delta > RESERVATION_WARNING_THRESHOLD:
-                return "** Warning: less than {} hours of reservation left. Current reservation ends at {}. **\n".format(
+                return "# ** Warning: less than {} hours of reservation left. Current reservation ends at {}. **\n".format(
                     RESERVATION_WARNING_HOURS,
                     reservation.end
                 )
