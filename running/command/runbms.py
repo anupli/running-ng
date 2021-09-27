@@ -155,10 +155,10 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output += "mkdir -p PLOTTY_WORKAROUND; timedrun; "
     output += bm.to_string(runtime.get_executable())
     output += "\n"
-    output += system("date")
-    output += system("w")
-    output += system("vmstat 1 2")
-    output += system("top -bcn 1 -w512 |head -n 12")
+    output += system("date") + "\n"
+    output += system("w") + "\n"
+    output += system("vmstat 1 2") + "\n"
+    output += system("top -bcn 1 -w512 |head -n 12") + "\n"
     output += "Environment variables: \n"
     for k, v in sorted(os.environ.items()):
         output += "\t{}={}\n".format(k, v)
