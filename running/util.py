@@ -10,7 +10,7 @@ import enum
 import getpass
 from datetime import datetime
 import subprocess
-
+import time
 
 def system(cmd) -> str:
     return subprocess.check_output(cmd, shell=True).decode("utf-8")
@@ -88,7 +88,7 @@ class MomaReservaton(object):
 
 
 class Moma(object):
-    def __init__(self, host: Optional[str] = None):
+    def __init__(self, host: Optional[str] = None, frequency: int = 60):
         if host is None:
             self.host = socket.gethostname()
             self.is_moma = socket.getfqdn().endswith(".moma")
@@ -101,10 +101,17 @@ class Moma(object):
                 self.is_moma = False
         self.reserve_time_url = "http://10.0.0.1/reserve-time?host={}".format(
             self.host)
+        self.frequency = frequency
+        self.last_checked = None
+        self.update_reservation()
 
-    def get_reservation(self) -> MomaReservaton:
+    def update_reservation(self):
+        now = time.time()
+        if self.last_checked:
+            if now - self.last_checked <= self.frequency:
+                return
         if not self.is_moma:
-            return MomaReservaton(MomaReservationStatus.NOT_MOMA, None, None, None)
+            self.reservation = MomaReservaton(MomaReservationStatus.NOT_MOMA, None, None, None)
         with urllib.request.urlopen(self.reserve_time_url) as response:
             html = response.read()
             if not html:
@@ -115,4 +122,9 @@ class Moma(object):
             ) else MomaReservationStatus.RESERVED_BY_OTHERS
             start = datetime.fromtimestamp(int(start))
             end = datetime.fromtimestamp(int(end))
-            return MomaReservaton(status, user, start, end)
+            self.reservation = MomaReservaton(status, user, start, end)
+        self.last_checked = now
+
+    def get_reservation(self) -> MomaReservaton:
+        self.update_reservation()
+        return self.reservation
