@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from running.benchmark import Benchmark
 
 RESERVATION_WARNING_HOURS = 12
-RESERVATION_WARNING_THRESHOLD = timedelta(seconds = RESERVATION_WARNING_HOURS * 60)
+RESERVATION_WARNING_THRESHOLD = timedelta(seconds = RESERVATION_WARNING_HOURS * 60 * 60)
 
 @register(RunbmsPlugin)
 class Zulip(RunbmsPlugin):
