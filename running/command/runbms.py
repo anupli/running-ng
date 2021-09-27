@@ -23,6 +23,8 @@ remote_host: Optional[str]
 skip_oom: Optional[int]
 skip_timeout: Optional[int]
 plugins: Dict[str, Any]
+resume: Optional[str]
+
 
 def setup_parser(subparsers):
     f = subparsers.add_parser("runbms")
@@ -37,6 +39,7 @@ def setup_parser(subparsers):
     f.add_argument("-m", "--minheap-multiplier", type=float)
     f.add_argument("--skip-oom", type=int)
     f.add_argument("--skip-timeout", type=int)
+    f.add_argument("--resume", type=str)
 
 
 def getid() -> str:
@@ -135,6 +138,10 @@ def get_filename(bm: Benchmark, hfac: Optional[float], size: Optional[int], conf
     )
 
 
+def get_filename_completed(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
+    return "{}.gz".format(get_filename(bm, hfac, size, config))
+
+
 def get_log_epilogue(runtime: Runtime, bm: Benchmark) -> str:
     return ""
 
@@ -213,6 +220,12 @@ def run_one_benchmark(
             if skip_timeout is not None and timeout_count[c] >= skip_timeout:
                 print(".", end="", flush=True)
                 continue
+            if resume:
+                log_filename_completed = get_filename_completed(
+                    bm, hfac, size, c)
+                if (log_dir / log_filename_completed).exists():
+                    print(chr(ord('a')+j), end="", flush=True)
+                    continue
             log_filename = get_filename(bm, hfac, size, c)
             logging.debug("Running with log filename {}".format(log_filename))
             if is_dry_run():
@@ -292,10 +305,15 @@ def run(args):
     with tempfile.TemporaryDirectory(prefix="runbms-") as runbms_dir:
         logging.info("Temporary directory: {}".format(runbms_dir))
         # Processing command lines args
-        prefix = args.get("id_prefix")
-        run_id = getid()
-        if prefix:
-            run_id = "{}-{}".format(prefix, run_id)
+        global resume
+        resume = args.get("resume")
+        if resume:
+            run_id = resume
+        else:
+            prefix = args.get("id_prefix")
+            run_id = getid()
+            if prefix:
+                run_id = "{}-{}".format(prefix, run_id)
         print("Run id: {}".format(run_id))
         log_dir = args.get("LOG_DIR") / run_id
         if not is_dry_run():
