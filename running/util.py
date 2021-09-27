@@ -1,4 +1,4 @@
-from typing import Any, List, TYPE_CHECKING, Optional, Tuple
+from typing import Any, List, TYPE_CHECKING, Optional, Tuple, Set
 if TYPE_CHECKING:
     from running.config import Configuration
     from running.modifier import Modifier
@@ -9,6 +9,11 @@ import urllib.request
 import enum
 import getpass
 from datetime import datetime
+import subprocess
+
+
+def system(cmd) -> str:
+    return subprocess.check_output(cmd, shell=True).decode("utf-8")
 
 
 def register(parent_class):
@@ -60,6 +65,11 @@ def smart_quote(_s: Any) -> str:
         return "\"{}\"".format(s)
     else:
         return s
+
+
+def get_logged_in_users() -> Set[str]:
+    output = system("who")
+    return set([l.split()[0] for l in output.splitlines()])
 
 
 class MomaReservationStatus(enum.Enum):

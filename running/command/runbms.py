@@ -4,7 +4,7 @@ from running.suite import BenchmarkSuite, is_dry_run
 from running.benchmark import Benchmark, SubprocessrExit
 from running.config import Configuration
 from pathlib import Path
-from running.util import parse_config_str
+from running.util import parse_config_str, system, get_logged_in_users
 import socket
 from datetime import datetime
 from running.runtime import Runtime
@@ -139,10 +139,6 @@ def get_log_epilogue(runtime: Runtime, bm: Benchmark) -> str:
     return ""
 
 
-def system(cmd) -> str:
-    return subprocess.check_output(cmd, shell=True).decode("utf-8")
-
-
 def hz_to_ghz(hzstr: str) -> str:
     return "{:.2f} GHz".format(int(hzstr) / 1000 / 1000)
 
@@ -152,6 +148,10 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output += "mkdir -p PLOTTY_WORKAROUND; timedrun; "
     output += bm.to_string(runtime.get_executable())
     output += "\n"
+    output += system("date")
+    output += system("w")
+    output += system("vmstat 1 2")
+    output += system("top -bcn 1 -w512 |head -n 12")
     output += "Environment variables: \n"
     for k, v in sorted(os.environ.items()):
         output += "\t{}={}\n".format(k, v)
@@ -184,7 +184,7 @@ def run_one_benchmark(
     configs: List[str],
     runbms_dir: Path,
     log_dir: Path
-):  
+):
     p: "RunbmsPlugin"
     for p in plugins.values():
         p.start_benchmark(hfac, bm)
@@ -202,6 +202,8 @@ def run_one_benchmark(
     oomed_count = DefaultDict(int)
     timeout_count: DefaultDict[str, int]
     timeout_count = DefaultDict(int)
+    if len(get_logged_in_users()) > 1:
+        logging.warning("More than one user logged in!")
     for i in range(0, invocations):
         print(i, end="", flush=True)
         for j, c in enumerate(configs):
@@ -270,6 +272,7 @@ def run_one_hfac(
             rsync(log_dir)
     for p in plugins.values():
         p.end_hfac(hfac)
+
 
 def ensure_remote_dir(log_dir):
     if not is_dry_run() and remote_host is not None:
@@ -342,7 +345,8 @@ def run(args):
             from running.plugin.runbms import RunbmsPlugin
             if type(plugins) is not dict:
                 raise TypeError("plugins must be a dictionary")
-            plugins = {k: RunbmsPlugin.from_config(k, v) for k,v in plugins.items()}
+            plugins = {k: RunbmsPlugin.from_config(
+                k, v) for k, v in plugins.items()}
             for p in plugins.values():
                 p.set_run_id(run_id)
 

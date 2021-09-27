@@ -9,12 +9,13 @@ from running.command.runbms import hfac_str
 if TYPE_CHECKING:
     from running.benchmark import Benchmark
 
+
 @register(RunbmsPlugin)
 class Zulip(RunbmsPlugin):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.config_file = kwargs.get("config_file", "~/.zuliprc")
-        self.client = zulip.Client(config_file = self.config_file)
+        self.client = zulip.Client(config_file=self.config_file)
         self.request = kwargs.get("request", {})
         if type(self.request) is not dict:
             raise TypeError("request of Zulip must be a dictionary")
@@ -35,19 +36,21 @@ class Zulip(RunbmsPlugin):
                 logging.warning("Zulip send_message failed\n{}".format(result))
         except:
             logging.exception("Unhandled Zulip send_message exception")
-    
+
     def __str__(self) -> str:
         return "Zulip {}".format(self.name)
 
     def start_hfac(self, hfac: Optional[float]):
         if self.nop:
             return
-        self.send_message("hfac {} started".format(hfac_str(hfac) if hfac is not None else "None"))
+        self.send_message("hfac {} started".format(
+            hfac_str(hfac) if hfac is not None else "None"))
 
     def end_hfac(self, hfac: Optional[float]):
         if self.nop:
             return
-        self.send_message("hfac {} ended".format(hfac_str(hfac) if hfac is not None else "None"))
+        self.send_message("hfac {} ended".format(
+            hfac_str(hfac) if hfac is not None else "None"))
 
     def start_benchmark(self, _hfac: Optional[float], bm: "Benchmark"):
         if self.nop:

@@ -33,4 +33,6 @@ class RunbmsPlugin(object):
     def end_benchmark(self, _hfac: Optional[float], _bm: "Benchmark"):
         pass
 
+# !!! Do NOT remove this import nor change its position
+# This is to make sure that the Zulip class is correctly registered
 from running.plugin.runbms.zulip import Zulip
