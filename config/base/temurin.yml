@@ -1,0 +1,13 @@
+runtimes:
+  temurin-8:
+    type: OpenJDK
+    release: 8
+    home: /usr/lib/jvm/temurin-8-amd64
+  temurin-11:
+    type: OpenJDK
+    release: 11
+    home: /usr/lib/jvm/temurin-11-amd64
+  temurin-17:
+    type: OpenJDK
+    release: 17
+    home: /usr/lib/jvm/temurin-17-amd64

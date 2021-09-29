@@ -1,2 +1,3 @@
 includes:
   - "adoptopenjdk.yml"
+  - "temurin.yml"
