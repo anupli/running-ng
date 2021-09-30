@@ -60,7 +60,7 @@ class Benchmark(object):
         return "{} {}".format(
             self.get_env_str(),
             " ".join([
-                smart_quote(x)
+                smart_quote(os.path.expandvars(x))
                 for x in self.get_full_args(executable)
             ])
         )
@@ -74,6 +74,7 @@ class Benchmark(object):
             return b"", SubprocessrExit.Dryrun
         else:
             cmd = self.get_full_args(runtime.get_executable())
+            cmd = [os.path.expandvars(x) for x in cmd]
             env_args = os.environ.copy()
             env_args.update(self.env_args)
             try:
@@ -83,8 +84,7 @@ class Benchmark(object):
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     timeout=timeout,
-                    cwd=cwd,
-                    shell=True
+                    cwd=cwd
                 )
                 return p.stdout, SubprocessrExit.Normal
             except subprocess.CalledProcessError as e:
