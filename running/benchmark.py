@@ -83,7 +83,8 @@ class Benchmark(object):
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     timeout=timeout,
-                    cwd=cwd
+                    cwd=cwd,
+                    shell=True
                 )
                 return p.stdout, SubprocessrExit.Normal
             except subprocess.CalledProcessError as e:
