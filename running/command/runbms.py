@@ -114,14 +114,14 @@ def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runb
     mod_b = b.attach_modifiers(mods)
     if size is not None:
         mod_b = mod_b.attach_modifiers([runtime.get_heapsize_modifier(size)])
-    prologue = get_log_prologue(runtime, mod_b)
     if fd:
+        prologue = get_log_prologue(runtime, mod_b)
         fd.write(prologue.encode("ascii"))
     output, exit_status = mod_b.run(runtime, timeout, cwd=runbms_dir)
     if fd:
         fd.write(output)
-    epilogue = get_log_epilogue(runtime, mod_b)
     if fd:
+        epilogue = get_log_epilogue(runtime, mod_b)
         fd.write(epilogue.encode("ascii"))
     return output, exit_status
 
