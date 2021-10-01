@@ -72,6 +72,8 @@ class Zulip(RunbmsPlugin):
 
     def get_reservation_message(self) -> str:
         reservation = self.moma.get_reservation()
+        if reservation is None:
+            return ""
         if reservation.status is MomaReservationStatus.NOT_MOMA:
             return "# ** Warning: not running on a moma machine. **\n"
         elif reservation.status is MomaReservationStatus.NOT_RESERVED:

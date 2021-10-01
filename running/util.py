@@ -103,6 +103,7 @@ class Moma(object):
             self.host)
         self.frequency = frequency
         self.last_checked = None
+        self.reservation = None
         self.update_reservation()
 
     def update_reservation(self):
@@ -111,18 +112,26 @@ class Moma(object):
             if now - self.last_checked <= self.frequency:
                 return
         if not self.is_moma:
-            self.reservation = MomaReservaton(MomaReservationStatus.NOT_MOMA, None, None, None)
-        with urllib.request.urlopen(self.reserve_time_url) as response:
-            html = response.read()
-            if not html:
-                return MomaReservaton(MomaReservationStatus.NOT_RESERVED, None, None, None)
-            html = html.decode("utf-8")
-            user, start, end = html.split(",")
-            status = MomaReservationStatus.RESERVED_BY_ME if user == getpass.getuser(
-            ) else MomaReservationStatus.RESERVED_BY_OTHERS
-            start = datetime.fromtimestamp(int(start))
-            end = datetime.fromtimestamp(int(end))
-            self.reservation = MomaReservaton(status, user, start, end)
+            self.reservation = MomaReservaton(
+                MomaReservationStatus.NOT_MOMA,
+                None, None, None
+            )
+        else:
+            with urllib.request.urlopen(self.reserve_time_url) as response:
+                html = response.read()
+                if not html:
+                    self.reservation = MomaReservaton(
+                        MomaReservationStatus.NOT_RESERVED,
+                        None, None, None
+                    )
+                else:
+                    html = html.decode("utf-8")
+                    user, start, end = html.split(",")
+                    status = MomaReservationStatus.RESERVED_BY_ME if user == getpass.getuser(
+                    ) else MomaReservationStatus.RESERVED_BY_OTHERS
+                    start = datetime.fromtimestamp(int(start))
+                    end = datetime.fromtimestamp(int(end))
+                    self.reservation = MomaReservaton(status, user, start, end)
         self.last_checked = now
 
     def get_reservation(self) -> MomaReservaton:
