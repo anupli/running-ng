@@ -1,4 +1,3 @@
-from running.plugin.runbms.zulip import Zulip
 from typing import Any, Dict, Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from running.benchmark import Benchmark
@@ -49,3 +48,4 @@ class RunbmsPlugin(object):
 
 # !!! Do NOT remove this import nor change its position
 # This is to make sure that the Zulip class is correctly registered
+from running.plugin.runbms.zulip import Zulip
