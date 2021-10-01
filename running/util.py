@@ -22,6 +22,13 @@ def register(parent_class):
         return cls
     return inner
 
+def config_index_to_chr(i: int) -> str:
+    if i < 0 or i >= 52:
+        raise ValueError("Cannot convert {} into a character".format(i))
+    elif i < 26:
+        return chr(ord('a')+i)
+    else:
+        return chr(ord('A')+i-26)
 
 def parse_modifier_strs(configuration: 'Configuration', mod_strs: List[str]) -> List['Modifier']:
     # Some modifiers could be a modifier set, and we need to flatten it
