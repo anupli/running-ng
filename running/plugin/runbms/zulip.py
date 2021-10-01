@@ -11,7 +11,9 @@ if TYPE_CHECKING:
     from running.benchmark import Benchmark
 
 RESERVATION_WARNING_HOURS = 12
-RESERVATION_WARNING_THRESHOLD = timedelta(seconds = RESERVATION_WARNING_HOURS * 60 * 60)
+RESERVATION_WARNING_THRESHOLD = timedelta(
+    seconds=RESERVATION_WARNING_HOURS * 60 * 60)
+
 
 @register(RunbmsPlugin)
 class Zulip(RunbmsPlugin):
@@ -58,7 +60,8 @@ class Zulip(RunbmsPlugin):
         try:
             result = self.client.update_message(request)
             if result["result"] != "success":
-                logging.warning("Zulip update_message failed\n{}".format(result))
+                logging.warning(
+                    "Zulip update_message failed\n{}".format(result))
             else:
                 self.last_message_content = content
         except:
@@ -107,7 +110,8 @@ class Zulip(RunbmsPlugin):
         if self.nop:
             return
         if self.last_message_id and self.last_message_content:
-            self.modify_message(self.last_message_content + config_index_to_chr(config))
+            self.modify_message(self.last_message_content +
+                                config_index_to_chr(config))
 
     def get_reservation_message(self) -> str:
         reservation = self.moma.get_reservation()

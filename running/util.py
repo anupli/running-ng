@@ -12,6 +12,7 @@ from datetime import datetime
 import subprocess
 import time
 
+
 def system(cmd) -> str:
     return subprocess.check_output(cmd, shell=True).decode("utf-8")
 
@@ -22,6 +23,7 @@ def register(parent_class):
         return cls
     return inner
 
+
 def config_index_to_chr(i: int) -> str:
     if i < 0 or i >= 52:
         raise ValueError("Cannot convert {} into a character".format(i))
@@ -29,6 +31,7 @@ def config_index_to_chr(i: int) -> str:
         return chr(ord('a')+i)
     else:
         return chr(ord('A')+i-26)
+
 
 def parse_modifier_strs(configuration: 'Configuration', mod_strs: List[str]) -> List['Modifier']:
     # Some modifiers could be a modifier set, and we need to flatten it
@@ -142,6 +145,6 @@ class Moma(object):
                     self.reservation = MomaReservaton(status, user, start, end)
         self.last_checked = now
 
-    def get_reservation(self) -> MomaReservaton:
+    def get_reservation(self) -> Optional[MomaReservaton]:
         self.update_reservation()
         return self.reservation
