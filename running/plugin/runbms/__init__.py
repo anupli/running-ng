@@ -33,6 +33,19 @@ class RunbmsPlugin(object):
     def end_benchmark(self, _hfac: Optional[float], _bm: "Benchmark"):
         pass
 
+    def start_invocation(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int):
+        pass
+
+    def end_invocation(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int):
+        pass
+
+    def start_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, _config: int):
+        pass
+
+    def end_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, _config: int):
+        pass
+
+
 # !!! Do NOT remove this import nor change its position
 # This is to make sure that the Zulip class is correctly registered
 from running.plugin.runbms.zulip import Zulip

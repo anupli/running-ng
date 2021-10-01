@@ -4,7 +4,7 @@ from running.suite import BenchmarkSuite, is_dry_run
 from running.benchmark import Benchmark, SubprocessrExit
 from running.config import Configuration
 from pathlib import Path
-from running.util import parse_config_str, system, get_logged_in_users
+from running.util import parse_config_str, system, get_logged_in_users, config_index_to_chr
 import socket
 from datetime import datetime
 from running.runtime import Runtime
@@ -213,8 +213,12 @@ def run_one_benchmark(
         logging.warning("More than one user logged in!")
     ever_ran = [False] * len(configs)
     for i in range(0, invocations):
+        for p in plugins.values():
+            p.start_invocation(hfac, bm, i)
         print(i, end="", flush=True)
         for j, c in enumerate(configs):
+            for p in plugins.values():
+                p.start_config(hfac, bm, i, j)
             if skip_oom is not None and oomed_count[c] >= skip_oom:
                 print(".", end="", flush=True)
                 continue
@@ -250,13 +254,18 @@ def run_one_benchmark(
                 print(".", end="", flush=True)
             elif exit_status is SubprocessrExit.Normal:
                 if suite.is_passed(output):
-                    print(chr(ord('a')+j), end="", flush=True)
+                    print(config_index_to_chr(j), end="", flush=True)
                 else:
                     print(".", end="", flush=True)
             elif exit_status is SubprocessrExit.Dryrun:
                 print(".", end="", flush=True)
             else:
                 raise ValueError("Not a valid SubprocessrExit value")
+            for p in plugins.values():
+                p.end_config(hfac, bm, i, j)
+
+        for p in plugins.values():
+            p.end_invocation(hfac, bm, i)
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
         if not is_dry_run() and ever_ran[j]:
