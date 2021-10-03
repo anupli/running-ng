@@ -229,7 +229,7 @@ def run_one_benchmark(
                 log_filename_completed = get_filename_completed(
                     bm, hfac, size, c)
                 if (log_dir / log_filename_completed).exists():
-                    print(chr(ord('a')+j), end="", flush=True)
+                    print(config_index_to_chr(j), end="", flush=True)
                     continue
             log_filename = get_filename(bm, hfac, size, c)
             logging.debug("Running with log filename {}".format(log_filename))
