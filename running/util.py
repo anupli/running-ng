@@ -59,6 +59,10 @@ def parse_config_str(configuration: 'Configuration', c: str) -> Tuple['Runtime',
     return runtime, mods
 
 
+def config_str_encode(c: str) -> str:
+    return ".".join([x.strip() for x in c.split("|")])
+
+
 def split_quoted(s: str) -> List[str]:
     return shlex.split(s)
 

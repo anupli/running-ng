@@ -4,7 +4,7 @@ from running.suite import BenchmarkSuite, is_dry_run
 from running.benchmark import Benchmark, SubprocessrExit
 from running.config import Configuration
 from pathlib import Path
-from running.util import parse_config_str, system, get_logged_in_users, config_index_to_chr
+from running.util import parse_config_str, system, get_logged_in_users, config_index_to_chr, config_str_encode
 import socket
 from datetime import datetime
 from running.runtime import Runtime
@@ -133,7 +133,7 @@ def get_filename(bm: Benchmark, hfac: Optional[float], size: Optional[int], conf
         # to match filenames
         hfac_str(hfac) if hfac is not None else "0",
         size if size is not None else "0",
-        ".".join(config.split("|")),
+        config_str_encode(config),
         bm.suite_name,
     )
 
@@ -269,8 +269,10 @@ def run_one_benchmark(
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
         if not is_dry_run() and ever_ran[j]:
-            subprocess.check_call("gzip {}".format(
-                log_dir / log_filename), shell=True)
+            subprocess.check_call([
+                "gzip",
+                log_dir / log_filename
+            ])
     print()
     for p in plugins.values():
         p.end_benchmark(hfac, bm)
