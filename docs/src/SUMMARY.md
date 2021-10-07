@@ -14,6 +14,6 @@
     - [`minheap`](./commands/minheap.md)
     - [`fillin`](./commands/fillin.md)
 - [Cookbook](./cookbook/index.md)
-    - [Whole-Process Performance Event Monitoring](./cookbook/phase_perf_events.md)
+    - [Performance Event Monitoring](./cookbook/phase_perf_events.md)
 - [Frequently Asked Questions](./faq.md)
 - [Changelog](./changelog.md)

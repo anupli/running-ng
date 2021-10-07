@@ -54,3 +54,40 @@ modifiers:
     type: ModifierSet
     val: "probes|probes_cp|jvmti|jvmti_env|perf"
 ```
+
+## MMTk
+Please clone and build [`probes`](../quickstart.md#prepare-probes).
+You will need to build `mmtk-core` with the `perf_counter` feature.
+
+First, you need to let the DaCapo benchmark inform the start and the end of a benchmark iteration.
+```yaml
+modifiers:
+  probes_cp:
+    type: JVMClasspath
+    val: "/path/to/probes /path/to/probes/probes.jar"
+  probes:
+    type: JVMArg
+    val: "-Djava.library.path=/path/to/probes -Dprobes=RustMMTk"
+```
+
+Then, you can specify a list of events you want to measure.
+```yaml
+modifiers:
+  mmtk_perf:
+    type: EnvVar
+    var: "MMTK_PHASE_PERF_EVENTS"
+    val: "PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1"
+```
+Note that the list is semicolon-separated.
+Each entry consists of three parts, separated by commas.
+The first part is the name of the event.
+Please refer to the previous section for details.
+The second part and the third part are `pid` and `cpu`, per `man perf_event_open`.
+In most cases, you want to use `0,-1`, that is measuring the calling thread (the results will be combined later through the `inherit` flag) on any CPU.
+For some events, such as RAPL, only package-wide measurement is supported, and you will have to adjust the values accordingly.
+
+**Note that you might have to increase the value of `MAX_PHASES` in `crate::util::statistics::stats` to a larger value, e.g., `1 << 14`, so that the array storing the per-phase value will not overflow.**
+
+# Work-Packet Performance Event Monitoring
+It's similar to the whole-process performance event monitoring for MMTk.
+Just use `MMTK_WORK_PERF_EVENTS` instead of `MMTK_PHASE_PERF_EVENTS`.
