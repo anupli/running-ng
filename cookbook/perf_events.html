@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="../quickstart.html"><strong aria-hidden="true">2.</strong> Quickstart</a></li><li class="chapter-item expanded "><a href="../basics/index.html"><strong aria-hidden="true">3.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../basics/design.html"><strong aria-hidden="true">3.1.</strong> Design Principles</a></li></ol></li><li class="chapter-item expanded "><a href="../references/index.html"><strong aria-hidden="true">4.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../references/suite.html"><strong aria-hidden="true">4.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="../references/runtime.html"><strong aria-hidden="true">4.2.</strong> Runtime</a></li><li class="chapter-item expanded "><a href="../references/modifier.html"><strong aria-hidden="true">4.3.</strong> Modifier</a></li></ol></li><li class="chapter-item expanded "><a href="../commands/index.html"><strong aria-hidden="true">5.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../commands/runbms.html"><strong aria-hidden="true">5.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="../commands/minheap.html"><strong aria-hidden="true">5.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="../commands/fillin.html"><strong aria-hidden="true">5.3.</strong> fillin</a></li></ol></li><li class="chapter-item expanded "><a href="../cookbook/index.html"><strong aria-hidden="true">6.</strong> Cookbook</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../cookbook/phase_perf_events.html" class="active"><strong aria-hidden="true">6.1.</strong> Performance Event Monitoring</a></li></ol></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">7.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../changelog.html"><strong aria-hidden="true">8.</strong> Changelog</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../install.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li></ol></li><li class="chapter-item expanded "><a href="../quickstart.html"><strong aria-hidden="true">2.</strong> Quickstart</a></li><li class="chapter-item expanded "><a href="../basics/index.html"><strong aria-hidden="true">3.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../basics/design.html"><strong aria-hidden="true">3.1.</strong> Design Principles</a></li></ol></li><li class="chapter-item expanded "><a href="../references/index.html"><strong aria-hidden="true">4.</strong> Core References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../references/suite.html"><strong aria-hidden="true">4.1.</strong> Benchmark Suite</a></li><li class="chapter-item expanded "><a href="../references/runtime.html"><strong aria-hidden="true">4.2.</strong> Runtime</a></li><li class="chapter-item expanded "><a href="../references/modifier.html"><strong aria-hidden="true">4.3.</strong> Modifier</a></li></ol></li><li class="chapter-item expanded "><a href="../commands/index.html"><strong aria-hidden="true">5.</strong> Command References</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../commands/runbms.html"><strong aria-hidden="true">5.1.</strong> runbms</a></li><li class="chapter-item expanded "><a href="../commands/minheap.html"><strong aria-hidden="true">5.2.</strong> minheap</a></li><li class="chapter-item expanded "><a href="../commands/fillin.html"><strong aria-hidden="true">5.3.</strong> fillin</a></li></ol></li><li class="chapter-item expanded "><a href="../cookbook/index.html"><strong aria-hidden="true">6.</strong> Cookbook</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../cookbook/perf_events.html" class="active"><strong aria-hidden="true">6.1.</strong> Performance Event Monitoring</a></li></ol></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">7.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../changelog.html"><strong aria-hidden="true">8.</strong> Changelog</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,7 +134,81 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="performance-event-monitoring"><a class="header" href="#performance-event-monitoring">Performance Event Monitoring</a></h1>
+                        <h1 id="whole-process-performance-event-monitoring"><a class="header" href="#whole-process-performance-event-monitoring">Whole-Process Performance Event Monitoring</a></h1>
+<h2 id="jvmti"><a class="header" href="#jvmti">JVMTI</a></h2>
+<p>Please clone and build <a href="../quickstart.html#prepare-probes"><code>probes</code></a>.</p>
+<p>Under the <code>probes</code> folder, you will find a JVMTI agent, <code>libperf_statistics.so</code>.
+You can check the source code <a href="https://github.com/anupli/probes/blob/master/native/jvmti_agents/perf_statistics.c">here</a>.
+To use the agent, there are four things you need to do.</p>
+<p>First, you will need to tell the dynamic linker to load the shared library before the VM boots.
+This ensures that the <code>inherit</code> flag of <code>perf_event_attr</code> works properly and all child threads subsequently spawned are included in the results.</p>
+<pre><code class="language-yaml">modifiers:
+  jvmti_env:
+    type: EnvVar
+    var: &quot;LD_PRELOAD&quot;
+    val: &quot;/path/to/probes/libperf_statistics.so&quot;
+</code></pre>
+<p>Second, you need to specify a list of events you want to measure.</p>
+<pre><code class="language-yaml">modifiers:
+  perf:
+    type: EnvVar
+    var: &quot;PERF_EVENTS&quot;
+    val: &quot;PERF_COUNT_HW_CPU_CYCLES,PERF_COUNT_HW_INSTRUCTIONS,PERF_COUNT_HW_CACHE_LL:MISS,PERF_COUNT_HW_CACHE_L1D:MISS,PERF_COUNT_HW_CACHE_DTLB:MISS&quot;
+</code></pre>
+<p>If you want to get a full list of events you can use on a particular machine, you can clone and build <a href="https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/"><code>libpfm4</code></a> and run the <code>showevtinfo</code> <a href="https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/examples/showevtinfo.c">program</a>.</p>
+<p>Third, you need to tell the JVM to load the agent.
+Note that you need to specify the absolute path.</p>
+<pre><code class="language-yaml">modifiers:
+  jvmti:
+    type: JVMArg
+    val: &quot;-agentpath:/path/to/probes/libperf_statistics.so&quot;
+</code></pre>
+<p>Finally, you need to let the DaCapo benchmark inform the start and the end of a benchmark iteration.
+We will reuse the <code>RustMMTk</code> probe here, as the callback functions in the JVMTI agent are also called <code>harness_begin</code> and <code>harness_end</code>.</p>
+<pre><code class="language-yaml">modifiers:
+  probes_cp:
+    type: JVMClasspath
+    val: &quot;/path/to/probes /path/to/probes/probes.jar&quot;
+  probes:
+    type: JVMArg
+    val: &quot;-Djava.library.path=/path/to/probes -Dprobes=RustMMTk&quot;
+</code></pre>
+<p>Now, putting it all together, you can define a set of modifiers, and use that set in your config strings.</p>
+<pre><code class="language-yaml">modifiers:
+  jvmti_common:
+    type: ModifierSet
+    val: &quot;probes|probes_cp|jvmti|jvmti_env|perf&quot;
+</code></pre>
+<h2 id="mmtk"><a class="header" href="#mmtk">MMTk</a></h2>
+<p>Please clone and build <a href="../quickstart.html#prepare-probes"><code>probes</code></a>.
+You will need to build <code>mmtk-core</code> with the <code>perf_counter</code> feature.</p>
+<p>First, you need to let the DaCapo benchmark inform the start and the end of a benchmark iteration.</p>
+<pre><code class="language-yaml">modifiers:
+  probes_cp:
+    type: JVMClasspath
+    val: &quot;/path/to/probes /path/to/probes/probes.jar&quot;
+  probes:
+    type: JVMArg
+    val: &quot;-Djava.library.path=/path/to/probes -Dprobes=RustMMTk&quot;
+</code></pre>
+<p>Then, you can specify a list of events you want to measure.</p>
+<pre><code class="language-yaml">modifiers:
+  mmtk_perf:
+    type: EnvVar
+    var: &quot;MMTK_PHASE_PERF_EVENTS&quot;
+    val: &quot;PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1&quot;
+</code></pre>
+<p>Note that the list is semicolon-separated.
+Each entry consists of three parts, separated by commas.
+The first part is the name of the event.
+Please refer to the previous section for details.
+The second part and the third part are <code>pid</code> and <code>cpu</code>, per <code>man perf_event_open</code>.
+In most cases, you want to use <code>0,-1</code>, that is measuring the calling thread (the results will be combined later through the <code>inherit</code> flag) on any CPU.
+For some events, such as RAPL, only package-wide measurement is supported, and you will have to adjust the values accordingly.</p>
+<p><strong>Note that you might have to increase the value of <code>MAX_PHASES</code> in <code>crate::util::statistics::stats</code> to a larger value, e.g., <code>1 &lt;&lt; 14</code>, so that the array storing the per-phase value will not overflow.</strong></p>
+<h1 id="work-packet-performance-event-monitoring"><a class="header" href="#work-packet-performance-event-monitoring">Work-Packet Performance Event Monitoring</a></h1>
+<p>It's similar to the whole-process performance event monitoring for MMTk.
+Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVENTS</code>.</p>
 
                     </main>
 
