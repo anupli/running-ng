@@ -13,7 +13,7 @@ modifiers:
   jvmti_env:
     type: EnvVar
     var: "LD_PRELOAD"
-    val: "/home/zixianc/MMTk-Dev/evaluation/probes/libperf_statistics.so"
+    val: "/path/to/probes/libperf_statistics.so"
 ```
 
 Second, you need to specify a list of events you want to measure.
