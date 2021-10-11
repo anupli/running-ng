@@ -26,9 +26,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/book
           cname: running-ng.zcai.org
-      
-      - shell: bash
-        env:
-          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-        run: |
-          curl -X POST "https://api.cloudflare.com/client/v4/zones/d3164438686506a16fcf49c57e66aaae/purge_cache" -H "Content-Type:application/json" -H "Authorization: Bearer $CLOUDFLARE_TOKEN" --data '{"purge_everything":true}'
