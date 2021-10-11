@@ -91,3 +91,22 @@ For some events, such as RAPL, only package-wide measurement is supported, and y
 # Work-Packet Performance Event Monitoring
 It's similar to the whole-process performance event monitoring for MMTk.
 Just use `MMTK_WORK_PERF_EVENTS` instead of `MMTK_PHASE_PERF_EVENTS`.
+
+# Machine-Specific Notes
+On Xeon D-1540 Broadwell (`mole` and `vole`), the `PERF_COUNT_HW_CACHE_LL:MISS` event is always zero.
+```console
+perf stat -e LLC-load-misses,cycles /bin/ls
+
+ Performance counter stats for '/bin/ls':
+
+                 0      LLC-load-misses
+         1,729,786      cycles
+
+       0.001135511 seconds time elapsed
+
+       0.001180000 seconds user
+       0.000000000 seconds sys
+```
+
+On AMD machines, the `PERF_COUNT_HW_CACHE_LL:MISS` event fails to open.
+`perf_event_open` syscall fails with `No such file or directory`.
