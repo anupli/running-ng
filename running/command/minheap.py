@@ -5,6 +5,7 @@ from running.benchmark import JavaBenchmark
 from running.suite import JavaBenchmarkSuite
 from running.util import parse_config_str
 import logging
+import tempfile
 
 
 def setup_parser(subparsers):
@@ -13,7 +14,7 @@ def setup_parser(subparsers):
     f.add_argument("CONFIG", type=Path)
 
 
-def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmark, heap: int) -> float:
+def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmark, heap: int, minheap_dir: Path) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2
@@ -25,7 +26,7 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
         size_str = "{}M".format(mid)
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers([heapsize])
-        output, _ = bm_with_heapsize.run(runtime, timeout=timeout)
+        output, _ = bm_with_heapsize.run(runtime, timeout=timeout, cwd=minheap_dir)
         if b"PASSED" in output:
             print(" o ", end="", flush=True)
             minh = mid
@@ -48,17 +49,18 @@ def run(args):
     configuration.resolve_class()
     suites = configuration.get("suites")
     maxheap = configuration.get("maxheap")
-    for suite_name, bms in configuration.get("benchmarks").items():
-        suite = suites[suite_name]
-        for b in bms:
-            print("{}-{}".format(b.suite_name, b.name))
-            for c in configuration.get("configs"):
-                runtime, mods = parse_config_str(configuration, c)
-                if isinstance(runtime, NativeExecutable):
-                    logging.warning(
-                        "Minheap measurement not supported for NativeExecutable")
-                    pass
-                mod_b = b.attach_modifiers(mods)
-                minheap = minheap_one_bm(suite, runtime, mod_b, maxheap)
-                print("minheap {}".format(minheap))
+    with tempfile.TemporaryDirectory(prefix="minheap-") as minheap_dir:
+        logging.info("Temporary directory: {}".format(minheap_dir))
+        for suite_name, bms in configuration.get("benchmarks").items():
+            suite = suites[suite_name]
+            for b in bms:
+                print("{}-{}".format(b.suite_name, b.name))
+                for c in configuration.get("configs"):
+                    runtime, mods = parse_config_str(configuration, c)
+                    if isinstance(runtime, NativeExecutable):
+                        logging.warning(
+                            "Minheap measurement not supported for NativeExecutable")
+                    mod_b = b.attach_modifiers(mods)
+                    minheap = minheap_one_bm(suite, runtime, mod_b, maxheap, minheap_dir)
+                    print("minheap {}".format(minheap))
     return True
