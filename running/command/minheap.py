@@ -1,4 +1,4 @@
-from typing import Any, BinaryIO, Dict, Optional
+from typing import IO, Any, BinaryIO, Dict, Optional
 from running.config import Configuration
 from pathlib import Path
 from running.runtime import NativeExecutable, Runtime
@@ -47,7 +47,7 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
     return minh
 
 
-def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, fd: Optional[BinaryIO]):
+def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, fd: Optional[IO[str]]):
     suites = configuration.get("suites")
     maxheap = configuration.get("maxheap")
     for suite_name, bms in configuration.get("benchmarks").items():
