@@ -24,7 +24,6 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
     hi = heap
     mid = (lo + hi) // 2
     minh = float('inf')
-    print("\t{} ".format(runtime.name), end="")
     timeout = suite.get_timeout(bm.name)
     while hi - lo > 1:
         heapsize = runtime.get_heapsize_modifier(mid)
@@ -50,28 +49,29 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
 def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, fd: Optional[IO[str]]):
     suites = configuration.get("suites")
     maxheap = configuration.get("maxheap")
-    for suite_name, bms in configuration.get("benchmarks").items():
-        if suite_name not in result:
-            result[suite_name] = {}
-        suite = suites[suite_name]
-        for b in bms:
-            if b.name not in result[suite_name]:
-                result[suite_name][b.name] = {}
-            print("{}-{}".format(b.suite_name, b.name))
-            for c in configuration.get("configs"):
-                # skip a configuration if we have measured it
-                c_encoded = config_str_encode(c)
-                if c_encoded in result[suite_name][b.name]:
+    for c in configuration.get("configs"):
+        c_encoded = config_str_encode(c)
+        if c_encoded not in result:
+            result[c_encoded] = {}
+        runtime, mods = parse_config_str(configuration, c)
+        print("{} ".format(c_encoded))
+        if isinstance(runtime, NativeExecutable):
+            logging.warning(
+                "Minheap measurement not supported for NativeExecutable")
+            continue
+        for suite_name, bms in configuration.get("benchmarks").items():
+            if suite_name not in result[c_encoded]:
+                result[c_encoded][suite_name] = {}
+            suite = suites[suite_name]
+            for b in bms:
+                # skip a benchmark if we have measured it
+                if b.name in result[c_encoded][suite_name]:
                     continue
-                runtime, mods = parse_config_str(configuration, c)
-                if isinstance(runtime, NativeExecutable):
-                    logging.warning(
-                        "Minheap measurement not supported for NativeExecutable")
-                    pass
+                print("\t {}-{} ".format(b.suite_name, b.name), end="")
                 mod_b = b.attach_modifiers(mods)
                 minheap = minheap_one_bm(suite, runtime, mod_b, maxheap, minheap_dir)
                 print("minheap {}".format(minheap))
-                result[suite_name][b.name][c_encoded] = minheap
+                result[c_encoded][suite_name][b.name] = minheap
                 if fd:
                     yaml.dump(result, fd)
 
