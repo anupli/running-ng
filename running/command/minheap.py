@@ -12,6 +12,7 @@ from running.suite import is_dry_run
 
 configuration: Configuration
 
+
 def setup_parser(subparsers):
     f = subparsers.add_parser("minheap")
     f.set_defaults(which="minheap")
@@ -30,7 +31,8 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
         size_str = "{}M".format(mid)
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers([heapsize])
-        output, _ = bm_with_heapsize.run(runtime, timeout=timeout, cwd=minheap_dir)
+        output, _ = bm_with_heapsize.run(
+            runtime, timeout=timeout, cwd=minheap_dir)
         if suite.is_passed(output):
             print(" o ", end="", flush=True)
             minh = mid
@@ -46,7 +48,7 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
     return minh
 
 
-def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, fd: Optional[IO[str]]):
+def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file: Optional[Path]):
     suites = configuration.get("suites")
     maxheap = configuration.get("maxheap")
     for c in configuration.get("configs"):
@@ -69,11 +71,14 @@ def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, fd: Optional
                     continue
                 print("\t {}-{} ".format(b.suite_name, b.name), end="")
                 mod_b = b.attach_modifiers(mods)
-                minheap = minheap_one_bm(suite, runtime, mod_b, maxheap, minheap_dir)
+                minheap = minheap_one_bm(
+                    suite, runtime, mod_b, maxheap, minheap_dir)
                 print("minheap {}".format(minheap))
                 result[c_encoded][suite_name][b.name] = minheap
-                if fd:
-                    yaml.dump(result, fd)
+                if result_file:
+                    with result_file.open("w") as fd:
+                        yaml.dump(result, fd)
+
 
 def run(args):
     if args.get("which") != "minheap":
@@ -94,7 +99,6 @@ def run(args):
         if is_dry_run():
             run_with_persistence(result, minheap_dir, None)
         else:
-            with result_file.open("w") as fd:
-                run_with_persistence(result, minheap_dir, fd)
+            run_with_persistence(result, minheap_dir, result_file)
 
     return True
