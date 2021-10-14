@@ -11,10 +11,23 @@ The value is required.
 `path`: path to the DaCapo `jar`.
 The value is required.
 
-`minheap`: a dictionary containing the minimal heap size in megabytes to execute a benchmark from the suite without triggering `OutOfMemoryError`.
+`minheap`: a string that selects one of the `minheap_values` set to use.
+
+`minheap_values`: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering `OutOfMemoryError`.
+Each size is measured in MiB.
 The default value is an empty dictionary.
 The minheap values are used only when running `runbms` with a valid `N` value.
 If the minheap value for a benchmark is not specified, a default of `4096` is used.
+An example looks like this.
+```yaml
+minheap_values:
+  adoptopenjdk-15-G1:
+    avrora: 7
+    batik: 253
+  temurin-17-G1:
+    avrora: 7
+    batik: 189
+```
 
 `timing_iteration`: specifying the timing iteration.
 The value is passed to DaCapo as `-n`.
