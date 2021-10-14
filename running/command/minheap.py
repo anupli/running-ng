@@ -1,4 +1,4 @@
-from typing import IO, Any, BinaryIO, Dict, Optional
+from typing import Any, Dict, Optional
 from running.config import Configuration
 from pathlib import Path
 from running.runtime import NativeExecutable, Runtime
@@ -9,6 +9,7 @@ import logging
 import tempfile
 import yaml
 from running.suite import is_dry_run
+from collections import defaultdict
 
 configuration: Configuration
 
@@ -80,6 +81,28 @@ def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file:
                         yaml.dump(result, fd)
 
 
+def print_best(result: Dict[str, Dict[str, Dict[str, float]]]):
+    minheap = defaultdict(lambda: defaultdict(lambda: float('inf')))
+    minheap_config = defaultdict(lambda: defaultdict(lambda: "ALL_FAILED"))
+    for config, suites in result.items():
+        for suite, benchmarks in suites.items():
+            for benchmark, heap_size in benchmarks.items():
+                if heap_size < minheap[suite][benchmark]:
+                    minheap[suite][benchmark] = heap_size
+                    minheap_config[suite][benchmark] = config
+
+    config_best_count = defaultdict(int)
+    for suite, benchmarks in minheap_config.items():
+        for benchmark, best_config in benchmarks.items():
+            config_best_count[best_config] += 1
+
+    config, count = max(config_best_count.items(), key=lambda x: x[1])
+    print("{} obtained the most number of minimum heap sizes required: {}".format(
+        config, count))
+    print("Minheap configuration to be copied to runbms config files")
+    print(yaml.dump(result[config]))
+
+
 def run(args):
     if args.get("which") != "minheap":
         return False
@@ -100,5 +123,5 @@ def run(args):
             run_with_persistence(result, minheap_dir, None)
         else:
             run_with_persistence(result, minheap_dir, result_file)
-
+    print_best(result)
     return True
