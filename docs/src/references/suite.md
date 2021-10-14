@@ -11,7 +11,7 @@ The value is required.
 `path`: path to the DaCapo `jar`.
 The value is required.
 
-`minheap`: a string that selects one of the `minheap_values` set to use.
+`minheap`: a string that selects one of the `minheap_values` sets to use.
 
 `minheap_values`: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering `OutOfMemoryError`.
 Each size is measured in MiB.
