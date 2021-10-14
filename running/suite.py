@@ -5,6 +5,7 @@ import logging
 from running.util import register, split_quoted
 
 __DRY_RUN = False
+__DEFAULT_MINHEAP = 4096
 
 
 def is_dry_run():
@@ -118,10 +119,20 @@ class DaCapo(JavaBenchmarkSuite):
         self.path = Path(kwargs["path"])
         if not self.path.exists():
             logging.info("DaCapo jar {} not found".format(self.path))
-        self.minheap = kwargs.get("minheap", {})
-        if not isinstance(self.minheap, dict):
+        self.minheap: str
+        self.minheap = kwargs.get("minheap")
+        self.minheap_values: Dict[str, Dict[str, int]]
+        self.minheap_values = kwargs.get("minheap_values", {})
+        if not isinstance(self.minheap_values, dict):
             raise TypeError(
-                "The minheap of {} should be a dictionary".format(self.name))
+                "The minheap_values of {} should be a dictionary".format(self.name))
+        if self.minheap:
+            if not isinstance(self.minheap, str):
+                raise TypeError(
+                    "The minheap of {} should be a string that selects from a minheap_values".format(self.name))
+            if self.minheap not in self.minheap_values:
+                raise KeyError(
+                    "{} is not a valid entry of {}.minheap_values".format(self.name, self.name))
         try:
             self.timing_iteration = int(kwargs.get("timing_iteration"))
         except TypeError:
@@ -154,11 +165,16 @@ class DaCapo(JavaBenchmarkSuite):
         )
 
     def get_minheap(self, bm_name: str) -> int:
-        if bm_name not in self.minheap:
+        if not self.minheap:
+            logging.warning(
+                "No minheap_value of {} is selected".format(self))
+            return __DEFAULT_MINHEAP
+        minheap = self.minheap_values[self.minheap]
+        if bm_name not in minheap:
             logging.warning(
                 "Minheap for {} of {} not set".format(bm_name, self))
-            return 4096
-        return self.minheap[bm_name]
+            return __DEFAULT_MINHEAP
+        return minheap[bm_name]
 
     def get_timeout(self, _bm_name: str) -> int:
         # FIXME have per benchmark timeout
