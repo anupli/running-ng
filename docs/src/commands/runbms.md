@@ -25,7 +25,7 @@ Override `minheap_multiplier` in the config file.
 
 `--skip-oom` (preview ⚠️): skip the remaining invocations if a benchmark under a `config` has run out of memory more than `SKIP_OOM` times.
 
-`--skip-oom` (preview ⚠️): skip the remaining invocations if a benchmark under a `config`  has timed out more than `SKIP_TIMEOUT` times.
+`--skip-timeout` (preview ⚠️): skip the remaining invocations if a benchmark under a `config`  has timed out more than `SKIP_TIMEOUT` times.
 
 `--resume` (preview ⚠️): resume a previous run under `LOG_DIR/RESUME`. If a `.log.gz` already exists for a group of invocations, they will be skipped. Remember to clean up the partial `*.log` files before resuming.
 
