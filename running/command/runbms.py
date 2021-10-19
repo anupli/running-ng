@@ -34,7 +34,7 @@ def setup_parser(subparsers):
     f.add_argument("N", type=int, nargs='?')
     f.add_argument("n", type=int, nargs='*')
     f.add_argument("-i", "--invocations", type=int)
-    f.add_argument("-s", "--slice", type=float)
+    f.add_argument("-s", "--slice", type=str)
     f.add_argument("-p", "--id-prefix")
     f.add_argument("-m", "--minheap-multiplier", type=float)
     f.add_argument("--skip-oom", type=int)
@@ -338,6 +338,7 @@ def run(args):
         N = args.get("N")
         ns = args.get("n")
         slice = args.get("slice")
+        slice = [float(s) for s in slice.split(",")] if slice else []
         global skip_oom
         skip_oom = args.get("skip_oom")
         global skip_timeout
@@ -383,8 +384,7 @@ def run(args):
             for p in plugins.values():
                 p.set_run_id(run_id)
 
-        def run_N_ns(N, ns):
-            hfacs = get_hfacs(heap_range, spread_factor, N, ns)
+        def run_hfacs(hfacs):
             logging.info("hfacs: {}".format(
                 ", ".join([
                     hfac_str(hfac)
@@ -396,9 +396,12 @@ def run(args):
                              configs, runbms_dir, log_dir)
                 print()
 
+        def run_N_ns(N, ns):
+            hfacs = get_hfacs(heap_range, spread_factor, N, ns)
+            run_hfacs(hfacs)
+
         if slice:
-            run_one_hfac(invocations, slice, suites, benchmarks,
-                         configs, runbms_dir, log_dir)
+            run_hfacs(slice)
             return True
 
         if N is None:

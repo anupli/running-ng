@@ -11,9 +11,10 @@ runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-pr
 `-i`: set the number of invocations.
 Overrides `invocations` in the config file.
 
-`-s`: only use one heap size, `SLICE * minheap`, to run benchmarks.
-That is, `N` and `n`s are ignored.
-You can use an integer or a floating point number.
+`-s`: only use the specified heap sizes.
+This is a comma-separated string of integers or floating point numbers.
+For each slice `s` in `SLICE`, we run benchmarks at `s * minheap`.
+`N` and `n`s are ignored. 
 
 `-p`: add a prefix to the folder names where the results are stored.
 By default, the folder that stores the result is named using the host name and the timestamp.
