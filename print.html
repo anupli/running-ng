@@ -533,9 +533,10 @@ Each of the subcommands that respect is flag will print out the commands to be e
 <p><code>-h</code>: print help message.</p>
 <p><code>-i</code>: set the number of invocations.
 Overrides <code>invocations</code> in the config file.</p>
-<p><code>-s</code>: only use one heap size, <code>SLICE * minheap</code>, to run benchmarks.
-That is, <code>N</code> and <code>n</code>s are ignored.
-You can use an integer or a floating point number.</p>
+<p><code>-s</code>: only use the specified heap sizes.
+This is a comma-separated string of integers or floating point numbers.
+For each slice <code>s</code> in <code>SLICE</code>, we run benchmarks at <code>s * minheap</code>.
+<code>N</code> and <code>n</code>s are ignored. </p>
 <p><code>-p</code>: add a prefix to the folder names where the results are stored.
 By default, the folder that stores the result is named using the host name and the timestamp.
 However, you can add a prefix to the folder name to signify which experiments the results belong to.</p>
