@@ -136,9 +136,24 @@
                     <main>
                         <h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
 <h2 id="binarybenchmarksuite--preview-"><a class="header" href="#binarybenchmarksuite--preview-"><code>BinaryBenchmarkSuite</code>  (preview ⚠️)</a></h2>
+<p>A <code>BinaryBenchmarkSuite</code> is a suite of programs which can be used to run binary
+benchmarks such as for C/C++ benchmarking.</p>
+<h3 id="keys"><a class="header" href="#keys">Keys</a></h3>
+<p><code>programs</code>: A yaml list of benchmarks in the format:</p>
+<pre><code class="language-yaml">programs:
+  &lt;BM_NAME_1&gt;:
+    path: /full/path/to/benchmark/binary_1
+    args: &quot;Any arguments to binary_1&quot;
+  &lt;BM_NAME_2&gt;:
+    path: /full/path/to/benchmark/binary_2
+    args: &quot;Any arguments to binary_2&quot;
+  [...]
+</code></pre>
+<p>A possible use-case could use wrapper shell scripts around the benchmark to
+output timing and other information in a tab-separated table.</p>
 <h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
 <p><a href="http://dacapo-bench.org/">DaCapo benchmark suite</a>.</p>
-<h3 id="keys"><a class="header" href="#keys">Keys</a></h3>
+<h3 id="keys-1"><a class="header" href="#keys-1">Keys</a></h3>
 <p><code>release</code>: one of the possible values <code>[&quot;2006&quot;, &quot;9.12&quot;, &quot;evaluation&quot;]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the DaCapo <code>jar</code>.

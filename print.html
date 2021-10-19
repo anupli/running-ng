@@ -433,9 +433,24 @@ Each benchmark suite requires a <code>type</code> key with other keys being spec
 please refer to <a href="references/./suite.html">this page</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
 <h2 id="binarybenchmarksuite--preview-"><a class="header" href="#binarybenchmarksuite--preview-"><code>BinaryBenchmarkSuite</code>  (preview ⚠️)</a></h2>
+<p>A <code>BinaryBenchmarkSuite</code> is a suite of programs which can be used to run binary
+benchmarks such as for C/C++ benchmarking.</p>
+<h3 id="keys"><a class="header" href="#keys">Keys</a></h3>
+<p><code>programs</code>: A yaml list of benchmarks in the format:</p>
+<pre><code class="language-yaml">programs:
+  &lt;BM_NAME_1&gt;:
+    path: /full/path/to/benchmark/binary_1
+    args: &quot;Any arguments to binary_1&quot;
+  &lt;BM_NAME_2&gt;:
+    path: /full/path/to/benchmark/binary_2
+    args: &quot;Any arguments to binary_2&quot;
+  [...]
+</code></pre>
+<p>A possible use-case could use wrapper shell scripts around the benchmark to
+output timing and other information in a tab-separated table.</p>
 <h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
 <p><a href="http://dacapo-bench.org/">DaCapo benchmark suite</a>.</p>
-<h3 id="keys"><a class="header" href="#keys">Keys</a></h3>
+<h3 id="keys-1"><a class="header" href="#keys-1">Keys</a></h3>
 <p><code>release</code>: one of the possible values <code>[&quot;2006&quot;, &quot;9.12&quot;, &quot;evaluation&quot;]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the DaCapo <code>jar</code>.
@@ -473,42 +488,46 @@ If a benchmark doesn't have a wrapper in the dictionary, it is treated as <code>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="runtime"><a class="header" href="#runtime">Runtime</a></h1>
 <h2 id="jikesrvm"><a class="header" href="#jikesrvm"><code>JikesRVM</code></a></h2>
 <h2 id="nativeexecutable-preview-"><a class="header" href="#nativeexecutable-preview-"><code>NativeExecutable</code> (preview ⚠️)</a></h2>
+<p>A <code>NativeExecutable</code> type specifies <a href="references/./commands/runbms.html"><code>runbms</code></a> to
+directly run the benchmarks on native hardware. This is supposed to be used in
+tandem with
+<a href="references/./references/suite.html#BinaryBenchmarkSuite"><code>BinaryBenchmarkSuite</code></a>.</p>
 <h2 id="openjdk"><a class="header" href="#openjdk"><code>OpenJDK</code></a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
 <h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
-<h3 id="keys-1"><a class="header" href="#keys-1">Keys</a></h3>
+<h3 id="keys-2"><a class="header" href="#keys-2">Keys</a></h3>
 <p><code>var</code>: name of the variable.</p>
 <p><code>val</code>: value of the variable.</p>
 <h3 id="description"><a class="header" href="#description">Description</a></h3>
 <p>Set an environment variable. Might override an environment variable inherited from the parent process.</p>
 <h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
 <p><code>JavaBenchmarkSuite</code> specific.</p>
-<h3 id="keys-2"><a class="header" href="#keys-2">Keys</a></h3>
+<h3 id="keys-3"><a class="header" href="#keys-3">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.</p>
 <h3 id="description-1"><a class="header" href="#description-1">Description</a></h3>
 <p>Specify arguments to a JVM, as opposed to the runtime.</p>
 <h2 id="jvmclasspath"><a class="header" href="#jvmclasspath"><code>JVMClasspath</code></a></h2>
 <p><code>JavaBenchmarkSuite</code> specific.</p>
-<h3 id="keys-3"><a class="header" href="#keys-3">Keys</a></h3>
+<h3 id="keys-4"><a class="header" href="#keys-4">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple classpaths are space separated.</p>
 <h3 id="description-2"><a class="header" href="#description-2">Description</a></h3>
 <p>Specify Java Classpaths.</p>
 <h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
-<h3 id="keys-4"><a class="header" href="#keys-4">Keys</a></h3>
+<h3 id="keys-5"><a class="header" href="#keys-5">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.</p>
 <h3 id="description-3"><a class="header" href="#description-3">Description</a></h3>
 <p>Specify arguments to a program, as opposed to the runtime.</p>
 <h2 id="modifierset-preview-"><a class="header" href="#modifierset-preview-"><code>ModifierSet</code> (preview ⚠️)</a></h2>
-<h3 id="keys-5"><a class="header" href="#keys-5">Keys</a></h3>
+<h3 id="keys-6"><a class="header" href="#keys-6">Keys</a></h3>
 <p><code>val</code>: <code>|</code> separated values, with possible value options. See <a href="references/./index.html#value-options">here</a> for details.</p>
 <h3 id="description-4"><a class="header" href="#description-4">Description</a></h3>
 <p>Specify a set of modifiers, including other <code>ModifierSet</code>s.
 That is, you can use <code>ModifierSet</code> recursively.</p>
 <h2 id="wrapper-preview-"><a class="header" href="#wrapper-preview-"><code>Wrapper</code> (preview ⚠️)</a></h2>
-<h3 id="keys-6"><a class="header" href="#keys-6">Keys</a></h3>
+<h3 id="keys-7"><a class="header" href="#keys-7">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.</p>
 <h3 id="description-5"><a class="header" href="#description-5">Description</a></h3>
@@ -557,7 +576,7 @@ The heap size 0 represents <code>1.0 * minheap</code>, and the heap size <code>N
 If <code>N</code> is omitted, then the script will run benchmarks without explicit explicitly setting heap sizes, unless you specify <code>-s</code> or use a modifier that sets the heap size.</p>
 <p><code>n</code>: the heap sizes to explore.
 Instead of exploring 0, 1, ..., and <code>N</code>, only explore the <code>n</code>s specified.</p>
-<h2 id="keys-7"><a class="header" href="#keys-7">Keys</a></h2>
+<h2 id="keys-8"><a class="header" href="#keys-8">Keys</a></h2>
 <p><code>invocations</code>: see above.</p>
 <p><code>minheap_multiplier</code>: see above.</p>
 <p><code>heap_range</code>: the heap size relative to the minheap when <code>n = N</code>.</p>
@@ -581,7 +600,7 @@ No message will be sent if it'a dry run.</p>
       type: private
       to: [&quot;your user id here&quot;]
 </code></pre>
-<h4 id="keys-8"><a class="header" href="#keys-8">Keys</a></h4>
+<h4 id="keys-9"><a class="header" href="#keys-9">Keys</a></h4>
 <p><code>request</code>: please follow the <a href="https://zulip.com/api/send-message">Zulip API documentation</a>.
 Note that you don't need to put in <code>content</code> here.
 Please contact the administrators of your organization for your user ID.</p>
@@ -608,6 +627,20 @@ Second, the difference between sizes are smaller for smaller sizes and larger fo
 You shouldn't log into the experiment machine so not to disturb the experiments.
 You should log into the remote host and check the <code>LOG_DIR</code> there and see the new results that came in.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="minheap"><a class="header" href="#minheap"><code>minheap</code></a></h1>
+<p>This subcommand runs benchmarks with different <a href="commands/./references/index.html">configs</a>
+while varying heap sizes in a binary search fashion in order to determine the
+minimum heap required to run each benchmark.</p>
+<p>The output is stored as a yaml file which can then be directly used as an
+<a href="commands/./references/index.html#overrides">override</a> for minheap values for a benchmark
+suite.</p>
+<h2 id="usage-2"><a class="header" href="#usage-2">Usage</a></h2>
+<pre><code class="language-console">minheap [-h|--help] CONFIG RESULT
+</code></pre>
+<p><code>-h</code>: print help message.</p>
+<p><code>CONFIG</code>: the path to the configuration file.
+This is required.</p>
+<p><code>RESULT</code>: where to store the results.
+This is required.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fillin"><a class="header" href="#fillin"><code>fillin</code></a></h1>
 <div style="break-before: page; page-break-before: always;"></div><p>Here are some recipes for common tasks.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="whole-process-performance-event-monitoring"><a class="header" href="#whole-process-performance-event-monitoring">Whole-Process Performance Event Monitoring</a></h1>

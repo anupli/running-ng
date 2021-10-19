@@ -135,6 +135,20 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="minheap"><a class="header" href="#minheap"><code>minheap</code></a></h1>
+<p>This subcommand runs benchmarks with different <a href="./references/index.html">configs</a>
+while varying heap sizes in a binary search fashion in order to determine the
+minimum heap required to run each benchmark.</p>
+<p>The output is stored as a yaml file which can then be directly used as an
+<a href="./references/index.html#overrides">override</a> for minheap values for a benchmark
+suite.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<pre><code class="language-console">minheap [-h|--help] CONFIG RESULT
+</code></pre>
+<p><code>-h</code>: print help message.</p>
+<p><code>CONFIG</code>: the path to the configuration file.
+This is required.</p>
+<p><code>RESULT</code>: where to store the results.
+This is required.</p>
 
                     </main>
 
