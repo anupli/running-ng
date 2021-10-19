@@ -544,6 +544,9 @@ The default logging level is <code>INFO</code>.</p>
 <p><code>-d</code>: enable dry run.
 Each of the subcommands that respect is flag will print out the commands to be executed in a child process instead of actually executing them.</p>
 <p><code>--version</code>: print the version number of <code>running-ng</code>.</p>
+<h2 id="convention"><a class="header" href="#convention">Convention</a></h2>
+<p>For each subcommand, the documentation can roughly be divided into two parts, the command line usage and the keys in the config file.</p>
+<p>Unless otherwise specified, the keys specified <a href="commands/../references/index.html">here</a> are common to all subcommands, with the keys specific to each subcommand documented in their respective documentation.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="runbms"><a class="header" href="#runbms"><code>runbms</code></a></h1>
 <p>This subcommand runs benchmarks with different configs, possibly with varying heap sizes.</p>
 <h2 id="usage-1"><a class="header" href="#usage-1">Usage</a></h2>
@@ -630,9 +633,44 @@ You should log into the remote host and check the <code>LOG_DIR</code> there and
 <p>This subcommand runs benchmarks with different <a href="commands/./references/index.html">configs</a>
 while varying heap sizes in a binary search fashion in order to determine the
 minimum heap required to run each benchmark.</p>
-<p>The output is stored as a yaml file which can then be directly used as an
-<a href="commands/./references/index.html#overrides">override</a> for minheap values for a benchmark
-suite.</p>
+<p>The result is stored in a YAML file.
+The dictionary keys are encoded config strings.
+For each config, there is one dictionary per benchmark suite, where the minimum heap size for each benchmark is stored.
+An example is as follows.</p>
+<pre><code class="language-yaml">temurin-17.openjdk_common.hotspot_gc-G1:
+  dacapochopin-69a704e:
+    avrora: 7
+    batik: 189
+temurin-17.openjdk_common.hotspot_gc-Parallel:
+  dacapochopin-69a704e:
+    avrora: 5
+    batik: 235
+</code></pre>
+<p>At the end of each run, <code>minheap</code> will print out the configuration that achieves the smallest minheap size for most benchmarks.
+The minheap values for that configuration will be printed out, which can then be used to populate the minheap values a benchmark suite, such as a [DaCapo benchmark suite]((../references/suite.md#dacapo).
+An example is as follows.</p>
+<pre><code class="language-console">temurin-17.openjdk_common.hotspot_gc-G1 obtained the most number of smallest minheap sizes: 8
+Minheap configuration to be copied to runbms config files
+dacapochopin-69a704e:
+  avrora: 7
+  batik: 189
+  biojava: 95
+  eclipse: 411
+  fop: 15
+  graphchi: 255
+  h2: 773
+  jme: 29
+  jython: 25
+  luindex: 42
+  lusearch: 21
+  pmd: 156
+  sunflow: 29
+  tomcat: 21
+  tradebeans: 131
+  tradesoap: 103
+  xalan: 8
+  zxing: 97
+</code></pre>
 <h2 id="usage-2"><a class="header" href="#usage-2">Usage</a></h2>
 <pre><code class="language-console">minheap [-h|--help] CONFIG RESULT
 </code></pre>
@@ -640,7 +678,11 @@ suite.</p>
 <p><code>CONFIG</code>: the path to the configuration file.
 This is required.</p>
 <p><code>RESULT</code>: where to store the results.
+This file contains both the interim results and the final result.
+An interrupted execution can be resumed by using the same <code>RESULT</code> path.
 This is required.</p>
+<h2 id="keys-10"><a class="header" href="#keys-10">Keys</a></h2>
+<p><code>maxheap</code>: the upper bound of the search.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fillin"><a class="header" href="#fillin"><code>fillin</code></a></h1>
 <div style="break-before: page; page-break-before: always;"></div><p>Here are some recipes for common tasks.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="whole-process-performance-event-monitoring"><a class="header" href="#whole-process-performance-event-monitoring">Whole-Process Performance Event Monitoring</a></h1>
