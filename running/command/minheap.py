@@ -100,7 +100,7 @@ def print_best(result: Dict[str, Dict[str, Dict[str, float]]]):
             config_best_count[best_config] += 1
 
     config, count = max(config_best_count.items(), key=lambda x: x[1])
-    print("{} obtained the most number of minimum heap sizes required: {}".format(
+    print("{} obtained the most number of smallest minheap sizes: {}".format(
         config, count))
     print("Minheap configuration to be copied to runbms config files")
     print(yaml.dump(result[config]))
