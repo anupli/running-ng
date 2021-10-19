@@ -1,6 +1,24 @@
 # Benchmark Suite
 
 ## `BinaryBenchmarkSuite`  (preview ⚠️)
+A `BinaryBenchmarkSuite` is a suite of programs which can be used to run binary
+benchmarks such as for C/C++ benchmarking.
+
+### Keys
+`programs`: A yaml list of benchmarks in the format:
+```yaml
+programs:
+  <BM_NAME_1>:
+    path: /full/path/to/benchmark/binary_1
+    args: "Any arguments to binary_1"
+  <BM_NAME_2>:
+    path: /full/path/to/benchmark/binary_2
+    args: "Any arguments to binary_2"
+  [...]
+```
+
+A possible use-case could use wrapper shell scripts around the benchmark to
+output timing and other information in a tab-separated table.
 
 ## `DaCapo`
 [DaCapo benchmark suite](http://dacapo-bench.org/).
