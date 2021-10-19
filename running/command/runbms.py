@@ -217,6 +217,7 @@ def run_one_benchmark(
             p.start_invocation(hfac, bm, i)
         print(i, end="", flush=True)
         for j, c in enumerate(configs):
+            config_passed = False
             for p in plugins.values():
                 p.start_config(hfac, bm, i, j)
             if skip_oom is not None and oomed_count[c] >= skip_oom:
@@ -254,6 +255,7 @@ def run_one_benchmark(
                 print(".", end="", flush=True)
             elif exit_status is SubprocessrExit.Normal:
                 if suite.is_passed(output):
+                    config_passed = True
                     print(config_index_to_chr(j), end="", flush=True)
                 else:
                     print(".", end="", flush=True)
@@ -262,7 +264,7 @@ def run_one_benchmark(
             else:
                 raise ValueError("Not a valid SubprocessrExit value")
             for p in plugins.values():
-                p.end_config(hfac, bm, i, j)
+                p.end_config(hfac, bm, i, j, config_passed)
 
         for p in plugins.values():
             p.end_invocation(hfac, bm, i)

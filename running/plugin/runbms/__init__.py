@@ -42,7 +42,7 @@ class RunbmsPlugin(object):
     def start_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, _config: int):
         pass
 
-    def end_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, _config: int):
+    def end_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, _config: int, _passed: bool):
         pass
 
 

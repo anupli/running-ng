@@ -106,12 +106,15 @@ class Zulip(RunbmsPlugin):
         if self.nop:
             return
 
-    def end_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, config: int):
+    def end_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, config: int, passed: bool):
         if self.nop:
             return
         if self.last_message_id and self.last_message_content:
-            self.modify_message(self.last_message_content +
-                                config_index_to_chr(config))
+            if passed:
+                self.modify_message(self.last_message_content +
+                                    config_index_to_chr(config))
+            else:
+                self.modify_message(self.last_message_content + ".")
 
     def get_reservation_message(self) -> str:
         reservation = self.moma.get_reservation()
