@@ -3,9 +3,9 @@
 ## `JikesRVM`
 
 ## `NativeExecutable` (preview ⚠️)
-A `NativeExecutable` type specifies [`runbms`](./commands/runbms.md) to
+A `NativeExecutable` type specifies [`runbms`](../commands/runbms.md) to
 directly run the benchmarks on native hardware. This is supposed to be used in
 tandem with
-[`BinaryBenchmarkSuite`](./references/suite.md#BinaryBenchmarkSuite).
+[`BinaryBenchmarkSuite`](./suite.md#BinaryBenchmarkSuite).
 
 ## `OpenJDK`

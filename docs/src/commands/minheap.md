@@ -1,5 +1,5 @@
 # `minheap`
-This subcommand runs benchmarks with different [configs](./references/index.md)
+This subcommand runs benchmarks with different [configs](../references/index.md)
 while varying heap sizes in a binary search fashion in order to determine the
 minimum heap required to run each benchmark.
 
