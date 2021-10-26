@@ -2,5 +2,5 @@ autopep8==1.6.0
 mypy==0.910
 pytest==6.2.5
 PyYAML==6.0
-types-PyYAML==5.4.12
+types-PyYAML==6.0.0
 zulip==0.8.0
