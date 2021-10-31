@@ -20,8 +20,8 @@ class SubprocessrExit(Enum):
 
 
 class Benchmark(object):
-    def __init__(self, suite_name: str, bm_name: str, wrapper: Optional[str] = None, **kwargs):
-        self.name = bm_name
+    def __init__(self, suite_name: str, name: str, wrapper: Optional[str] = None, timeout: Optional[int] = None, **kwargs):
+        self.name = name
         self.suite_name = suite_name
         self.env_args: Dict[str, str]
         self.env_args = {}
@@ -30,6 +30,7 @@ class Benchmark(object):
             self.wrapper = split_quoted(wrapper)
         else:
             self.wrapper = []
+        self.timeout = timeout
 
     def get_env_str(self) -> str:
         return " ".join([
@@ -65,7 +66,7 @@ class Benchmark(object):
             ])
         )
 
-    def run(self, runtime: Runtime, timeout: int = None, cwd: Path = None) -> Tuple[bytes, SubprocessrExit]:
+    def run(self, runtime: Runtime, cwd: Path = None) -> Tuple[bytes, SubprocessrExit]:
         if suite.is_dry_run():
             print(
                 self.to_string(runtime.get_executable()),
@@ -83,7 +84,7 @@ class Benchmark(object):
                     env=env_args,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
-                    timeout=timeout,
+                    timeout=self.timeout,
                     cwd=cwd
                 )
                 return p.stdout, SubprocessrExit.Normal

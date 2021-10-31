@@ -41,10 +41,6 @@ class BenchmarkSuite(object):
     def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
         raise NotImplementedError
 
-    def get_timeout(self, _bm: Union[str, Dict[str, Any]]) -> Optional[int]:
-        # No timeout by default
-        return None
-
     def is_passed(self, _output: bytes) -> bool:
         raise NotImplementedError
 
@@ -73,15 +69,12 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
             self.programs[bm_name]['path'],
             self.programs[bm_name]['args'],
             suite_name=self.name,
-            bm_name=bm_name
+            bm_name=bm_name,
+            timeout=self.timeout
         )
 
     def is_oom(self, _output: bytes) -> bool:
         return False
-
-    def get_timeout(self, _bm: Union[str, Dict[str, Any]]) -> Optional[int]:
-        # FIXME have per benchmark timeout
-        return self.timeout
 
     def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
         logging.warning("minheap is not respected for BinaryBenchmarkSuite")
@@ -97,9 +90,6 @@ class JavaBenchmarkSuite(BenchmarkSuite):
         super().__init__(**kwargs)
 
     def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
-        raise NotImplementedError()
-
-    def get_timeout(self, _bm: Union[str, Dict[str, Any]]) -> Optional[int]:
         raise NotImplementedError()
 
     def is_oom(self, output: bytes) -> bool:
@@ -165,7 +155,8 @@ class DaCapo(JavaBenchmarkSuite):
             cp=cp,
             wrapper=self.get_wrapper(bm_name),
             suite_name=self.name,
-            bm_name=bm_name
+            bm_name=bm_name,
+            timeout=self.timeout
         )
 
     def get_minheap(self, bm: Union[str, Dict[str, Any]]) -> int:
@@ -181,10 +172,6 @@ class DaCapo(JavaBenchmarkSuite):
                 "Minheap for {} of {} not set".format(bm_name, self))
             return __DEFAULT_MINHEAP
         return minheap[bm_name]
-
-    def get_timeout(self, _bm: Union[str, Dict[str, Any]]) -> int:
-        # FIXME have per benchmark timeout
-        return self.timeout
 
     def is_passed(self, output: bytes) -> bool:
         return b"PASSED" in output

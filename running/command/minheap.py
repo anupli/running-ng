@@ -26,14 +26,13 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
     hi = heap
     mid = (lo + hi) // 2
     minh = float('inf')
-    timeout = suite.get_timeout(bm.name)
     while hi - lo > 1:
         heapsize = runtime.get_heapsize_modifier(mid)
         size_str = "{}M".format(mid)
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers([heapsize])
         output, _ = bm_with_heapsize.run(
-            runtime, timeout=timeout, cwd=minheap_dir)
+            runtime, cwd=minheap_dir)
         if suite.is_passed(output):
             print(" o ", end="", flush=True)
             minh = mid

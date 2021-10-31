@@ -109,7 +109,7 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
     return [spread(spread_factor, N, n)/divisor + start for n in ns]
 
 
-def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runbms_dir: Path, size: Optional[int], fd: Optional[BinaryIO]) -> Tuple[bytes, SubprocessrExit]:
+def run_benchmark_with_config(c: str, b: Benchmark, runbms_dir: Path, size: Optional[int], fd: Optional[BinaryIO]) -> Tuple[bytes, SubprocessrExit]:
     runtime, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     if size is not None:
@@ -117,7 +117,7 @@ def run_benchmark_with_config(c: str, b: Benchmark, timeout: Optional[int], runb
     if fd:
         prologue = get_log_prologue(runtime, mod_b)
         fd.write(prologue.encode("ascii"))
-    output, exit_status = mod_b.run(runtime, timeout, cwd=runbms_dir)
+    output, exit_status = mod_b.run(runtime, cwd=runbms_dir)
     if fd:
         fd.write(output)
     if fd:
@@ -204,7 +204,6 @@ def run_one_benchmark(
         print(size, end=" ")
     else:
         size = None
-    timeout = suite.get_timeout(bm_name)
     oomed_count: DefaultDict[str, int]
     oomed_count = DefaultDict(int)
     timeout_count: DefaultDict[str, int]
@@ -236,14 +235,14 @@ def run_one_benchmark(
             logging.debug("Running with log filename {}".format(log_filename))
             if is_dry_run():
                 output, exit_status = run_benchmark_with_config(
-                    c, bm, timeout, runbms_dir, size, None
+                    c, bm, runbms_dir, size, None
                 )
                 assert exit_status is SubprocessrExit.Dryrun
             else:
                 fd: BinaryIO
                 with (log_dir / log_filename).open("ab") as fd:
                     output, exit_status = run_benchmark_with_config(
-                        c, bm, timeout, runbms_dir, size, fd
+                        c, bm, runbms_dir, size, fd
                     )
                 ever_ran[j] = True
             if suite.is_oom(output):
