@@ -28,7 +28,7 @@ class BenchmarkSuite(object):
     def __str__(self) -> str:
         return "Benchmark Suite {}".format(self.name)
 
-    def get_benchmark(self, bm_name: str) -> Any:
+    def get_benchmark(self, _bm: Union[str, Dict[str, Any]]) -> Any:
         raise NotImplementedError()
 
     @staticmethod
@@ -38,17 +38,17 @@ class BenchmarkSuite(object):
     def is_oom(self, _output: bytes) -> bool:
         raise NotImplementedError
 
-    def get_minheap(self, _bm_name: str) -> int:
+    def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
         raise NotImplementedError
 
-    def get_timeout(self, _bm_name: str) -> Optional[int]:
+    def get_timeout(self, _bm: Union[str, Dict[str, Any]]) -> Optional[int]:
         # No timeout by default
         return None
 
     def is_passed(self, _output: bytes) -> bool:
         raise NotImplementedError
 
-    def get_wrapper(self, _bm_name: str) -> Optional[str]:
+    def get_wrapper(self, _bm: Union[str, Dict[str, Any]]) -> Optional[str]:
         return None
 
 
@@ -66,7 +66,9 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
         }
         self.timeout = kwargs.get("timeout")
 
-    def get_benchmark(self, bm_name: str) -> 'BinaryBenchmark':
+    def get_benchmark(self, bm: Union[str, Dict[str, Any]]) -> 'BinaryBenchmark':
+        assert type(bm) is str
+        bm_name = bm
         return BinaryBenchmark(
             self.programs[bm_name]['path'],
             self.programs[bm_name]['args'],
@@ -77,11 +79,11 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
     def is_oom(self, _output: bytes) -> bool:
         return False
 
-    def get_timeout(self, _bm_name: str) -> Optional[int]:
+    def get_timeout(self, _bm: Union[str, Dict[str, Any]]) -> Optional[int]:
         # FIXME have per benchmark timeout
         return self.timeout
 
-    def get_minheap(self, _bm_name: str) -> int:
+    def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
         logging.warning("minheap is not respected for BinaryBenchmarkSuite")
         return 0
 
@@ -94,10 +96,10 @@ class JavaBenchmarkSuite(BenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get_minheap(self, bm_name: str) -> int:
+    def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
         raise NotImplementedError()
 
-    def get_timeout(self, bm_name: str) -> Optional[int]:
+    def get_timeout(self, _bm: Union[str, Dict[str, Any]]) -> Optional[int]:
         raise NotImplementedError()
 
     def is_oom(self, output: bytes) -> bool:
@@ -147,7 +149,9 @@ class DaCapo(JavaBenchmarkSuite):
     def __str__(self) -> str:
         return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
 
-    def get_benchmark(self, bm_name: str) -> 'JavaBenchmark':
+    def get_benchmark(self, bm: Union[str, Dict[str, Any]]) -> 'JavaBenchmark':
+        assert type(bm) is str
+        bm_name = bm
         if self.callback:
             cp = [str(self.path)]
             program_args = ["Harness", "-c", self.callback]
@@ -164,7 +168,9 @@ class DaCapo(JavaBenchmarkSuite):
             bm_name=bm_name
         )
 
-    def get_minheap(self, bm_name: str) -> int:
+    def get_minheap(self, bm: Union[str, Dict[str, Any]]) -> int:
+        assert type(bm) is str
+        bm_name = bm
         if not self.minheap:
             logging.warning(
                 "No minheap_value of {} is selected".format(self))
@@ -176,14 +182,16 @@ class DaCapo(JavaBenchmarkSuite):
             return __DEFAULT_MINHEAP
         return minheap[bm_name]
 
-    def get_timeout(self, _bm_name: str) -> int:
+    def get_timeout(self, _bm: Union[str, Dict[str, Any]]) -> int:
         # FIXME have per benchmark timeout
         return self.timeout
 
     def is_passed(self, output: bytes) -> bool:
         return b"PASSED" in output
 
-    def get_wrapper(self, bm_name: str) -> Optional[str]:
+    def get_wrapper(self, bm: Union[str, Dict[str, Any]]) -> Optional[str]:
+        assert type(bm) is str
+        bm_name = bm
         if self.wrapper is None:
             return None
         elif type(self.wrapper) == str:
