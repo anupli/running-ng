@@ -200,7 +200,7 @@ def run_one_benchmark(
     size: Optional[int]  # heap size measured in MB
     if hfac is not None:
         print(hfac_str(hfac), end=" ")
-        size = get_heapsize(hfac, suite.get_minheap(bm_name))
+        size = get_heapsize(hfac, suite.get_minheap(bm))
         print(size, end=" ")
     else:
         size = None

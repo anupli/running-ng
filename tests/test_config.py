@@ -52,7 +52,8 @@ def test_resolve_suites():
         "dacapo2006": {
             "type": "DaCapo",
             "release": "2006",
-            "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar"
+            "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
+            "timing_iteration": 3
         }
     }})
     c.resolve_class()

@@ -48,7 +48,7 @@ minheap_values:
 ```
 
 `timing_iteration`: specifying the timing iteration.
-The value is passed to DaCapo as `-n`.
+It can either be a number, which is passed to DaCapo as `-n`, or a string `converge`.
 The default value is 3.
 
 `callback`: the class (possibly within some packages) for the DaCapo callback. The value is passed to DaCapo as `-c`.
@@ -65,3 +65,23 @@ Multiple arguments are space separated.
 This wrapper is used for all benchmarks in the benchmark suite.
 Second, a dictionary of strings with shell-like syntax to specify possibly different wrappers for different benchmarks.
 If a benchmark doesn't have a wrapper in the dictionary, it is treated as `null`.
+
+`size`: specifying the size of input data.
+Note that the names of the sizes are subject to change depending on the DaCapo releases.
+The default value is `default`.
+
+### Benchmark Specification
+Some of the suite-wide keys can be overridden in a per-benchmark-basis.
+The keys currently supported are `timing_iteration` and `size`.
+Note that, within a suite, your choice of `name` should uniquely identify a particular way of running a benchmark of name `bm_name`.
+The `name` is used to get the minheap value, etc., which can depend of the size of input data and/or the timing iteration.
+Therefore, it is highly recommended that you give a `name` different from the `bm_name`.
+
+Note that, you might need to adjust various other values, including but not limit to the minheap value dictionary and the modifier exclusion dictionary.
+
+The following is an example.
+```yaml
+benchmarks:
+  dacapo2006:
+    - {name: eclipse_large, bm_name: eclipse, size: large}
+```

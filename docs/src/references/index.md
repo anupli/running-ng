@@ -22,6 +22,21 @@ benchmark suite; and the `avrora` and `fop` benchmarks from the `dacapobach`
 benchmark suite. These benchmark suites have to be defined previously (usually
 through an [`includes` key](#includes)).
 
+Note that each benchmark of a benchmark suite can either be a string or a suite-specific dictionary.
+For example, for the DaCapo benchmark suite, the following two snippets are equivalent.
+
+```yaml
+benchmarks:
+  dacapo2006:
+    - eclipse
+```
+
+```yaml
+benchmarks:
+  dacapo2006:
+    - {name: eclipse, bm_name: eclipse, size: default}
+```
+
 ## `configs`
 A YAML list of configuration strings to be used to run the benchmarks. These are
 specified as a [`runtime`](#runtimes) followed by a `'|'` separated list of

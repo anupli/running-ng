@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-from running.benchmark import JavaBenchmark, BinaryBenchmark
+from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark
 import logging
 from running.util import register, split_quoted
 
@@ -28,24 +28,21 @@ class BenchmarkSuite(object):
     def __str__(self) -> str:
         return "Benchmark Suite {}".format(self.name)
 
-    def get_benchmark(self, _bm: Union[str, Dict[str, Any]]) -> Any:
-        raise NotImplementedError()
-
     @staticmethod
     def from_config(name: str, config: Dict[str, str]) -> Any:
         return BenchmarkSuite.CLS_MAPPING[config["type"]](name=name, **config)
 
-    def is_oom(self, _output: bytes) -> bool:
+    def get_benchmark(self, _bm_spec: Union[str, Dict[str, Any]]) -> Any:
+        raise NotImplementedError()
+
+    def get_minheap(self, _bm: Benchmark) -> int:
         raise NotImplementedError
 
-    def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
+    def is_oom(self, _output: bytes) -> bool:
         raise NotImplementedError
 
     def is_passed(self, _output: bytes) -> bool:
         raise NotImplementedError
-
-    def get_wrapper(self, _bm: Union[str, Dict[str, Any]]) -> Optional[str]:
-        return None
 
 
 @register(BenchmarkSuite)
@@ -62,9 +59,9 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
         }
         self.timeout = kwargs.get("timeout")
 
-    def get_benchmark(self, bm: Union[str, Dict[str, Any]]) -> 'BinaryBenchmark':
-        assert type(bm) is str
-        bm_name = bm
+    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'BinaryBenchmark':
+        assert type(bm_spec) is str
+        bm_name = bm_spec
         return BinaryBenchmark(
             self.programs[bm_name]['path'],
             self.programs[bm_name]['args'],
@@ -73,12 +70,13 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
             timeout=self.timeout
         )
 
+    def get_minheap(self, bm: Benchmark) -> int:
+        logging.warning("minheap is not respected for BinaryBenchmarkSuite")
+        assert isinstance(bm, BinaryBenchmark)
+        return 0
+
     def is_oom(self, _output: bytes) -> bool:
         return False
-
-    def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
-        logging.warning("minheap is not respected for BinaryBenchmarkSuite")
-        return 0
 
     def is_passed(self, _output: bytes) -> bool:
         # FIXME no generic way to know
@@ -89,7 +87,7 @@ class JavaBenchmarkSuite(BenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get_minheap(self, _bm: Union[str, Dict[str, Any]]) -> int:
+    def get_minheap(self, _bm: Benchmark) -> int:
         raise NotImplementedError()
 
     def is_oom(self, output: bytes) -> bool:
@@ -103,15 +101,16 @@ class JavaBenchmarkSuite(BenchmarkSuite):
 class DaCapo(JavaBenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.release: str
         self.release = kwargs["release"]
         if self.release not in ["2006", "9.12", "evaluation"]:
-            logging.info(
+            raise ValueError(
                 "DaCapo release {} not recongized".format(self.release))
         self.path: Path
         self.path = Path(kwargs["path"])
         if not self.path.exists():
             logging.info("DaCapo jar {} not found".format(self.path))
-        self.minheap: str
+        self.minheap: Optional[str]
         self.minheap = kwargs.get("minheap")
         self.minheap_values: Dict[str, Dict[str, int]]
         self.minheap_values = kwargs.get("minheap_values", {})
@@ -125,60 +124,111 @@ class DaCapo(JavaBenchmarkSuite):
             if self.minheap not in self.minheap_values:
                 raise KeyError(
                     "{} is not a valid entry of {}.minheap_values".format(self.name, self.name))
+        self.timing_iteration: Union[str, int]
         try:
             self.timing_iteration = int(kwargs.get("timing_iteration"))
-        except TypeError:
-            logging.warning(
-                "Timing iteration not set for DaCapo {}, use default value 3".format(self.path))
-            self.timing_iteration = 3
+        except ValueError:
+            timing_iteration = kwargs.get("timing_iteration")
+            if timing_iteration != "converge":
+                raise TypeError("The timing iteration of the DaCapo benchmark suite `{}` is {}, which neither an integer nor 'converge'".format(
+                    self.path,
+                    repr(timing_iteration)
+                ))
+            self.timing_iteration = "converge"
+        self.callback: Optional[str]
         self.callback = kwargs.get("callback")
+        self.timeout: Optional[int]
         self.timeout = kwargs.get("timeout")
         self.wrapper: Optional[Union[Dict[str, str], str]]
         self.wrapper = kwargs.get("wrapper")
+        self.size: str
+        self.size = kwargs.get("size", "default")
 
     def __str__(self) -> str:
         return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
 
-    def get_benchmark(self, bm: Union[str, Dict[str, Any]]) -> 'JavaBenchmark':
-        assert type(bm) is str
-        bm_name = bm
+    @staticmethod
+    def parse_timing_iteration(v: Any):
+        try:
+            timing_iteration = int(v)
+        except ValueError:
+            if v != "converge":
+                raise TypeError("The timing iteration {} is neither an integer nor 'converge'".format(
+                    repr(v)
+                ))
+            timing_iteration = v
+        return timing_iteration
+
+    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JavaBenchmark':
+        if type(bm_spec) is str:
+            bm_name = bm_spec
+            name = bm_spec
+            size = "default"
+            timing_iteration = self.timing_iteration
+        else:
+            assert type(bm_spec) is dict
+            if "bm_name" not in bm_spec or "name" not in bm_spec:
+                raise KeyError(
+                    "When a dictionary is used to speicfy a benchmark, you need to provide both `name` and `bm_name`")
+            bm_name = bm_spec["bm_name"]
+            name = bm_spec["name"]
+            if "timing_iteration" in bm_spec:
+                timing_iteration = DaCapo.parse_timing_iteration(
+                    bm_spec["timing_iteration"])
+            else:
+                timing_iteration = self.timing_iteration
+            if "size" in bm_spec:
+                size = bm_spec["size"]
+            else:
+                size = self.size
+
         if self.callback:
             cp = [str(self.path)]
             program_args = ["Harness", "-c", self.callback]
         else:
             cp = []
             program_args = ["-jar", str(self.path)]
-        program_args.extend(["-n", str(self.timing_iteration), bm_name])
+        # Timing iteration
+        if type(timing_iteration) is int:
+            program_args.extend(["-n", str(timing_iteration)])
+        else:
+            assert timing_iteration == "converge"
+            if self.release == "2006":
+                program_args.append("-converge")
+            else:
+                program_args.append("--converge")
+        # Input size
+        program_args.extend(["-s", size])
+        # Naem of the benchmark
+        program_args.append(bm_name)
         return JavaBenchmark(
             jvm_args=[],
             program_args=program_args,
             cp=cp,
             wrapper=self.get_wrapper(bm_name),
             suite_name=self.name,
-            bm_name=bm_name,
+            name=name,
             timeout=self.timeout
         )
 
-    def get_minheap(self, bm: Union[str, Dict[str, Any]]) -> int:
-        assert type(bm) is str
-        bm_name = bm
+    def get_minheap(self, bm: Benchmark) -> int:
+        assert isinstance(bm, JavaBenchmark)
+        name = bm.name
         if not self.minheap:
             logging.warning(
                 "No minheap_value of {} is selected".format(self))
             return __DEFAULT_MINHEAP
         minheap = self.minheap_values[self.minheap]
-        if bm_name not in minheap:
+        if name not in minheap:
             logging.warning(
-                "Minheap for {} of {} not set".format(bm_name, self))
+                "Minheap for {} of {} not set".format(name, self))
             return __DEFAULT_MINHEAP
-        return minheap[bm_name]
+        return minheap[name]
 
     def is_passed(self, output: bytes) -> bool:
         return b"PASSED" in output
 
-    def get_wrapper(self, bm: Union[str, Dict[str, Any]]) -> Optional[str]:
-        assert type(bm) is str
-        bm_name = bm
+    def get_wrapper(self, bm_name: str) -> Optional[str]:
         if self.wrapper is None:
             return None
         elif type(self.wrapper) == str:
