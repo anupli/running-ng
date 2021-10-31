@@ -1,0 +1,5 @@
+suites:
+  specjbb2015:
+    type: SPECjbb2015
+    path: "/usr/share/benchmarks/SPECjbb2015/specjbb2015.jar"
+    release: "1.03"

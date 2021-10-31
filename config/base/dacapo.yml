@@ -101,7 +101,7 @@ suites:
         zxing: 97
     timing_iteration: 3
     timeout: 120
-   dacapochopin-29a657f:
+  dacapochopin-29a657f:
     type: DaCapo
     release: evaluation
     path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-29a657f.jar

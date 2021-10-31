@@ -40,6 +40,7 @@ def setup_parser(subparsers):
     f.add_argument("--skip-oom", type=int)
     f.add_argument("--skip-timeout", type=int)
     f.add_argument("--resume", type=str)
+    f.add_argument("--workdir", type=Path)
 
 
 def getid() -> str:
@@ -318,6 +319,9 @@ def run(args):
         return False
     with tempfile.TemporaryDirectory(prefix="runbms-") as runbms_dir:
         logging.info("Temporary directory: {}".format(runbms_dir))
+        if args.get("workdir"):
+            args.get("workdir").mkdir(parents=True, exist_ok=True)
+            runbms_dir = str(args.get("workdir").resolve())
         # Processing command lines args
         global resume
         resume = args.get("resume")

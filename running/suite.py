@@ -240,3 +240,46 @@ class DaCapo(JavaBenchmarkSuite):
                             "a string (the same wrapper for all benchmarks), "
                             "or a dictionary (different wrappers for"
                             "differerent benchmarks)".format(self.name))
+
+@register(BenchmarkSuite)
+class SPECjbb2015(JavaBenchmarkSuite):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.release: str
+        self.release = kwargs["release"]
+        if self.release not in ["1.03"]:
+            raise ValueError(
+                "SPECjbb2015 release {} not recongized".format(self.release))
+        self.path: Path
+        self.path = Path(kwargs["path"]).resolve()
+        self.propsfile = (self.path / ".." / "config" / "specjbb2015.props").resolve()
+        if not self.path.exists():
+            logging.info("SPECjbb2015 jar {} not found".format(self.path))
+
+    def __str__(self) -> str:
+        return "{} SPECjbb2015 {} {}".format(super().__str__(), self.release, self.path)
+
+    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JavaBenchmark':
+        assert type(bm_spec) is str
+        if bm_spec != "composite":
+            raise ValueError("Only composite mode is supported for now")
+
+        program_args = [
+            "-jar", str(self.path),
+            "-p", str(self.propsfile),
+            "-m", "COMPOSITE"
+        ]
+        return JavaBenchmark(
+            jvm_args=[],
+            program_args=program_args,
+            cp=[],
+            suite_name=self.name,
+            name="composite"
+        )
+
+    def get_minheap(self, _bm: Benchmark) -> int:
+        return 2048 # SPEC recommends running with minimum 2GB of heap
+
+    def is_passed(self, output: bytes) -> bool:
+        # FIXME
+        return True
