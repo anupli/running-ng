@@ -174,7 +174,7 @@ An example looks like this.</p>
     batik: 189
 </code></pre>
 <p><code>timing_iteration</code>: specifying the timing iteration.
-The value is passed to DaCapo as <code>-n</code>.
+It can either be a number, which is passed to DaCapo as <code>-n</code>, or a string <code>converge</code>.
 The default value is 3.</p>
 <p><code>callback</code>: the class (possibly within some packages) for the DaCapo callback. The value is passed to DaCapo as <code>-c</code>.
 The default value is <code>null</code>.</p>
@@ -188,6 +188,21 @@ Multiple arguments are space separated.
 This wrapper is used for all benchmarks in the benchmark suite.
 Second, a dictionary of strings with shell-like syntax to specify possibly different wrappers for different benchmarks.
 If a benchmark doesn't have a wrapper in the dictionary, it is treated as <code>null</code>.</p>
+<p><code>size</code>: specifying the size of input data.
+Note that the names of the sizes are subject to change depending on the DaCapo releases.
+The default value is <code>default</code>.</p>
+<h3 id="benchmark-specification"><a class="header" href="#benchmark-specification">Benchmark Specification</a></h3>
+<p>Some of the suite-wide keys can be overridden in a per-benchmark-basis.
+The keys currently supported are <code>timing_iteration</code> and <code>size</code>.
+Note that, within a suite, your choice of <code>name</code> should uniquely identify a particular way of running a benchmark of name <code>bm_name</code>.
+The <code>name</code> is used to get the minheap value, etc., which can depend of the size of input data and/or the timing iteration.
+Therefore, it is highly recommended that you give a <code>name</code> different from the <code>bm_name</code>.</p>
+<p>Note that, you might need to adjust various other values, including but not limit to the minheap value dictionary and the modifier exclusion dictionary.</p>
+<p>The following is an example.</p>
+<pre><code class="language-yaml">benchmarks:
+  dacapo2006:
+    - {name: eclipse_large, bm_name: eclipse, size: large}
+</code></pre>
 
                     </main>
 

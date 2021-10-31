@@ -154,6 +154,16 @@ commands.</p>
 benchmark suite; and the <code>avrora</code> and <code>fop</code> benchmarks from the <code>dacapobach</code>
 benchmark suite. These benchmark suites have to be defined previously (usually
 through an <a href="#includes"><code>includes</code> key</a>).</p>
+<p>Note that each benchmark of a benchmark suite can either be a string or a suite-specific dictionary.
+For example, for the DaCapo benchmark suite, the following two snippets are equivalent.</p>
+<pre><code class="language-yaml">benchmarks:
+  dacapo2006:
+    - eclipse
+</code></pre>
+<pre><code class="language-yaml">benchmarks:
+  dacapo2006:
+    - {name: eclipse, bm_name: eclipse, size: default}
+</code></pre>
 <h2 id="configs"><a class="header" href="#configs"><code>configs</code></a></h2>
 <p>A YAML list of configuration strings to be used to run the benchmarks. These are
 specified as a <a href="#runtimes"><code>runtime</code></a> followed by a <code>'|'</code> separated list of
