@@ -105,6 +105,49 @@ suites:
     type: DaCapo
     release: evaluation
     path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-29a657f.jar
+    minheap: adoptopenjdk-15-G1
+    minheap_values:
+      adoptopenjdk-15-G1:
+        avrora: 7
+        batik: 253
+        biojava: 191
+        cassandra: 89
+        eclipse: 437
+        fop: 19
+        graphchi: 255
+        h2: 1154
+        h2o: 73
+        jme: 55
+        jython: 37
+        # Java version '15.0.2' is incompatable with kafka: Kafka currently requires Java 8 due to 'java.lang.NoClassDefFoundError: javax/activation/DataSource' error for more recent Java releases.
+        # kafka: inf
+        luindex: 42
+        lusearch: 23
+        pmd: 243
+        sunflow: 33
+        tradebeans: 169
+        tradesoap: 133
+        tomcat: 25
+        xalan: 9
+        zxing: 96
+      temurin-17-G1:
+        avrora: 7
+        batik: 189
+        biojava: 95
+        eclipse: 411
+        fop: 15
+        graphchi: 255
+        h2: 773
+        jme: 29
+        jython: 25
+        luindex: 42
+        lusearch: 21
+        pmd: 156
+        sunflow: 29
+        tomcat: 21
+        tradebeans: 131
+        tradesoap: 103
+        xalan: 8
+        zxing: 97
     timing_iteration: 3
     timeout: 120
-  
