@@ -193,7 +193,7 @@ Note that the names of the sizes are subject to change depending on the DaCapo r
 The default value is <code>default</code>.</p>
 <h3 id="benchmark-specification"><a class="header" href="#benchmark-specification">Benchmark Specification</a></h3>
 <p>Some of the suite-wide keys can be overridden in a per-benchmark-basis.
-The keys currently supported are <code>timing_iteration</code> and <code>size</code>.
+The keys currently supported are <code>timing_iteration</code>, <code>size</code>, and <code>timeout</code>.
 Note that, within a suite, your choice of <code>name</code> should uniquely identify a particular way of running a benchmark of name <code>bm_name</code>.
 The <code>name</code> is used to get the minheap value, etc., which can depend of the size of input data and/or the timing iteration.
 Therefore, it is highly recommended that you give a <code>name</code> different from the <code>bm_name</code>.</p>
@@ -203,6 +203,17 @@ Therefore, it is highly recommended that you give a <code>name</code> different 
   dacapo2006:
     - {name: eclipse_large, bm_name: eclipse, size: large}
 </code></pre>
+<h2 id="specjbb2015"><a class="header" href="#specjbb2015"><code>SPECjbb2015</code></a></h2>
+<p><a href="https://www.spec.org/jbb2015/">SPECjbb2015</a>.</p>
+<h3 id="keys-2"><a class="header" href="#keys-2">Keys</a></h3>
+<p><code>release</code>: one of the possible values <code>[&quot;1.03&quot;]</code>.
+The value is required.</p>
+<p><code>path</code>: path to the <code>jar</code>.
+The value is required.
+Note that the property file should reside in <code>path/../config/specjbb2015.props</code> per the standard folder structure of the ISO image provided by SPEC.</p>
+<h3 id="benchmark-specification-1"><a class="header" href="#benchmark-specification-1">Benchmark Specification</a></h3>
+<p>Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
+Right now, only <code>&quot;composite&quot;</code> is supported.</p>
 
                     </main>
 
