@@ -72,7 +72,7 @@ The default value is `default`.
 
 ### Benchmark Specification
 Some of the suite-wide keys can be overridden in a per-benchmark-basis.
-The keys currently supported are `timing_iteration` and `size`.
+The keys currently supported are `timing_iteration`, `size`, and `timeout`.
 Note that, within a suite, your choice of `name` should uniquely identify a particular way of running a benchmark of name `bm_name`.
 The `name` is used to get the minheap value, etc., which can depend of the size of input data and/or the timing iteration.
 Therefore, it is highly recommended that you give a `name` different from the `bm_name`.
@@ -85,3 +85,18 @@ benchmarks:
   dacapo2006:
     - {name: eclipse_large, bm_name: eclipse, size: large}
 ```
+
+## `SPECjbb2015`
+[SPECjbb2015](https://www.spec.org/jbb2015/).
+
+### Keys
+`release`: one of the possible values `["1.03"]`.
+The value is required.
+
+`path`: path to the `jar`.
+The value is required.
+Note that the property file should reside in `path/../config/specjbb2015.props` per the standard folder structure of the ISO image provided by SPEC.
+
+### Benchmark Specification
+Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
+Right now, only `"composite"` is supported.

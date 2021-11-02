@@ -160,11 +160,12 @@ class DaCapo(JavaBenchmarkSuite):
         return timing_iteration
 
     def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JavaBenchmark':
+        timing_iteration = self.timing_iteration
+        timeout = self.timeout
+        size = self.size
         if type(bm_spec) is str:
             bm_name = bm_spec
             name = bm_spec
-            size = "default"
-            timing_iteration = self.timing_iteration
         else:
             assert type(bm_spec) is dict
             if "bm_name" not in bm_spec or "name" not in bm_spec:
@@ -175,12 +176,10 @@ class DaCapo(JavaBenchmarkSuite):
             if "timing_iteration" in bm_spec:
                 timing_iteration = DaCapo.parse_timing_iteration(
                     bm_spec["timing_iteration"])
-            else:
-                timing_iteration = self.timing_iteration
             if "size" in bm_spec:
                 size = bm_spec["size"]
-            else:
-                size = self.size
+            if "timeout" in bm_spec:
+                timeout = bm_spec["timeout"]
 
         if self.callback:
             cp = [str(self.path)]
@@ -208,7 +207,7 @@ class DaCapo(JavaBenchmarkSuite):
             wrapper=self.get_wrapper(bm_name),
             suite_name=self.name,
             name=name,
-            timeout=self.timeout
+            timeout=timeout
         )
 
     def get_minheap(self, bm: Benchmark) -> int:
