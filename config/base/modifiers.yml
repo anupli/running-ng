@@ -10,6 +10,9 @@ modifiers:
       dacapochopin-69a704e:
         - tradebeans
         - tradesoap
+      dacapochopin-29a657f:
+        - tradebeans
+        - tradesoap
   ms:
     type: JVMArg
     val: "-XX:MetaspaceSize=500M -XX:+DisableExplicitGC"
