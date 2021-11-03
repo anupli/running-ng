@@ -149,5 +149,7 @@ suites:
         tradesoap: 103
         xalan: 8
         zxing: 97
+        lusearch_huge: 122 # {name: lusearch_large, bm_name: lusearch, size: large}
+        lusearch_large: 142 # {name: lusearch_huge, bm_name: lusearch, size: huge, timing_iteration: 2}
     timing_iteration: 3
     timeout: 120
