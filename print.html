@@ -651,6 +651,18 @@ Please make sure that this file can only be accessed by you (e.g., <code>chmod 6
 If you are a moma user, please create this file on <code>squirrel</code>, and it will then be synced to other machines.
 Please follow the Zulip documentation for the <a href="https://zulip.com/api/configuring-python-bindings">syntax</a> of the config file and for <a href="https://zulip.com/api/api-keys">obtaining an API key</a>.
 If you can't create a new bot, please contact the administrators of your organization.</p>
+<h3 id="copyfile"><a class="header" href="#copyfile"><code>CopyFile</code></a></h3>
+<p>Copying files from the working directory.</p>
+<p>Here is an example.</p>
+<pre><code class="language-yaml">plugins:
+  dacapo_latency:
+    type: CopyFile
+    patterns:
+      - &quot;scratch/dacapo-latency-*.csv&quot;
+</code></pre>
+<h4 id="keys-11"><a class="header" href="#keys-11">Keys</a></h4>
+<p><code>patterns</code>: a list of patterns following the Python 3 <code>pathlib.Path.glob</code> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">syntax</a>.
+Files matched the patterns will be copied to <code>LOG_DIR</code> where different subfolders will be created for each invocation.</p>
 <h2 id="interpreting-the-outputs"><a class="header" href="#interpreting-the-outputs">Interpreting the Outputs</a></h2>
 <p>Under construction 🚧.</p>
 <h3 id="console-outputs"><a class="header" href="#console-outputs">Console Outputs</a></h3>
@@ -719,7 +731,7 @@ This is required.</p>
 This file contains both the interim results and the final result.
 An interrupted execution can be resumed by using the same <code>RESULT</code> path.
 This is required.</p>
-<h2 id="keys-11"><a class="header" href="#keys-11">Keys</a></h2>
+<h2 id="keys-12"><a class="header" href="#keys-12">Keys</a></h2>
 <p><code>maxheap</code>: the upper bound of the search.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fillin"><a class="header" href="#fillin"><code>fillin</code></a></h1>
 <div style="break-before: page; page-break-before: always;"></div><p>Here are some recipes for common tasks.</p>
