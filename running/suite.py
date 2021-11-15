@@ -266,7 +266,8 @@ class SPECjbb2015(JavaBenchmarkSuite):
         program_args = [
             "-jar", str(self.path),
             "-p", str(self.propsfile),
-            "-m", "COMPOSITE"
+            "-m", "COMPOSITE",
+            "-skipReport"
         ]
         return JavaBenchmark(
             jvm_args=[],
