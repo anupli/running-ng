@@ -92,6 +92,21 @@ If you are a moma user, please create this file on `squirrel`, and it will then 
 Please follow the Zulip documentation for the [syntax](https://zulip.com/api/configuring-python-bindings) of the config file and for [obtaining an API key](https://zulip.com/api/api-keys).
 If you can't create a new bot, please contact the administrators of your organization.
 
+### `CopyFile`
+Copying files from the working directory.
+
+Here is an example.
+```yaml
+plugins:
+  dacapo_latency:
+    type: CopyFile
+    patterns:
+      - "scratch/dacapo-latency-*.csv"
+```
+#### Keys
+`patterns`: a list of patterns following the Python 3 `pathlib.Path.glob` [syntax](https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob).
+Files matched the patterns will be copied to `LOG_DIR` where different subfolders will be created for each invocation.
+
 ## Interpreting the Outputs
 Under construction 🚧.
 ### Console Outputs
