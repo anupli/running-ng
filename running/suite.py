@@ -240,6 +240,7 @@ class DaCapo(JavaBenchmarkSuite):
                             "or a dictionary (different wrappers for"
                             "differerent benchmarks)".format(self.name))
 
+
 @register(BenchmarkSuite)
 class SPECjbb2015(JavaBenchmarkSuite):
     def __init__(self, **kwargs):
@@ -251,7 +252,8 @@ class SPECjbb2015(JavaBenchmarkSuite):
                 "SPECjbb2015 release {} not recongized".format(self.release))
         self.path: Path
         self.path = Path(kwargs["path"]).resolve()
-        self.propsfile = (self.path / ".." / "config" / "specjbb2015.props").resolve()
+        self.propsfile = (self.path / ".." / "config" /
+                          "specjbb2015.props").resolve()
         if not self.path.exists():
             logging.info("SPECjbb2015 jar {} not found".format(self.path))
 
@@ -278,7 +280,7 @@ class SPECjbb2015(JavaBenchmarkSuite):
         )
 
     def get_minheap(self, _bm: Benchmark) -> int:
-        return 2048 # SPEC recommends running with minimum 2GB of heap
+        return 2048  # SPEC recommends running with minimum 2GB of heap
 
     def is_passed(self, output: bytes) -> bool:
         # FIXME

@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any, Dict, Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from running.benchmark import Benchmark
@@ -10,9 +11,19 @@ class RunbmsPlugin(object):
     def __init__(self, **kwargs):
         self.name = kwargs["name"]
         self.run_id = None
+        self.runbms_dir: Optional[Path]
+        self.runbms_dir = None
+        self.log_dir: Optional[Path]
+        self.log_dir = None
 
-    def set_run_id(self, run_id: str):
+    def set_run_id(self, run_id: Path):
         self.run_id = run_id
+
+    def set_runbms_dir(self, runbms_dir: str):
+        self.runbms_dir = Path(runbms_dir).resolve()
+
+    def set_log_dir(self, log_dir: Path):
+        self.log_dir = log_dir
 
     @staticmethod
     def from_config(name: str, config: Dict[str, str]) -> Any:
@@ -27,25 +38,26 @@ class RunbmsPlugin(object):
     def end_hfac(self, _hfac: Optional[float]):
         pass
 
-    def start_benchmark(self, _hfac: Optional[float], _bm: "Benchmark"):
+    def start_benchmark(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark"):
         pass
 
-    def end_benchmark(self, _hfac: Optional[float], _bm: "Benchmark"):
+    def end_benchmark(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark"):
         pass
 
-    def start_invocation(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int):
+    def start_invocation(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int):
         pass
 
-    def end_invocation(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int):
+    def end_invocation(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int):
         pass
 
-    def start_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, _config: int):
+    def start_config(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int, _config: str, _config_index: int):
         pass
 
-    def end_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, _config: int, _passed: bool):
+    def end_config(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int, _config: str, _config_index: int, _passed: bool):
         pass
 
 
 # !!! Do NOT remove this import nor change its position
 # This is to make sure that the Zulip class is correctly registered
+from running.plugin.runbms.copyfile import CopyFile
 from running.plugin.runbms.zulip import Zulip

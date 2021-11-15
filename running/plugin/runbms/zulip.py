@@ -82,37 +82,37 @@ class Zulip(RunbmsPlugin):
         self.send_message("hfac {} ended".format(
             hfac_str(hfac) if hfac is not None else "None"))
 
-    def start_benchmark(self, _hfac: Optional[float], bm: "Benchmark"):
+    def start_benchmark(self, _hfac: Optional[float], _size: Optional[int], bm: "Benchmark"):
         if self.nop:
             return
         self.send_message("benchmark {} started".format(bm.name))
 
-    def end_benchmark(self, _hfac: Optional[float], bm: "Benchmark"):
+    def end_benchmark(self, _hfac: Optional[float], _size: Optional[int], bm: "Benchmark"):
         if self.nop:
             return
         self.send_message("benchmark {} ended".format(bm.name))
 
-    def start_invocation(self, _hfac: Optional[float], _bm: "Benchmark", invocation: int):
+    def start_invocation(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", invocation: int):
         if self.nop:
             return
         if self.last_message_id and self.last_message_content:
             self.modify_message(self.last_message_content + str(invocation))
 
-    def end_invocation(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int):
+    def end_invocation(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int):
         if self.nop:
             return
 
-    def start_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, _config: int):
+    def start_config(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int, _config: str, _config_index: int):
         if self.nop:
             return
 
-    def end_config(self, _hfac: Optional[float], _bm: "Benchmark", _invocation: int, config: int, passed: bool):
+    def end_config(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int, _config: str, config_index: int, passed: bool):
         if self.nop:
             return
         if self.last_message_id and self.last_message_content:
             if passed:
                 self.modify_message(self.last_message_content +
-                                    config_index_to_chr(config))
+                                    config_index_to_chr(config_index))
             else:
                 self.modify_message(self.last_message_content + ".")
 

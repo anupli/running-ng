@@ -127,8 +127,8 @@ def run_benchmark_with_config(c: str, b: Benchmark, runbms_dir: Path, size: Opti
     return output, exit_status
 
 
-def get_filename(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
-    return "{}.{}.{}.{}.{}.log".format(
+def get_filename_no_ext(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
+    return "{}.{}.{}.{}.{}".format(
         bm.name,
         # plotty uses "^(\w+)\.(\d+)\.(\d+)\.([a-zA-Z0-9_\-\.\:\,]+)\.log\.gz$"
         # to match filenames
@@ -137,6 +137,10 @@ def get_filename(bm: Benchmark, hfac: Optional[float], size: Optional[int], conf
         config_str_encode(config),
         bm.suite_name,
     )
+
+
+def get_filename(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
+    return get_filename_no_ext(bm, hfac, size, config) + ".log"
 
 
 def get_filename_completed(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
@@ -194,8 +198,6 @@ def run_one_benchmark(
     log_dir: Path
 ):
     p: "RunbmsPlugin"
-    for p in plugins.values():
-        p.start_benchmark(hfac, bm)
     bm_name = bm.name
     print(bm_name, end=" ")
     size: Optional[int]  # heap size measured in MB
@@ -205,6 +207,8 @@ def run_one_benchmark(
         print(size, end=" ")
     else:
         size = None
+    for p in plugins.values():
+        p.start_benchmark(hfac, size, bm)
     oomed_count: DefaultDict[str, int]
     oomed_count = DefaultDict(int)
     timeout_count: DefaultDict[str, int]
@@ -214,12 +218,12 @@ def run_one_benchmark(
     ever_ran = [False] * len(configs)
     for i in range(0, invocations):
         for p in plugins.values():
-            p.start_invocation(hfac, bm, i)
+            p.start_invocation(hfac, size, bm, i)
         print(i, end="", flush=True)
         for j, c in enumerate(configs):
             config_passed = False
             for p in plugins.values():
-                p.start_config(hfac, bm, i, j)
+                p.start_config(hfac, size, bm, i, c, j)
             if skip_oom is not None and oomed_count[c] >= skip_oom:
                 print(".", end="", flush=True)
                 continue
@@ -264,10 +268,12 @@ def run_one_benchmark(
             else:
                 raise ValueError("Not a valid SubprocessrExit value")
             for p in plugins.values():
-                p.end_config(hfac, bm, i, j, config_passed)
+                p.end_config(hfac, size, bm, i, c, j, config_passed)
 
         for p in plugins.values():
-            p.end_invocation(hfac, bm, i)
+            p.end_invocation(hfac, size, bm, i)
+    for p in plugins.values():
+        p.end_benchmark(hfac, size, bm)
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
         if not is_dry_run() and ever_ran[j]:
@@ -276,8 +282,6 @@ def run_one_benchmark(
                 log_dir / log_filename
             ])
     print()
-    for p in plugins.values():
-        p.end_benchmark(hfac, bm)
 
 
 def run_one_hfac(
@@ -386,6 +390,8 @@ def run(args):
                 k, v) for k, v in plugins.items()}
             for p in plugins.values():
                 p.set_run_id(run_id)
+                p.set_runbms_dir(runbms_dir)
+                p.set_log_dir(log_dir)
 
         def run_hfacs(hfacs):
             logging.info("hfacs: {}".format(
