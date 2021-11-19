@@ -107,6 +107,8 @@ plugins:
 `patterns`: a list of patterns following the Python 3 `pathlib.Path.glob` [syntax](https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob).
 Files matched the patterns will be copied to `LOG_DIR` where different subfolders will be created for each invocation.
 
+`skip_failed`: don't copy files from failed runs. The default value is true.
+
 ## Interpreting the Outputs
 Under construction 🚧.
 ### Console Outputs
