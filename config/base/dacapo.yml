@@ -151,5 +151,26 @@ suites:
         zxing: 97
         lusearch_huge: 122 # {name: lusearch_large, bm_name: lusearch, size: large}
         lusearch_large: 142 # {name: lusearch_huge, bm_name: lusearch, size: huge, timing_iteration: 2}
+      temurin-11-G1:
+        avrora: 5
+        batik: 185
+        biojava: 95
+        cassandra: 1026
+        eclipse: 423
+        fop: 13
+        graphchi: 255
+        h2: 771
+        h2o: 62
+        jme: 29
+        jython: 27
+        luindex: 40
+        lusearch: 25
+        pmd: 158
+        sunflow: 27
+        tomcat: 19
+        tradebeans: 129
+        tradesoap: 101
+        xalan: 7
+        zxing: 96
     timing_iteration: 3
     timeout: 120
