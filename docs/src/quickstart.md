@@ -1,6 +1,8 @@
 # Quickstart
 This guide will show you how to use `running-ng` to compare two different builds of JVMs.
 
+**Note that for each occurrence in the form `/path/to/*`, you need to replace it with the real path of the respective item in the filesystem.**
+
 ## Installation
 Please follow the [installation guide](./install.md) to install `running-ng`.
 You will need Python 3.6+.
@@ -17,7 +19,7 @@ The `includes` directive here will populate the dictionary with some default val
 Add the following to `two_builds.yml`.
 ```yaml
 benchmarks:
-  dacapochopin-69a704e:
+  dacapochopin-29a657f:
     - avrora
     - batik
     - biojava
@@ -39,15 +41,17 @@ benchmarks:
     - xalan
     - zxing
 ```
-This specify a list of benchmarks used in this experiment from the [benchmark suite](./references/suite.md) `dacapochopin-69a704e`.
+This specify a list of benchmarks used in this experiment from the [benchmark suite](./references/suite.md) `dacapochopin-29a657f`.
 The benchmark suite is defined in `/path/to/running-ng/config/base/dacapo.yml`.
-The `minheap` value of `dacapochopin-69a704e` is measured with AdoptOpenJDK 11 using G1 GC.
+By default, the minimum heap sizes of `dacapochopin-29a657f` benchmarks are measured with AdoptOpenJDK 15 using G1 GC.
+If you are using OpenJDK 11 or 17, you can override the value of `suites.dacapochopin-29a657f.minheap` to `temurin-17-G1` or `temurin-11-G1`.
+That is, you can, for example, add `"suites.dacapochopin-29a657f.minheap": "temurin-17-G1"` to `overrides`.
 
 Then, add the following to `two_builds.yml`.
 ```yaml
 overrides:
-  "suites.dacapochopin-69a704e.timing_iteration": 5
-  "suites.dacapochopin-69a704e.callback": "probe.DacapoChopinCallback"
+  "suites.dacapochopin-29a657f.timing_iteration": 5
+  "suites.dacapochopin-29a657f.callback": "probe.DacapoChopinCallback"
 ```
 That is, we want to run five iterations for each invocation, and use `DacapoChopinCallback` because it is the appropriate callback for this release of DaCapo.
 
