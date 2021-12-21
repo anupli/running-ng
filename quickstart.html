@@ -136,6 +136,7 @@
                     <main>
                         <h1 id="quickstart"><a class="header" href="#quickstart">Quickstart</a></h1>
 <p>This guide will show you how to use <code>running-ng</code> to compare two different builds of JVMs.</p>
+<p><strong>Note that for each occurrence in the form <code>/path/to/*</code>, you need to replace it with the real path of the respective item in the filesystem.</strong></p>
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <p>Please follow the <a href="./install.html">installation guide</a> to install <code>running-ng</code>.
 You will need Python 3.6+.</p>
@@ -148,7 +149,7 @@ The <code>includes</code> directive here will populate the dictionary with some 
 <h2 id="prepare-benchmarks"><a class="header" href="#prepare-benchmarks">Prepare Benchmarks</a></h2>
 <p>Add the following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">benchmarks:
-  dacapochopin-69a704e:
+  dacapochopin-29a657f:
     - avrora
     - batik
     - biojava
@@ -170,13 +171,15 @@ The <code>includes</code> directive here will populate the dictionary with some 
     - xalan
     - zxing
 </code></pre>
-<p>This specify a list of benchmarks used in this experiment from the <a href="./references/suite.html">benchmark suite</a> <code>dacapochopin-69a704e</code>.
+<p>This specify a list of benchmarks used in this experiment from the <a href="./references/suite.html">benchmark suite</a> <code>dacapochopin-29a657f</code>.
 The benchmark suite is defined in <code>/path/to/running-ng/config/base/dacapo.yml</code>.
-The <code>minheap</code> value of <code>dacapochopin-69a704e</code> is measured with AdoptOpenJDK 11 using G1 GC.</p>
+By default, the minimum heap sizes of <code>dacapochopin-29a657f</code> benchmarks are measured with AdoptOpenJDK 15 using G1 GC.
+If you are using OpenJDK 11 or 17, you can override the value of <code>suites.dacapochopin-29a657f.minheap</code> to <code>temurin-17-G1</code> or <code>temurin-11-G1</code>.
+That is, you can, for example, add <code>&quot;suites.dacapochopin-29a657f.minheap&quot;: &quot;temurin-17-G1&quot;</code> to <code>overrides</code>.</p>
 <p>Then, add the following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">overrides:
-  &quot;suites.dacapochopin-69a704e.timing_iteration&quot;: 5
-  &quot;suites.dacapochopin-69a704e.callback&quot;: &quot;probe.DacapoChopinCallback&quot;
+  &quot;suites.dacapochopin-29a657f.timing_iteration&quot;: 5
+  &quot;suites.dacapochopin-29a657f.callback&quot;: &quot;probe.DacapoChopinCallback&quot;
 </code></pre>
 <p>That is, we want to run five iterations for each invocation, and use <code>DacapoChopinCallback</code> because it is the appropriate callback for this release of DaCapo.</p>
 <h2 id="prepare-your-builds"><a class="header" href="#prepare-your-builds">Prepare Your Builds</a></h2>
