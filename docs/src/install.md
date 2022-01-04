@@ -34,4 +34,5 @@ fi
 ```
 
 If you are a moma user, please change these dotfiles on `squirrel.moma`, and then run `sudo /moma-admin/config/update_self.fish`.
+Note that you should run this command using a SSH session on a standard terminal instead of using the integrated terminal in VSCode Remote.
 Please check [here](https://squirrel.anu.edu.au/#customization) for how to setup a UNIX password for `sudo`.
