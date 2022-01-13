@@ -19,7 +19,7 @@ temurin-17.openjdk_common.hotspot_gc-Parallel:
 ```
 
 At the end of each run, `minheap` will print out the configuration that achieves the smallest minheap size for most benchmarks.
-The minheap values for that configuration will be printed out, which can then be used to populate the minheap values a benchmark suite, such as a [DaCapo benchmark suite]((../references/suite.md#dacapo).
+The minheap values for that configuration will be printed out, which can then be used to populate the minheap values a benchmark suite, such as a [DaCapo benchmark suite](../references/suite.md#dacapo).
 An example is as follows.
 ```console
 temurin-17.openjdk_common.hotspot_gc-G1 obtained the most number of smallest minheap sizes: 8
