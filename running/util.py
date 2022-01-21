@@ -54,7 +54,7 @@ def parse_modifier_strs(configuration: 'Configuration', mod_strs: List[str]) -> 
 
 
 def parse_config_str(configuration: 'Configuration', c: str) -> Tuple['Runtime', List['Modifier']]:
-    runtime = configuration.get("runtimes")[c.split('|')[0]]
+    runtime = configuration.get("runtimes")[c.split('|')[0].strip()]
     mods = parse_modifier_strs(configuration, c.split('|')[1:])
     return runtime, mods
 
