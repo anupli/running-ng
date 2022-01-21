@@ -174,3 +174,57 @@ suites:
         zxing: 96
     timing_iteration: 3
     timeout: 120
+  dacapochopin-f480064:
+    type: DaCapo
+    release: evaluation
+    path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-f480064.jar
+    minheap: temurin-11-G1
+    minheap_values:
+      temurin-11-G1:
+        avrora: 5
+        batik: 186
+        biojava: 96
+        cassandra: 87
+        eclipse: 423
+        fop: 13
+        graphchi: 255
+        h2: 771
+        h2o: 83
+        jme: 29
+        jython: 27
+        kafka: 201
+        luindex: 41
+        lusearch: 26
+        pmd: 43
+        # spring: .inf
+        sunflow: 27
+        tomcat: 19
+        tradebeans: 129
+        tradesoap: 113
+        xalan: 7
+        zxing: 98
+      temurin-17-G1:
+        avrora: 7
+        batik: 190
+        biojava: 95
+        # cassandra: .inf
+        eclipse: 411
+        fop: 15
+        graphchi: 255
+        h2: 773
+        # h2o: .inf
+        jme: 29
+        jython: 25
+        kafka: 197
+        luindex: 42
+        lusearch: 25
+        pmd: 45
+        # spring: .inf
+        sunflow: 27
+        tomcat: 21
+        tradebeans: 131
+        tradesoap: 103
+        xalan: 7
+        zxing: 101
+    timing_iteration: 3
+    timeout: 120
