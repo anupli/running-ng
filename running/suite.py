@@ -361,6 +361,5 @@ class Octane(BenchmarkSuite):
     def is_passed(self, output: bytes) -> bool:
         return b"PASSED" in output
 
-    def is_oom(self, _output: bytes) -> bool:
-        # FIXME
-        return False
+    def is_oom(self, output: bytes) -> bool:
+        return b"Fatal javascript OOM in Reached heap limit" in output
