@@ -303,6 +303,22 @@ class Octane(BenchmarkSuite):
         self.harness_lib = Path(kwargs["harness_lib"]).resolve()
         self.timing_iteration: int
         self.timing_iteration = int(kwargs.get("timing_iteration"))
+        self.minheap: Optional[str]
+        self.minheap = kwargs.get("minheap")
+        self.minheap_values: Dict[str, Dict[str, int]]
+        self.minheap_values = kwargs.get("minheap_values", {})
+        if not isinstance(self.minheap_values, dict):
+            raise TypeError(
+                "The minheap_values of {} should be a dictionary".format(self.name))
+        if self.minheap:
+            if not isinstance(self.minheap, str):
+                raise TypeError(
+                    "The minheap of {} should be a string that selects from a minheap_values".format(self.name))
+            if self.minheap not in self.minheap_values:
+                raise KeyError(
+                    "{} is not a valid entry of {}.minheap_values".format(self.name, self.name))
+        self.timeout: Optional[int]
+        self.timeout = kwargs.get("timeout")
 
     def __str__(self) -> str:
         return "{} Octane {}".format(super().__str__(), self.path)
@@ -324,14 +340,23 @@ class Octane(BenchmarkSuite):
             program=str(self.wrapper),
             program_args=program_args,
             suite_name=self.name,
-            name=bm_spec
+            name=bm_spec,
+            timeout=self.timeout
         )
 
     def get_minheap(self, bm: Benchmark) -> int:
-        # FIXME
-        logging.warning("minheap is not respected for Octane")
         assert isinstance(bm, D8Benchmark)
-        return 0
+        name = bm.name
+        if not self.minheap:
+            logging.warning(
+                "No minheap_value of {} is selected".format(self))
+            return __DEFAULT_MINHEAP
+        minheap = self.minheap_values[self.minheap]
+        if name not in minheap:
+            logging.warning(
+                "Minheap for {} of {} not set".format(name, self))
+            return __DEFAULT_MINHEAP
+        return minheap[name]
 
     def is_passed(self, output: bytes) -> bool:
         return b"PASSED" in output

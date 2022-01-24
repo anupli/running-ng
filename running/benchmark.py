@@ -117,6 +117,9 @@ class BinaryBenchmark(Benchmark):
             elif type(m) == JVMClasspath:
                 logging.warning(
                     "JVMClasspath not respected by BinaryBenchmark")
+            elif type(m) == D8Arg:
+                logging.warning(
+                    "D8Arg not respected by BinaryBenchmark")
         return bb
 
     def get_full_args(self, _executable: Union[str, Path]) -> List[Union[str, Path]]:
@@ -151,6 +154,9 @@ class JavaBenchmark(Benchmark):
                 jb.program_args.extend(m.val)
             elif type(m) == JVMClasspath:
                 jb.cp.extend(m.val)
+            elif type(m) == D8Arg:
+                logging.warning(
+                    "D8Arg not respected by JavaBenchmark")
         return jb
 
     def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
@@ -185,6 +191,8 @@ class D8Benchmark(Benchmark):
             elif type(m) == JVMClasspath:
                 logging.warning(
                     "JVMClasspath not respected by D8Benchmark")
+            elif type(m) == D8Arg:
+                db.d8_args.extend(m.val)
         return db
 
     def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:

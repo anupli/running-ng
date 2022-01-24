@@ -1,4 +1,4 @@
-from running.modifier import JVMArg, Modifier
+from running.modifier import JVMArg, Modifier, D8Arg
 from typing import Any, Dict, Union
 from pathlib import Path
 import logging
@@ -110,3 +110,12 @@ class D8(Runtime):
 
     def __str__(self):
         return "{} d8 {}".format(super().__str__(), self.executable)
+
+    def get_heapsize_modifier(self, size: int) -> Modifier:
+        size_str = "{}".format(size)
+        heapsize = D8Arg(
+            name="heap{}".format(size_str),
+            val="--initial-heap-size={} --max-heap-size={}".format(
+                size_str, size_str)
+        )
+        return heapsize
