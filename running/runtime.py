@@ -92,3 +92,21 @@ class JikesRVM(JVM):
 
     def __str__(self):
         return "{} JikesRVM {}".format(super().__str__(), self.home)
+
+
+@register(Runtime)
+class D8(Runtime):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.executable: Path
+        self.executable = Path(kwargs["executable"])
+        if not self.executable.exists():
+            logging.warning(
+                "d8 executable {} doesn't exist".format(self.executable))
+        self.executable = self.executable.absolute()
+
+    def get_executable(self) -> Path:
+        return self.executable
+
+    def __str__(self):
+        return "{} d8 {}".format(super().__str__(), self.executable)
