@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark
+from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark, D8Benchmark
 import logging
 from running.util import register, split_quoted
 
@@ -109,7 +109,7 @@ class DaCapo(JavaBenchmarkSuite):
         self.path: Path
         self.path = Path(kwargs["path"])
         if not self.path.exists():
-            logging.info("DaCapo jar {} not found".format(self.path))
+            logging.warning("DaCapo jar {} not found".format(self.path))
         self.minheap: Optional[str]
         self.minheap = kwargs.get("minheap")
         self.minheap_values: Dict[str, Dict[str, int]]
@@ -285,3 +285,84 @@ class SPECjbb2015(JavaBenchmarkSuite):
     def is_passed(self, output: bytes) -> bool:
         # FIXME
         return True
+
+
+@register(BenchmarkSuite)
+class Octane(BenchmarkSuite):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.path: Path
+        self.path = Path(kwargs["path"]).resolve()
+        if not self.path.exists():
+            logging.info("Octane folder {} not found".format(self.path))
+        self.wrapper: Path
+        self.wrapper = Path(kwargs["wrapper"]).resolve()
+        if not self.wrapper.exists():
+            logging.info("Octane folder {} not found".format(self.wrapper))
+        self.harness_lib: Path
+        self.harness_lib = Path(kwargs["harness_lib"]).resolve()
+        self.timing_iteration: int
+        self.timing_iteration = int(kwargs.get("timing_iteration"))
+        self.minheap: Optional[str]
+        self.minheap = kwargs.get("minheap")
+        self.minheap_values: Dict[str, Dict[str, int]]
+        self.minheap_values = kwargs.get("minheap_values", {})
+        if not isinstance(self.minheap_values, dict):
+            raise TypeError(
+                "The minheap_values of {} should be a dictionary".format(self.name))
+        if self.minheap:
+            if not isinstance(self.minheap, str):
+                raise TypeError(
+                    "The minheap of {} should be a string that selects from a minheap_values".format(self.name))
+            if self.minheap not in self.minheap_values:
+                raise KeyError(
+                    "{} is not a valid entry of {}.minheap_values".format(self.name, self.name))
+        self.timeout: Optional[int]
+        self.timeout = kwargs.get("timeout")
+
+    def __str__(self) -> str:
+        return "{} Octane {}".format(super().__str__(), self.path)
+
+    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'D8Benchmark':
+        assert type(bm_spec) is str
+
+        d8_args = [
+            "--harness",
+            "--harness_lib", str(self.harness_lib),
+        ]
+        program_args = [
+            str(self.path),
+            bm_spec,
+            str(self.timing_iteration)
+        ]
+        return D8Benchmark(
+            d8_args=d8_args,
+            program=str(self.wrapper),
+            program_args=program_args,
+            suite_name=self.name,
+            name=bm_spec,
+            timeout=self.timeout
+        )
+
+    def get_minheap(self, bm: Benchmark) -> int:
+        assert isinstance(bm, D8Benchmark)
+        name = bm.name
+        if not self.minheap:
+            logging.warning(
+                "No minheap_value of {} is selected".format(self))
+            return __DEFAULT_MINHEAP
+        minheap = self.minheap_values[self.minheap]
+        if name not in minheap:
+            logging.warning(
+                "Minheap for {} of {} not set".format(name, self))
+            return __DEFAULT_MINHEAP
+        return minheap[name]
+
+    def is_passed(self, output: bytes) -> bool:
+        return b"PASSED" in output
+
+    def is_oom(self, output: bytes) -> bool:
+        # The format is "Fatal javascript OOM in ..."
+        # such as "Fatal javascript OOM in Reached heap limit"
+        # or "Fatal javascript OOM in Ineffective mark-compacts near heap limit"
+        return b"Fatal javascript OOM in" in output

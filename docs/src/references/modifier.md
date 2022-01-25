@@ -16,7 +16,16 @@ Set an environment variable. Might override an environment variable inherited fr
 Multiple arguments are space separated.
 
 ### Description
-Specify arguments to a JVM, as opposed to the runtime.
+Specify arguments to a JVM, as opposed to the program.
+
+## `D8Arg` (preview ⚠️)
+`D8Benchmark` specific.
+### Keys
+`val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
+Multiple arguments are space separated.
+
+### Description
+Specify arguments to `d8`, as opposed to the program.
 
 ## `JVMClasspath`
 `JavaBenchmarkSuite` specific.

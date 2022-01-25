@@ -9,3 +9,7 @@ tandem with
 [`BinaryBenchmarkSuite`](./suite.md#BinaryBenchmarkSuite).
 
 ## `OpenJDK`
+
+## `D8` (preview ⚠️)
+### Keys
+`executable`: path to the `d8` executable.

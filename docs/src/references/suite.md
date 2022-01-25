@@ -86,7 +86,7 @@ benchmarks:
     - {name: eclipse_large, bm_name: eclipse, size: large}
 ```
 
-## `SPECjbb2015`
+## `SPECjbb2015` (preview ⚠️)
 [SPECjbb2015](https://www.spec.org/jbb2015/).
 
 ### Keys
@@ -100,3 +100,34 @@ Note that the property file should reside in `path/../config/specjbb2015.props` 
 ### Benchmark Specification
 Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
 Right now, only `"composite"` is supported.
+
+## `Octane` (preview ⚠️)
+### Keys
+`path`: path to the Octane benchmark folder.
+The value is required.
+
+`wrapper`: path to the Octane wrapper written by Wenyu Zhao.
+The value is required.
+
+`harness_lib`: path to the d8 harness shared library written by Wenyu Zhao.
+The value is required.
+
+`timing_iteration`: specifying the timing iteration using an integer.
+The value is required.
+
+`minheap`: a string that selects one of the `minheap_values` sets to use.
+
+`minheap_values`: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering `Fatal javascript OOM in ...`.
+Each size is measured in MiB.
+The default value is an empty dictionary.
+The minheap values are used only when running `runbms` with a valid `N` value.
+If the minheap value for a benchmark is not specified, a default of `4096` is used.
+An example looks like this.
+```yaml
+minheap_values:
+  d8:
+    octane:
+      box2d: 5
+      codeload: 159
+      crypto: 3
+```

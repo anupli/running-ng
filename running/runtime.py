@@ -1,4 +1,4 @@
-from running.modifier import JVMArg, Modifier
+from running.modifier import JVMArg, Modifier, D8Arg
 from typing import Any, Dict, Union
 from pathlib import Path
 import logging
@@ -92,3 +92,30 @@ class JikesRVM(JVM):
 
     def __str__(self):
         return "{} JikesRVM {}".format(super().__str__(), self.home)
+
+
+@register(Runtime)
+class D8(Runtime):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.executable: Path
+        self.executable = Path(kwargs["executable"])
+        if not self.executable.exists():
+            logging.warning(
+                "d8 executable {} doesn't exist".format(self.executable))
+        self.executable = self.executable.absolute()
+
+    def get_executable(self) -> Path:
+        return self.executable
+
+    def __str__(self):
+        return "{} d8 {}".format(super().__str__(), self.executable)
+
+    def get_heapsize_modifier(self, size: int) -> Modifier:
+        size_str = "{}".format(size)
+        heapsize = D8Arg(
+            name="heap{}".format(size_str),
+            val="--initial-heap-size={} --max-heap-size={}".format(
+                size_str, size_str)
+        )
+        return heapsize

@@ -117,6 +117,9 @@ class BinaryBenchmark(Benchmark):
             elif type(m) == JVMClasspath:
                 logging.warning(
                     "JVMClasspath not respected by BinaryBenchmark")
+            elif type(m) == D8Arg:
+                logging.warning(
+                    "D8Arg not respected by BinaryBenchmark")
         return bb
 
     def get_full_args(self, _executable: Union[str, Path]) -> List[Union[str, Path]]:
@@ -151,6 +154,9 @@ class JavaBenchmark(Benchmark):
                 jb.program_args.extend(m.val)
             elif type(m) == JVMClasspath:
                 jb.cp.extend(m.val)
+            elif type(m) == D8Arg:
+                logging.warning(
+                    "D8Arg not respected by JavaBenchmark")
         return jb
 
     def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
@@ -158,5 +164,42 @@ class JavaBenchmark(Benchmark):
         cmd.append(executable)
         cmd.extend(self.jvm_args)
         cmd.extend(self.get_classpath_args())
+        cmd.extend(self.program_args)
+        return cmd
+
+
+class D8Benchmark(Benchmark):
+    def __init__(self, d8_args: List[str], program: str, program_args: List[str], **kwargs):
+        super().__init__(**kwargs)
+        self.d8_args = d8_args
+        self.program = program
+        self.program_args = program_args
+
+    def __str__(self) -> str:
+        return self.to_string("d8")
+
+    def attach_modifiers(self, modifiers: List[Modifier]) -> 'D8Benchmark':
+        db = super().attach_modifiers(modifiers)
+        for m in modifiers:
+            if self.suite_name in m.excludes:
+                if self.name in m.excludes[self.suite_name]:
+                    continue
+            if type(m) == ProgramArg:
+                db.program_args.extend(m.val)
+            elif type(m) == JVMArg:
+                logging.warning("JVMArg not respected by D8Benchmark")
+            elif type(m) == JVMClasspath:
+                logging.warning(
+                    "JVMClasspath not respected by D8Benchmark")
+            elif type(m) == D8Arg:
+                db.d8_args.extend(m.val)
+        return db
+
+    def get_full_args(self, executable: Union[str, Path]) -> List[Union[str, Path]]:
+        cmd = super().get_full_args(executable)
+        cmd.append(executable)
+        cmd.extend(self.d8_args)
+        cmd.append(self.program)
+        cmd.append("--")
         cmd.extend(self.program_args)
         return cmd
