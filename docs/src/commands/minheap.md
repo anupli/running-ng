@@ -47,10 +47,13 @@ dacapochopin-69a704e:
 
 ## Usage
 ```console
-minheap [-h|--help] CONFIG RESULT
+minheap [-h] [-r|--retries RETRIES] CONFIG RESULT
 ```
 
 `-h`: print help message.
+
+`-r`  (preview ⚠️): set the number of retries.
+Overrides `retries` in the config file.
 
 `CONFIG`: the path to the configuration file.
 This is required.
@@ -62,3 +65,7 @@ This is required.
 
 ## Keys
 `maxheap`: the upper bound of the search.
+
+`retries` (preview ⚠️): the maximum number of retries before a heap size is deemed too small.
+Note that this is only meant to be a workaround of occasional crashes, rather than OOMs.
+If an invocation fails with OOM, the respective heap size will be considered as too small immediately.

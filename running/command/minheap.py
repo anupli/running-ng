@@ -10,6 +10,7 @@ import tempfile
 import yaml
 from running.suite import is_dry_run
 from collections import defaultdict
+from enum import Enum
 
 configuration: Configuration
 
@@ -19,9 +20,39 @@ def setup_parser(subparsers):
     f.set_defaults(which="minheap")
     f.add_argument("CONFIG", type=Path)
     f.add_argument("RESULT", type=Path)
+    f.add_argument("-r", "--retries", type=int)
 
 
-def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmark, heap: int, minheap_dir: Path) -> float:
+class RunResult(Enum):
+    Passed = 1
+    FailedWithOOM = 2
+    Failed = 3
+
+    def is_passed(self) -> bool:
+        return self == RunResult.Passed
+
+
+def run_bm_with_retry(suite: JavaBenchmarkSuite, runtime: Runtime, bm_with_heapsize: JavaBenchmark, minheap_dir: Path, retries: int) -> RunResult:
+    def log(s):
+        return print(s, end="", flush=True)
+
+    log(" ")
+    for _ in range(retries):
+        output, _ = bm_with_heapsize.run(runtime, cwd=minheap_dir)
+        if suite.is_passed(output):
+            log("o ")
+            return RunResult.Passed
+        elif suite.is_oom(output):
+            log("x ")
+            return RunResult.FailedWithOOM
+        else:
+            log(".")
+            continue
+    log(" ")
+    return RunResult.Failed
+
+
+def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmark, heap: int, minheap_dir: Path, retries: int) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2
@@ -31,24 +62,19 @@ def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmar
         size_str = "{}M".format(mid)
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers([heapsize])
-        output, _ = bm_with_heapsize.run(
-            runtime, cwd=minheap_dir)
-        if suite.is_passed(output):
-            print(" o ", end="", flush=True)
+        result = run_bm_with_retry(
+            suite, runtime, bm_with_heapsize, minheap_dir, retries)
+        if result.is_passed():
             minh = mid
             hi = mid
             mid = (lo + hi) // 2
         else:
-            if suite.is_oom(output):
-                print(" x ", end="", flush=True)
-            else:
-                print(" ? ", end="", flush=True)
             lo = mid
             mid = (lo + hi) // 2
     return minh
 
 
-def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file: Optional[Path]):
+def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file: Optional[Path], retries: int):
     suites = configuration.get("suites")
     maxheap = configuration.get("maxheap")
     for c in configuration.get("configs"):
@@ -72,7 +98,7 @@ def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file:
                 print("\t {}-{} ".format(b.suite_name, b.name), end="")
                 mod_b = b.attach_modifiers(mods)
                 minheap = minheap_one_bm(
-                    suite, runtime, mod_b, maxheap, minheap_dir)
+                    suite, runtime, mod_b, maxheap, minheap_dir, retries)
                 print("minheap {}".format(minheap))
                 result[c_encoded][suite_name][b.name] = minheap
                 if result_file:
@@ -98,11 +124,12 @@ def print_best(result: Dict[str, Dict[str, Dict[str, float]]]):
         for benchmark, best_config in benchmark_configs.items():
             config_best_count[best_config] += 1
 
-    config, count = max(config_best_count.items(), key=lambda x: x[1])
-    print("{} obtained the most number of smallest minheap sizes: {}".format(
-        config, count))
-    print("Minheap configuration to be copied to runbms config files")
-    print(yaml.dump(result[config]))
+    if config_best_count.items():
+        config, count = max(config_best_count.items(), key=lambda x: x[1])
+        print("{} obtained the most number of smallest minheap sizes: {}".format(
+            config, count))
+        print("Minheap configuration to be copied to runbms config files")
+        print(yaml.dump(result[config]))
 
 
 def run(args):
@@ -119,11 +146,14 @@ def run(args):
                 result = {}
     else:
         result = {}
+    retries = configuration.get("retries")
+    if args.get("retries"):
+        retries = args.get("retries")
     with tempfile.TemporaryDirectory(prefix="minheap-") as minheap_dir:
         logging.info("Temporary directory: {}".format(minheap_dir))
         if is_dry_run():
-            run_with_persistence(result, minheap_dir, None)
+            run_with_persistence(result, minheap_dir, None, retries)
         else:
-            run_with_persistence(result, minheap_dir, result_file)
+            run_with_persistence(result, minheap_dir, result_file, retries)
     print_best(result)
     return True

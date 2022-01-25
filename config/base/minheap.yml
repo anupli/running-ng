@@ -4,3 +4,4 @@ includes:
   - "./modifiers.yml"
 
 maxheap: 4096
+retries: 1
