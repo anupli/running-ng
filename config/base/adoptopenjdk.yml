@@ -26,4 +26,4 @@ runtimes:
   adoptopenjdk-16:
     type: OpenJDK
     release: 15
-    home: /usr/lib/jvm/adoptopenjdk-15-hotspot-amd64
+    home: /usr/lib/jvm/adoptopenjdk-16-hotspot-amd64
