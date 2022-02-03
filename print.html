@@ -561,48 +561,51 @@ tandem with
 <h2 id="spidermonkey-preview-"><a class="header" href="#spidermonkey-preview-"><code>SpiderMonkey</code> (preview ⚠️)</a></h2>
 <h3 id="keys-5"><a class="header" href="#keys-5">Keys</a></h3>
 <p><code>executable</code>: path to the <code>js</code> executable.</p>
+<h2 id="javascriptcore-preview-"><a class="header" href="#javascriptcore-preview-"><code>JavaScriptCore</code> (preview ⚠️)</a></h2>
+<h3 id="keys-6"><a class="header" href="#keys-6">Keys</a></h3>
+<p><code>executable</code>: path to the <code>jsc</code> executable.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
 <h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
-<h3 id="keys-6"><a class="header" href="#keys-6">Keys</a></h3>
+<h3 id="keys-7"><a class="header" href="#keys-7">Keys</a></h3>
 <p><code>var</code>: name of the variable.</p>
 <p><code>val</code>: value of the variable.</p>
 <h3 id="description"><a class="header" href="#description">Description</a></h3>
 <p>Set an environment variable. Might override an environment variable inherited from the parent process.</p>
 <h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
 <p><code>JVM</code> specific.</p>
-<h3 id="keys-7"><a class="header" href="#keys-7">Keys</a></h3>
+<h3 id="keys-8"><a class="header" href="#keys-8">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.</p>
 <h3 id="description-1"><a class="header" href="#description-1">Description</a></h3>
 <p>Specify arguments to a JVM, as opposed to the program.</p>
 <h2 id="jsarg-preview-"><a class="header" href="#jsarg-preview-"><code>JSArg</code> (preview ⚠️)</a></h2>
 <p><code>JavaScriptRuntime</code> specific.</p>
-<h3 id="keys-8"><a class="header" href="#keys-8">Keys</a></h3>
+<h3 id="keys-9"><a class="header" href="#keys-9">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.</p>
 <h3 id="description-2"><a class="header" href="#description-2">Description</a></h3>
 <p>Specify arguments to <code>d8</code>, as opposed to the program.</p>
 <h2 id="jvmclasspath"><a class="header" href="#jvmclasspath"><code>JVMClasspath</code></a></h2>
 <p><code>JVM</code> specific.</p>
-<h3 id="keys-9"><a class="header" href="#keys-9">Keys</a></h3>
+<h3 id="keys-10"><a class="header" href="#keys-10">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple classpaths are space separated.</p>
 <h3 id="description-3"><a class="header" href="#description-3">Description</a></h3>
 <p>Specify Java Classpaths.</p>
 <h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
-<h3 id="keys-10"><a class="header" href="#keys-10">Keys</a></h3>
+<h3 id="keys-11"><a class="header" href="#keys-11">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.</p>
 <h3 id="description-4"><a class="header" href="#description-4">Description</a></h3>
 <p>Specify arguments to a program, as opposed to the runtime.</p>
 <h2 id="modifierset-preview-"><a class="header" href="#modifierset-preview-"><code>ModifierSet</code> (preview ⚠️)</a></h2>
-<h3 id="keys-11"><a class="header" href="#keys-11">Keys</a></h3>
+<h3 id="keys-12"><a class="header" href="#keys-12">Keys</a></h3>
 <p><code>val</code>: <code>|</code> separated values, with possible value options. See <a href="references/./index.html#value-options">here</a> for details.</p>
 <h3 id="description-5"><a class="header" href="#description-5">Description</a></h3>
 <p>Specify a set of modifiers, including other <code>ModifierSet</code>s.
 That is, you can use <code>ModifierSet</code> recursively.</p>
 <h2 id="wrapper-preview-"><a class="header" href="#wrapper-preview-"><code>Wrapper</code> (preview ⚠️)</a></h2>
-<h3 id="keys-12"><a class="header" href="#keys-12">Keys</a></h3>
+<h3 id="keys-13"><a class="header" href="#keys-13">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.</p>
 <h3 id="description-6"><a class="header" href="#description-6">Description</a></h3>
@@ -656,7 +659,7 @@ The heap size 0 represents <code>1.0 * minheap</code>, and the heap size <code>N
 If <code>N</code> is omitted, then the script will run benchmarks without explicit explicitly setting heap sizes, unless you specify <code>-s</code> or use a modifier that sets the heap size.</p>
 <p><code>n</code>: the heap sizes to explore.
 Instead of exploring 0, 1, ..., and <code>N</code>, only explore the <code>n</code>s specified.</p>
-<h2 id="keys-13"><a class="header" href="#keys-13">Keys</a></h2>
+<h2 id="keys-14"><a class="header" href="#keys-14">Keys</a></h2>
 <p><code>invocations</code>: see above.</p>
 <p><code>minheap_multiplier</code>: see above.</p>
 <p><code>heap_range</code>: the heap size relative to the minheap when <code>n = N</code>.</p>
@@ -680,7 +683,7 @@ No message will be sent if it'a dry run.</p>
       type: private
       to: [&quot;your user id here&quot;]
 </code></pre>
-<h4 id="keys-14"><a class="header" href="#keys-14">Keys</a></h4>
+<h4 id="keys-15"><a class="header" href="#keys-15">Keys</a></h4>
 <p><code>request</code>: please follow the <a href="https://zulip.com/api/send-message">Zulip API documentation</a>.
 Note that you don't need to put in <code>content</code> here.
 Please contact the administrators of your organization for your user ID.</p>
@@ -699,7 +702,7 @@ If you can't create a new bot, please contact the administrators of your organiz
     patterns:
       - &quot;scratch/dacapo-latency-*.csv&quot;
 </code></pre>
-<h4 id="keys-15"><a class="header" href="#keys-15">Keys</a></h4>
+<h4 id="keys-16"><a class="header" href="#keys-16">Keys</a></h4>
 <p><code>patterns</code>: a list of patterns following the Python 3 <code>pathlib.Path.glob</code> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">syntax</a>.
 Files matched the patterns will be copied to <code>LOG_DIR</code> where different subfolders will be created for each invocation.</p>
 <p><code>skip_failed</code>: don't copy files from failed runs. The default value is true.</p>
@@ -773,7 +776,7 @@ This is required.</p>
 This file contains both the interim results and the final result.
 An interrupted execution can be resumed by using the same <code>RESULT</code> path.
 This is required.</p>
-<h2 id="keys-16"><a class="header" href="#keys-16">Keys</a></h2>
+<h2 id="keys-17"><a class="header" href="#keys-17">Keys</a></h2>
 <p><code>maxheap</code>: the upper bound of the search.</p>
 <p><code>retries</code> (preview ⚠️): the maximum number of retries before a heap size is deemed too small.
 Note that this is only meant to be a workaround of occasional crashes, rather than OOMs.
