@@ -160,6 +160,7 @@ class SpiderMonkey(JavaScriptRuntime):
 
     def get_heapsize_modifier(self, size: int) -> Modifier:
         size_str = "{}".format(size)
+        # FIXME doesn't seem to be working
         heapsize = JSArg(
             name="heap{}".format(size_str),
             val="--available-memory={}".format(size_str)
@@ -168,4 +169,23 @@ class SpiderMonkey(JavaScriptRuntime):
 
     def is_oom(self, output: bytes) -> bool:
         # FIXME not sure how to check for OOM for SpiderMonkey yet
+        return False
+
+
+@register(Runtime)
+class JavaScriptCore(JavaScriptRuntime):
+    def __str__(self):
+        return "{} JavaScriptCore {}".format(super().__str__(), self.executable)
+
+    def get_heapsize_modifier(self, size: int) -> Modifier:
+        size_str = "{}".format(size)
+        # FIXME doesn't seem to be working
+        heapsize = JSArg(
+            name="heap{}".format(size_str),
+            val="--gcMaxHeapSize={}".format(size_str)
+        )
+        return heapsize
+
+    def is_oom(self, output: bytes) -> bool:
+        # FIXME not sure how to check for OOM for JavaScriptCore yet
         return False

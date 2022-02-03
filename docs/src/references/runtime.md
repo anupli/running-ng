@@ -17,3 +17,7 @@ tandem with
 ## `SpiderMonkey` (preview ⚠️)
 ### Keys
 `executable`: path to the `js` executable.
+
+## `JavaScriptCore` (preview ⚠️)
+### Keys
+`executable`: path to the `jsc` executable.

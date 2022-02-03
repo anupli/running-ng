@@ -2,7 +2,7 @@ import logging
 import subprocess
 import sys
 from typing import Any, List, Optional, Tuple, Union, Dict
-from running.runtime import D8, Runtime, DummyRuntime
+from running.runtime import D8, JavaScriptCore, Runtime, DummyRuntime, SpiderMonkey
 from running.modifier import *
 from running.util import smart_quote, split_quoted
 from pathlib import Path
@@ -202,5 +202,12 @@ class JavaScriptBenchmark(Benchmark):
         cmd.append(self.program)
         if isinstance(runtime, D8):
             cmd.append("--")
+        elif isinstance(runtime, JavaScriptCore):
+            cmd.append("--")
+        elif isinstance(runtime, SpiderMonkey):
+            pass
+        else:
+            raise TypeError("{} is of type {}, and not a valid runtime for JavaScriptBenchmark".format(
+                runtime, type(runtime)))
         cmd.extend(self.program_args)
         return cmd
