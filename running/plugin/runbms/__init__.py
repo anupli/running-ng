@@ -58,6 +58,6 @@ class RunbmsPlugin(object):
 
 
 # !!! Do NOT remove this import nor change its position
-# This is to make sure that the Zulip class is correctly registered
+# This is to make sure that the plugin classes are correctly registered
 from running.plugin.runbms.copyfile import CopyFile
 from running.plugin.runbms.zulip import Zulip

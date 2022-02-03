@@ -1,4 +1,5 @@
 from running.config import Configuration
+from running.runtime import DummyRuntime
 from running.suite import BinaryBenchmarkSuite
 
 
@@ -36,8 +37,8 @@ def test_dacapo_size():
     c.resolve_class()
     fop = c.get("benchmarks")["dacapo2006"][0]
     fop_small = c.get("benchmarks")["dacapo2006"][1]
-    assert "-s default" in fop.to_string("java")
-    assert "-s small" in fop_small.to_string("java")
+    assert "-s default" in fop.to_string(DummyRuntime("java"))
+    assert "-s small" in fop_small.to_string(DummyRuntime("java"))
 
 
 def test_dacapo_timing_iteration():
@@ -62,5 +63,5 @@ def test_dacapo_timing_iteration():
     c.resolve_class()
     fop = c.get("benchmarks")["dacapo2006"][0]
     fop_converge = c.get("benchmarks")["dacapo2006"][1]
-    assert "-n 3" in fop.to_string("java")
-    assert "-converge" in fop_converge.to_string("java")
+    assert "-n 3" in fop.to_string(DummyRuntime("java"))
+    assert "-converge" in fop_converge.to_string(DummyRuntime("java"))

@@ -158,7 +158,7 @@ def hz_to_ghz(hzstr: str) -> str:
 def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output = "\n-----\n"
     output += "mkdir -p PLOTTY_WORKAROUND; timedrun; "
-    output += bm.to_string(runtime.get_executable())
+    output += bm.to_string(runtime)
     output += "\n"
     output += system("date") + "\n"
     output += system("w") + "\n"
@@ -238,6 +238,7 @@ def run_one_benchmark(
                     continue
             log_filename = get_filename(bm, hfac, size, c)
             logging.debug("Running with log filename {}".format(log_filename))
+            runtime, _ = parse_config_str(configuration, c)
             if is_dry_run():
                 output, exit_status = run_benchmark_with_config(
                     c, bm, runbms_dir, size, None
@@ -250,7 +251,7 @@ def run_one_benchmark(
                         c, bm, runbms_dir, size, fd
                     )
                 ever_ran[j] = True
-            if suite.is_oom(output):
+            if runtime.is_oom(output):
                 oomed_count[c] += 1
             if exit_status is SubprocessrExit.Timeout:
                 timeout_count[c] += 1

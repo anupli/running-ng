@@ -2,8 +2,8 @@ from typing import Any, Dict, Optional, DefaultDict
 from running.config import Configuration
 from pathlib import Path
 from running.runtime import NativeExecutable, Runtime
-from running.benchmark import JavaBenchmark
-from running.suite import JavaBenchmarkSuite
+from running.benchmark import Benchmark
+from running.suite import BenchmarkSuite
 from running.util import parse_config_str, config_str_encode
 import logging
 import tempfile
@@ -32,7 +32,7 @@ class RunResult(Enum):
         return self == RunResult.Passed
 
 
-def run_bm_with_retry(suite: JavaBenchmarkSuite, runtime: Runtime, bm_with_heapsize: JavaBenchmark, minheap_dir: Path, retries: int) -> RunResult:
+def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize: Benchmark, minheap_dir: Path, retries: int) -> RunResult:
     def log(s):
         return print(s, end="", flush=True)
 
@@ -42,7 +42,7 @@ def run_bm_with_retry(suite: JavaBenchmarkSuite, runtime: Runtime, bm_with_heaps
         if suite.is_passed(output):
             log("o ")
             return RunResult.Passed
-        elif suite.is_oom(output):
+        elif runtime.is_oom(output):
             log("x ")
             return RunResult.FailedWithOOM
         else:
@@ -52,7 +52,7 @@ def run_bm_with_retry(suite: JavaBenchmarkSuite, runtime: Runtime, bm_with_heaps
     return RunResult.Failed
 
 
-def minheap_one_bm(suite: JavaBenchmarkSuite, runtime: Runtime, bm: JavaBenchmark, heap: int, minheap_dir: Path, retries: int) -> float:
+def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap: int, minheap_dir: Path, retries: int) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2

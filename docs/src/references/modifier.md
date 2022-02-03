@@ -10,7 +10,7 @@
 Set an environment variable. Might override an environment variable inherited from the parent process.
 
 ## `JVMArg`
-`JavaBenchmarkSuite` specific.
+`JVM` specific.
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple arguments are space separated.
@@ -18,8 +18,8 @@ Multiple arguments are space separated.
 ### Description
 Specify arguments to a JVM, as opposed to the program.
 
-## `D8Arg` (preview ⚠️)
-`D8Benchmark` specific.
+## `JSArg` (preview ⚠️)
+`JavaScriptRuntime` specific.
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple arguments are space separated.
@@ -28,7 +28,7 @@ Multiple arguments are space separated.
 Specify arguments to `d8`, as opposed to the program.
 
 ## `JVMClasspath`
-`JavaBenchmarkSuite` specific.
+`JVM` specific.
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple classpaths are space separated.

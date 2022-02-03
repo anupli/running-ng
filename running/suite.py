@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark, D8Benchmark
+from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark, JavaScriptBenchmark
 import logging
 from running.util import register, split_quoted
 
@@ -38,9 +38,6 @@ class BenchmarkSuite(object):
     def get_minheap(self, _bm: Benchmark) -> int:
         raise NotImplementedError
 
-    def is_oom(self, _output: bytes) -> bool:
-        raise NotImplementedError
-
     def is_passed(self, _output: bytes) -> bool:
         raise NotImplementedError
 
@@ -75,9 +72,6 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
         assert isinstance(bm, BinaryBenchmark)
         return 0
 
-    def is_oom(self, _output: bytes) -> bool:
-        return False
-
     def is_passed(self, _output: bytes) -> bool:
         # FIXME no generic way to know
         return True
@@ -89,12 +83,6 @@ class JavaBenchmarkSuite(BenchmarkSuite):
 
     def get_minheap(self, _bm: Benchmark) -> int:
         raise NotImplementedError()
-
-    def is_oom(self, output: bytes) -> bool:
-        for pattern in [b"Allocation Failed", b"OutOfMemoryError", b"ran out of memory", b"panicked at 'Out of memory!'"]:
-            if pattern in output:
-                return True
-        return False
 
 
 @register(BenchmarkSuite)
@@ -299,8 +287,6 @@ class Octane(BenchmarkSuite):
         self.wrapper = Path(kwargs["wrapper"]).resolve()
         if not self.wrapper.exists():
             logging.info("Octane folder {} not found".format(self.wrapper))
-        self.harness_lib: Path
-        self.harness_lib = Path(kwargs["harness_lib"]).resolve()
         self.timing_iteration: int
         self.timing_iteration = int(kwargs.get("timing_iteration"))
         self.minheap: Optional[str]
@@ -323,20 +309,16 @@ class Octane(BenchmarkSuite):
     def __str__(self) -> str:
         return "{} Octane {}".format(super().__str__(), self.path)
 
-    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'D8Benchmark':
+    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JavaScriptBenchmark':
         assert type(bm_spec) is str
 
-        d8_args = [
-            "--harness",
-            "--harness_lib", str(self.harness_lib),
-        ]
         program_args = [
             str(self.path),
             bm_spec,
             str(self.timing_iteration)
         ]
-        return D8Benchmark(
-            d8_args=d8_args,
+        return JavaScriptBenchmark(
+            js_args=[],
             program=str(self.wrapper),
             program_args=program_args,
             suite_name=self.name,
@@ -345,7 +327,7 @@ class Octane(BenchmarkSuite):
         )
 
     def get_minheap(self, bm: Benchmark) -> int:
-        assert isinstance(bm, D8Benchmark)
+        assert isinstance(bm, JavaScriptBenchmark)
         name = bm.name
         if not self.minheap:
             logging.warning(
@@ -360,9 +342,3 @@ class Octane(BenchmarkSuite):
 
     def is_passed(self, output: bytes) -> bool:
         return b"PASSED" in output
-
-    def is_oom(self, output: bytes) -> bool:
-        # The format is "Fatal javascript OOM in ..."
-        # such as "Fatal javascript OOM in Reached heap limit"
-        # or "Fatal javascript OOM in Ineffective mark-compacts near heap limit"
-        return b"Fatal javascript OOM in" in output

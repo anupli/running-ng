@@ -13,3 +13,7 @@ tandem with
 ## `D8` (preview ⚠️)
 ### Keys
 `executable`: path to the `d8` executable.
+
+## `SpiderMonkey` (preview ⚠️)
+### Keys
+`executable`: path to the `js` executable.

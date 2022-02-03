@@ -110,10 +110,10 @@ class Wrapper(Modifier):
 
 
 @register(Modifier)
-class D8Arg(Modifier):
+class JSArg(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} D8Arg {}".format(super().__str__(), self.val)
+        return "{} JSArg {}".format(super().__str__(), self.val)

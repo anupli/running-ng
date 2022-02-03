@@ -109,9 +109,6 @@ The value is required.
 `wrapper`: path to the Octane wrapper written by Wenyu Zhao.
 The value is required.
 
-`harness_lib`: path to the d8 harness shared library written by Wenyu Zhao.
-The value is required.
-
 `timing_iteration`: specifying the timing iteration using an integer.
 The value is required.
 
