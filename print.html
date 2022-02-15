@@ -765,11 +765,11 @@ dacapochopin-69a704e:
   zxing: 97
 </code></pre>
 <h2 id="usage-2"><a class="header" href="#usage-2">Usage</a></h2>
-<pre><code class="language-console">minheap [-h] [-r|--retries RETRIES] CONFIG RESULT
+<pre><code class="language-console">minheap [-h] [-a|--attempts ATTEMPTS] CONFIG RESULT
 </code></pre>
 <p><code>-h</code>: print help message.</p>
-<p><code>-r</code>  (preview ⚠️): set the number of retries.
-Overrides <code>retries</code> in the config file.</p>
+<p><code>-a</code>  (preview ⚠️): set the number of attempts.
+Overrides <code>attempts</code> in the config file.</p>
 <p><code>CONFIG</code>: the path to the configuration file.
 This is required.</p>
 <p><code>RESULT</code>: where to store the results.
@@ -778,9 +778,9 @@ An interrupted execution can be resumed by using the same <code>RESULT</code> pa
 This is required.</p>
 <h2 id="keys-17"><a class="header" href="#keys-17">Keys</a></h2>
 <p><code>maxheap</code>: the upper bound of the search.</p>
-<p><code>retries</code> (preview ⚠️): the maximum number of retries before a heap size is deemed too small.
-Note that this is only meant to be a workaround of occasional crashes, rather than OOMs.
-If an invocation fails with OOM, the respective heap size will be considered as too small immediately.</p>
+<p><code>attempts</code> (preview ⚠️): for a particular heap size, if an invocation passes or fails with OOM, the binary search will continue with the next appropriate heap size.
+If an invocation crashes and if the total number of invocations has not exceeded <code>ATTEMPTS</code>, the same heap size will be repeated.
+If all <code>ATTEMPTS</code> invocations crash, the binary search for this config will stop, and <code>minheap</code> will report <code>inf</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fillin"><a class="header" href="#fillin"><code>fillin</code></a></h1>
 <div style="break-before: page; page-break-before: always;"></div><p>Here are some recipes for common tasks.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="whole-process-performance-event-monitoring"><a class="header" href="#whole-process-performance-event-monitoring">Whole-Process Performance Event Monitoring</a></h1>
