@@ -30,7 +30,7 @@ class RunResult(Enum):
 
     def is_passed(self) -> bool:
         return self == RunResult.Passed
-    
+
     def is_failed(self) -> bool:
         return self == RunResult.Failed
 
