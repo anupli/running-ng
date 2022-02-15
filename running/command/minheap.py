@@ -30,6 +30,9 @@ class RunResult(Enum):
 
     def is_passed(self) -> bool:
         return self == RunResult.Passed
+    
+    def is_failed(self) -> bool:
+        return self == RunResult.Failed
 
 
 def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize: Benchmark, minheap_dir: Path, retries: int) -> RunResult:
@@ -68,6 +71,8 @@ def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap:
             minh = mid
             hi = mid
             mid = (lo + hi) // 2
+        elif result.is_failed():
+            return float('inf')
         else:
             lo = mid
             mid = (lo + hi) // 2

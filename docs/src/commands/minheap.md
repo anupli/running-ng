@@ -69,3 +69,4 @@ This is required.
 `retries` (preview ⚠️): the maximum number of retries before a heap size is deemed too small.
 Note that this is only meant to be a workaround of occasional crashes, rather than OOMs.
 If an invocation fails with OOM, the respective heap size will be considered as too small immediately.
+If all RETRIES retries crash, `minheap` will report `inf`.
