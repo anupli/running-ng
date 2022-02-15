@@ -20,7 +20,7 @@ def setup_parser(subparsers):
     f.set_defaults(which="minheap")
     f.add_argument("CONFIG", type=Path)
     f.add_argument("RESULT", type=Path)
-    f.add_argument("-r", "--retries", type=int)
+    f.add_argument("-a", "--attempts", type=int)
 
 
 class RunResult(Enum):
@@ -35,12 +35,12 @@ class RunResult(Enum):
         return self == RunResult.Failed
 
 
-def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize: Benchmark, minheap_dir: Path, retries: int) -> RunResult:
+def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize: Benchmark, minheap_dir: Path, attempts: int) -> RunResult:
     def log(s):
         return print(s, end="", flush=True)
 
     log(" ")
-    for _ in range(retries):
+    for _ in range(attempts):
         output, _ = bm_with_heapsize.run(runtime, cwd=minheap_dir)
         if suite.is_passed(output):
             log("o ")
@@ -55,7 +55,7 @@ def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize:
     return RunResult.Failed
 
 
-def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap: int, minheap_dir: Path, retries: int) -> float:
+def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap: int, minheap_dir: Path, attempts: int) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2
@@ -66,7 +66,7 @@ def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap:
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers([heapsize])
         result = run_bm_with_retry(
-            suite, runtime, bm_with_heapsize, minheap_dir, retries)
+            suite, runtime, bm_with_heapsize, minheap_dir, attempts)
         if result.is_passed():
             minh = mid
             hi = mid
@@ -79,7 +79,7 @@ def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap:
     return minh
 
 
-def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file: Optional[Path], retries: int):
+def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file: Optional[Path], attempts: int):
     suites = configuration.get("suites")
     maxheap = configuration.get("maxheap")
     for c in configuration.get("configs"):
@@ -103,7 +103,7 @@ def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file:
                 print("\t {}-{} ".format(b.suite_name, b.name), end="")
                 mod_b = b.attach_modifiers(mods)
                 minheap = minheap_one_bm(
-                    suite, runtime, mod_b, maxheap, minheap_dir, retries)
+                    suite, runtime, mod_b, maxheap, minheap_dir, attempts)
                 print("minheap {}".format(minheap))
                 result[c_encoded][suite_name][b.name] = minheap
                 if result_file:
@@ -151,14 +151,14 @@ def run(args):
                 result = {}
     else:
         result = {}
-    retries = configuration.get("retries")
-    if args.get("retries"):
-        retries = args.get("retries")
+    attempts = configuration.get("attempts")
+    if args.get("attempts"):
+        attempts = args.get("attempts")
     with tempfile.TemporaryDirectory(prefix="minheap-") as minheap_dir:
         logging.info("Temporary directory: {}".format(minheap_dir))
         if is_dry_run():
-            run_with_persistence(result, minheap_dir, None, retries)
+            run_with_persistence(result, minheap_dir, None, attempts)
         else:
-            run_with_persistence(result, minheap_dir, result_file, retries)
+            run_with_persistence(result, minheap_dir, result_file, attempts)
     print_best(result)
     return True
