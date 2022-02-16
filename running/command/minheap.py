@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional, DefaultDict
 from running.config import Configuration
 from pathlib import Path
 from running.runtime import NativeExecutable, Runtime
-from running.benchmark import Benchmark
+from running.benchmark import Benchmark, SubprocessrExit
 from running.suite import BenchmarkSuite
 from running.util import parse_config_str, config_str_encode
 import logging
@@ -23,36 +23,39 @@ def setup_parser(subparsers):
     f.add_argument("-a", "--attempts", type=int)
 
 
-class RunResult(Enum):
-    Passed = 1
-    FailedWithOOM = 2
-    Failed = 3
-
-    def is_passed(self) -> bool:
-        return self == RunResult.Passed
-
-    def is_failed(self) -> bool:
-        return self == RunResult.Failed
+class ContinueSearch(Enum):
+    Abort = 1
+    HeapTooBig = 2
+    HeapTooSmall = 3
 
 
-def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize: Benchmark, minheap_dir: Path, attempts: int) -> RunResult:
+def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize: Benchmark, minheap_dir: Path, attempts: int) -> ContinueSearch:
     def log(s):
         return print(s, end="", flush=True)
 
     log(" ")
     for _ in range(attempts):
-        output, _ = bm_with_heapsize.run(runtime, cwd=minheap_dir)
-        if suite.is_passed(output):
-            log("o ")
-            return RunResult.Passed
-        elif runtime.is_oom(output):
+        output, subprocess_exit = bm_with_heapsize.run(
+            runtime, cwd=minheap_dir)
+        if runtime.is_oom(output):
+            # if OOM is detected, we exit the loop regardless the exit statussour
             log("x ")
-            return RunResult.FailedWithOOM
-        else:
-            log(".")
-            continue
+            return ContinueSearch.HeapTooSmall
+        if subprocess_exit is SubprocessrExit.Normal:
+            if suite.is_passed(output):
+                log("o ")
+                return ContinueSearch.HeapTooBig
+        elif subprocess_exit is SubprocessrExit.Timeout:
+            # A timeout is likely due to heap being too small and many GCs scheduled back to back
+            log("t ")
+            return ContinueSearch.HeapTooSmall
+        # If not the above scenario, we treat this invocation as a crash or some kind of erroneous state
+        log(".")
+        continue
+    # No successful invocation in the above attempts, but none OOMed either
+    # Probably too many crashes, abort the binary search for this benchmark
     log(" ")
-    return RunResult.Failed
+    return ContinueSearch.Abort
 
 
 def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap: int, minheap_dir: Path, attempts: int) -> float:
@@ -67,15 +70,17 @@ def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap:
         bm_with_heapsize = bm.attach_modifiers([heapsize])
         result = run_bm_with_retry(
             suite, runtime, bm_with_heapsize, minheap_dir, attempts)
-        if result.is_passed():
+        if result is ContinueSearch.Abort:
+            return float('inf')
+        elif result is ContinueSearch.HeapTooBig:
             minh = mid
             hi = mid
             mid = (lo + hi) // 2
-        elif result.is_failed():
-            return float('inf')
-        else:
+        elif result is ContinueSearch.HeapTooSmall:
             lo = mid
             mid = (lo + hi) // 2
+        else:
+            raise ValueError("Unhandled ContinueSearch variant")
     return minh
 
 

@@ -66,6 +66,6 @@ This is required.
 ## Keys
 `maxheap`: the upper bound of the search.
 
-`attempts` (preview ⚠️): for a particular heap size, if an invocation passes or fails with OOM, the binary search will continue with the next appropriate heap size.
+`attempts` (preview ⚠️): for a particular heap size, if an invocation passes or fails with OOM (timeout treated as OOM), the binary search will continue with the next appropriate heap size.
 If an invocation crashes and if the total number of invocations has not exceeded `ATTEMPTS`, the same heap size will be repeated.
 If all `ATTEMPTS` invocations crash, the binary search for this config will stop, and `minheap` will report `inf`.
