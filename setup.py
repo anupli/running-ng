@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+import setuptools
 from codecs import open
 from os import path
 
@@ -12,15 +12,19 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 about = {}
-with open(path.join(here, NAME, '__version__.py')) as f:
+with open(path.join(here, "src", NAME, '__version__.py')) as f:
     exec(f.read(), about)
 
-setup(
+setuptools.setup(
     name="running-ng",
     version=about["__VERSION__"],
     description='Running: Next Generation',
     long_description=long_description,
-    url='https://github.com/caizixian/running-ng',
+    long_description_content_type="text/markdown",
+    url="https://github.com/anupli/running-ng",
+    project_urls={
+        "Bug Tracker": "https://github.com/anupli/running-ng/issues",
+    },
     author='Zixian Cai',
     author_email='u5937495@anu.edu.au',
     license='Apache',
@@ -33,7 +37,13 @@ setup(
         'Programming Language :: Python :: 3',
     ],
 
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    package_dir={"": "src"},
+    packages=setuptools.find_packages(where="src"),
+    package_data={
+        "running": ["data/**/*.yml"],
+    },
+    include_package_data=True,
+    python_requires=">=3.6",
 
     entry_points={
         'console_scripts': [

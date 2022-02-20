@@ -1,13 +1,5 @@
 # Installation
-For now, the best way to install `running-ng` is via source.
-```bash
-git clone https://github.com/anupli/running-ng
-cd running-ng
-pip3 install -e . --user
-```
-
-The `-e` option is used to allow quick update of `running-ng` by running `git pull`.
-Once the codebase is more stabilized, other installation options, such as installing from PyPI, could be preferable.
+`pip install --user -U running-ng`
 
 ## Adding `running` to `PATH`
 You will need to add the folder where `running` is installed to your `PATH`.
