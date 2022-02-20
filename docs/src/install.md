@@ -1,5 +1,8 @@
 # Installation
-`pip install --user -U running-ng`
+`pip3 install --user -U running-ng`
+
+The base configuration files can be usually be found in paths like `~/.local/lib/python3.6/site-packages/running/config/base`.
+The exact path might differ depending on your Python version, etc.
 
 ## Adding `running` to `PATH`
 You will need to add the folder where `running` is installed to your `PATH`.
