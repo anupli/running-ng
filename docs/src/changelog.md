@@ -1,7 +1,65 @@
 # Changelog
 ## Unreleased
-### Features
-### Improvements
+### Added
+#### Base Configurations
+- AdoptOpenJDK 16
+- DaCapo Chopin Snapshot-29a657f, Chopin Snapshot-f480064
+- Temurin 8, 11, 17
+- SPECjbb 2015, 1.03
+
+#### Commands
+- `minheap` gains an extra key `attempts` (can be overridden by `--attempts`) so that crashes don't cause bogus minheap measurements.
+- `minheap` stores results in a YAML file, which is also used to resume an interrupted execution.
+- `minheap` prints the minheap values of the best config at the ends.
+- `runbms` gains an extra argument, `--resume`, to resume an interrupted execution from a log folder.
+- `runbms` gains an extra argument, `--workdir`, to override the default working directory.
+- `runbms` adds more information of the environment to the log file, including the date, logged in users, system load, and top processes.
+- `runbms` gains a callback-based plugin system, and an extra key `plugins` is added.
+- `runbms` gains a plugin `CopyFile` to copy files from the working directory.
+- `runbms` gains a plugin `Zulip`, which sends messages about the progress of the experiments, and warns about reservation expiration on moma machines.
+- `runbms` outputs a warning message if more than one users are logged in.
+- `runbms` uses uppercase letters if there are more than 26 configs.
+
+#### Modifiers
+- `ModifierSet`
+- `Wrapper`
+- `JSArg`
+
+#### Runtimes
+- `D8`
+- `SpiderMonkey`
+- `JavaScriptCore`
+- `JVM` now detects OOM generated in the form of Rust panic from `mmtk-core`.
+
+#### Benchmark Suites
+- `DaCapo` gains an extra key `size`, which is used to specify the size of the input.
+- `DaCapo` now allows individual benchmark to override the timing iteration, input size, and timeout of the suite.
+- `SPECjbb2015`: basic support for running SPECjbb 2015 in composite mode.
+- `Octane`: basic support for running Octane using Wenyu's wrapper script.
+
+### Changed
+#### Benchmark Suites
+- The `minheap` key of `DaCapo` changes from a dictionary to a string. The string is used to look up `minheap_values`, which are collections of minheap values. This makes it easier to store multiple sets of minheap values for the same benchmark suite measured using different runtimes.
+
+#### Base Syntax
+- Whitespaces can be used in config strings for visual alignment. They are ignored when parsed.
+
+#### Commands
+- The `--slice` argument of `runbms` now accepts multiple command separated floating point numbers. 
+
+### Deprecated
+### Removed
+#### Base Configurations
+- DaCapo Chopin Snapshot-69a704e
+
+### Fixed
+#### Commands
+- Resolving relative paths of runtimes before running. Otherwise, they would be resolved relative to the `runbms` working directory.
+- Use the `BinaryIO` interface of file IO and interprocess communication to avoid invalid UTF-8 characters from crashing the script.
+- Subprocesses now inherit environment variables from the the parent process.
+- `minheap` now runs in a temporary working directory to avoid file-based conflicts between concurrent executions. Note that network-port-based conflicts can still happen.
+
+### Security
 
 ## [`v0.1.0` (2021-08-09)](https://github.com/anupli/running-ng/releases/tag/v0.1.0)
 Initial release.
