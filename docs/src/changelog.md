@@ -1,6 +1,19 @@
 # Changelog
 ## Unreleased
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [`v0.2.0` (2022-02-20)](https://github.com/anupli/running-ng/releases/tag/v0.2.0)
+### Added
 #### Base Configurations
 - AdoptOpenJDK 16
 - DaCapo Chopin Snapshot-29a657f, Chopin Snapshot-f480064
@@ -47,7 +60,6 @@
 #### Commands
 - The `--slice` argument of `runbms` now accepts multiple command separated floating point numbers. 
 
-### Deprecated
 ### Removed
 #### Base Configurations
 - DaCapo Chopin Snapshot-69a704e
@@ -58,8 +70,6 @@
 - Use the `BinaryIO` interface of file IO and interprocess communication to avoid invalid UTF-8 characters from crashing the script.
 - Subprocesses now inherit environment variables from the the parent process.
 - `minheap` now runs in a temporary working directory to avoid file-based conflicts between concurrent executions. Note that network-port-based conflicts can still happen.
-
-### Security
 
 ## [`v0.1.0` (2021-08-09)](https://github.com/anupli/running-ng/releases/tag/v0.1.0)
 Initial release.
