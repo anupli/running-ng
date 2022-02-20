@@ -878,6 +878,13 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
 <h2 id="unreleased"><a class="header" href="#unreleased">Unreleased</a></h2>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
+<h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
+<h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
+<h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
+<h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
+<h3 id="security"><a class="header" href="#security">Security</a></h3>
+<h2 id="v020-2022-02-20"><a class="header" href="#v020-2022-02-20"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.0"><code>v0.2.0</code> (2022-02-20)</a></a></h2>
+<h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
 <h4 id="base-configurations"><a class="header" href="#base-configurations">Base Configurations</a></h4>
 <ul>
 <li>AdoptOpenJDK 16</li>
@@ -919,7 +926,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>SPECjbb2015</code>: basic support for running SPECjbb 2015 in composite mode.</li>
 <li><code>Octane</code>: basic support for running Octane using Wenyu's wrapper script.</li>
 </ul>
-<h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
+<h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
 <h4 id="benchmark-suites-1"><a class="header" href="#benchmark-suites-1">Benchmark Suites</a></h4>
 <ul>
 <li>The <code>minheap</code> key of <code>DaCapo</code> changes from a dictionary to a string. The string is used to look up <code>minheap_values</code>, which are collections of minheap values. This makes it easier to store multiple sets of minheap values for the same benchmark suite measured using different runtimes.</li>
@@ -932,13 +939,12 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li>The <code>--slice</code> argument of <code>runbms</code> now accepts multiple command separated floating point numbers. </li>
 </ul>
-<h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
-<h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
+<h3 id="removed-1"><a class="header" href="#removed-1">Removed</a></h3>
 <h4 id="base-configurations-1"><a class="header" href="#base-configurations-1">Base Configurations</a></h4>
 <ul>
 <li>DaCapo Chopin Snapshot-69a704e</li>
 </ul>
-<h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
+<h3 id="fixed-1"><a class="header" href="#fixed-1">Fixed</a></h3>
 <h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
 <ul>
 <li>Resolving relative paths of runtimes before running. Otherwise, they would be resolved relative to the <code>runbms</code> working directory.</li>
@@ -946,10 +952,9 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>Subprocesses now inherit environment variables from the the parent process.</li>
 <li><code>minheap</code> now runs in a temporary working directory to avoid file-based conflicts between concurrent executions. Note that network-port-based conflicts can still happen.</li>
 </ul>
-<h3 id="security"><a class="header" href="#security">Security</a></h3>
 <h2 id="v010-2021-08-09"><a class="header" href="#v010-2021-08-09"><a href="https://github.com/anupli/running-ng/releases/tag/v0.1.0"><code>v0.1.0</code> (2021-08-09)</a></a></h2>
 <p>Initial release.</p>
-<h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
+<h3 id="added-2"><a class="header" href="#added-2">Added</a></h3>
 <h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
 <ul>
 <li><code>fillin</code></li>
