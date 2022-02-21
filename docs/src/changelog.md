@@ -3,6 +3,8 @@
 ### Added
 
 ### Changed
+#### Commands
+- `runbms` now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.
 
 ### Deprecated
 
