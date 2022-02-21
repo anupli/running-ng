@@ -13,8 +13,8 @@ import subprocess
 import time
 
 
-def system(cmd) -> str:
-    return subprocess.check_output(cmd, shell=True).decode("utf-8")
+def system(cmd, check=True) -> str:
+    return subprocess.run(cmd, check=check, stdout=subprocess.PIPE, shell=True).stdout.decode("utf-8")
 
 
 def register(parent_class):

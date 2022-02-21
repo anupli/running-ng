@@ -174,17 +174,19 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output += "number of cores: "
     cores = system("cat /proc/cpuinfo | grep MHz | wc -l")
     output += cores
-    for i in range(0, int(cores)):
-        output += "Frequency of cpu {}: ".format(i)
-        output += hz_to_ghz(
-            system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_cur_freq".format(i)))
-        output += "\n"
-        output += "Governor of cpu {}: ".format(i)
-        output += system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_governor".format(i))
-        output += "Scaling_min_freq of cpu {}: ".format(i)
-        output += hz_to_ghz(
-            system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq".format(i)))
-        output += "\n"
+    has_cpufreq = Path("/sys/devices/system/cpu/cpu0/cpufreq").is_dir()
+    if has_cpufreq:
+        for i in range(0, int(cores)):
+            output += "Frequency of cpu {}: ".format(i)
+            output += hz_to_ghz(
+                system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_cur_freq".format(i)))
+            output += "\n"
+            output += "Governor of cpu {}: ".format(i)
+            output += system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_governor".format(i))
+            output += "Scaling_min_freq of cpu {}: ".format(i)
+            output += hz_to_ghz(
+                system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq".format(i)))
+            output += "\n"
     return output
 
 
