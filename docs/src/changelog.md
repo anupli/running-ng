@@ -11,6 +11,7 @@
 ### Removed
 
 ### Fixed
+#### `BinaryBenchmarkSuite`: fixes missing parameter when constructing `BinaryBenchmark` due to a bug in previous refactoring
 
 ### Security
 
