@@ -139,14 +139,22 @@
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
-<ul>
-<li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
-</ul>
 <h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <h4 id="binarybenchmarksuite-fixes-missing-parameter-when-constructing-binarybenchmark-due-to-a-bug-in-previous-refactoring"><a class="header" href="#binarybenchmarksuite-fixes-missing-parameter-when-constructing-binarybenchmark-due-to-a-bug-in-previous-refactoring"><code>BinaryBenchmarkSuite</code>: fixes missing parameter when constructing <code>BinaryBenchmark</code> due to a bug in previous refactoring</a></h4>
 <h3 id="security"><a class="header" href="#security">Security</a></h3>
+<h2 id="v021-2022-03-05"><a class="header" href="#v021-2022-03-05"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.1"><code>v0.2.1</code> (2022-03-05)</a></a></h2>
+<h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
+<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
+<ul>
+<li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
+</ul>
+<h3 id="fixed-1"><a class="header" href="#fixed-1">Fixed</a></h3>
+<h4 id="benchmark-suites"><a class="header" href="#benchmark-suites">Benchmark Suites</a></h4>
+<ul>
+<li><code>BinaryBenchmarkSuite</code>: fixes missing parameter when constructing <code>BinaryBenchmark</code> due to a bug in previous refactoring</li>
+</ul>
 <h2 id="v020-2022-02-20"><a class="header" href="#v020-2022-02-20"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.0"><code>v0.2.0</code> (2022-02-20)</a></a></h2>
 <h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
 <h4 id="base-configurations"><a class="header" href="#base-configurations">Base Configurations</a></h4>
@@ -156,7 +164,7 @@
 <li>Temurin 8, 11, 17</li>
 <li>SPECjbb 2015, 1.03</li>
 </ul>
-<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
+<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
 <ul>
 <li><code>minheap</code> gains an extra key <code>attempts</code> (can be overridden by <code>--attempts</code>) so that crashes don't cause bogus minheap measurements.</li>
 <li><code>minheap</code> stores results in a YAML file, which is also used to resume an interrupted execution.</li>
@@ -183,15 +191,15 @@
 <li><code>JavaScriptCore</code></li>
 <li><code>JVM</code> now detects OOM generated in the form of Rust panic from <code>mmtk-core</code>.</li>
 </ul>
-<h4 id="benchmark-suites"><a class="header" href="#benchmark-suites">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-1"><a class="header" href="#benchmark-suites-1">Benchmark Suites</a></h4>
 <ul>
 <li><code>DaCapo</code> gains an extra key <code>size</code>, which is used to specify the size of the input.</li>
 <li><code>DaCapo</code> now allows individual benchmark to override the timing iteration, input size, and timeout of the suite.</li>
 <li><code>SPECjbb2015</code>: basic support for running SPECjbb 2015 in composite mode.</li>
 <li><code>Octane</code>: basic support for running Octane using Wenyu's wrapper script.</li>
 </ul>
-<h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
-<h4 id="benchmark-suites-1"><a class="header" href="#benchmark-suites-1">Benchmark Suites</a></h4>
+<h3 id="changed-2"><a class="header" href="#changed-2">Changed</a></h3>
+<h4 id="benchmark-suites-2"><a class="header" href="#benchmark-suites-2">Benchmark Suites</a></h4>
 <ul>
 <li>The <code>minheap</code> key of <code>DaCapo</code> changes from a dictionary to a string. The string is used to look up <code>minheap_values</code>, which are collections of minheap values. This makes it easier to store multiple sets of minheap values for the same benchmark suite measured using different runtimes.</li>
 </ul>
@@ -199,7 +207,7 @@
 <ul>
 <li>Whitespaces can be used in config strings for visual alignment. They are ignored when parsed.</li>
 </ul>
-<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
+<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
 <ul>
 <li>The <code>--slice</code> argument of <code>runbms</code> now accepts multiple comma-separated floating point numbers. </li>
 </ul>
@@ -208,8 +216,8 @@
 <ul>
 <li>DaCapo Chopin Snapshot-69a704e</li>
 </ul>
-<h3 id="fixed-1"><a class="header" href="#fixed-1">Fixed</a></h3>
-<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
+<h3 id="fixed-2"><a class="header" href="#fixed-2">Fixed</a></h3>
+<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
 <ul>
 <li>Resolving relative paths of runtimes before running. Otherwise, they would be resolved relative to the <code>runbms</code> working directory.</li>
 <li>Use the <code>BinaryIO</code> interface of file IO and interprocess communication to avoid invalid UTF-8 characters from crashing the script.</li>
@@ -219,7 +227,7 @@
 <h2 id="v010-2021-08-09"><a class="header" href="#v010-2021-08-09"><a href="https://github.com/anupli/running-ng/releases/tag/v0.1.0"><code>v0.1.0</code> (2021-08-09)</a></a></h2>
 <p>Initial release.</p>
 <h3 id="added-2"><a class="header" href="#added-2">Added</a></h3>
-<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
+<h4 id="commands-5"><a class="header" href="#commands-5">Commands</a></h4>
 <ul>
 <li><code>fillin</code></li>
 <li><code>minheap</code></li>
@@ -238,7 +246,7 @@
 <li><code>OpenJDK</code></li>
 <li><code>JikesRVM</code></li>
 </ul>
-<h4 id="benchmark-suites-2"><a class="header" href="#benchmark-suites-2">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-3"><a class="header" href="#benchmark-suites-3">Benchmark Suites</a></h4>
 <ul>
 <li><code>BinaryBenchmarkSuite</code></li>
 <li><code>DaCapo</code></li>
