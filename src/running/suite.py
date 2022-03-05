@@ -63,7 +63,7 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
             self.programs[bm_name]['path'],
             self.programs[bm_name]['args'],
             suite_name=self.name,
-            bm_name=bm_name,
+            name=bm_name,
             timeout=self.timeout
         )
 
