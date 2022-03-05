@@ -4,7 +4,6 @@
 
 ### Changed
 #### Commands
-- `runbms` now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.
 
 ### Deprecated
 
@@ -14,6 +13,15 @@
 #### `BinaryBenchmarkSuite`: fixes missing parameter when constructing `BinaryBenchmark` due to a bug in previous refactoring
 
 ### Security
+
+## [`v0.2.1` (2022-03-05)](https://github.com/anupli/running-ng/releases/tag/v0.2.1)
+### Changed
+#### Commands
+- `runbms` now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.
+
+### Fixed
+#### Benchmark Suites
+- `BinaryBenchmarkSuite`: fixes missing parameter when constructing `BinaryBenchmark` due to a bug in previous refactoring
 
 ## [`v0.2.0` (2022-02-20)](https://github.com/anupli/running-ng/releases/tag/v0.2.0)
 ### Added
