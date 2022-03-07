@@ -875,11 +875,9 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h2 id="unreleased"><a class="header" href="#unreleased">Unreleased</a></h2>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
-<h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
 <h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
-<h4 id="binarybenchmarksuite-fixes-missing-parameter-when-constructing-binarybenchmark-due-to-a-bug-in-previous-refactoring"><a class="header" href="#binarybenchmarksuite-fixes-missing-parameter-when-constructing-binarybenchmark-due-to-a-bug-in-previous-refactoring"><code>BinaryBenchmarkSuite</code>: fixes missing parameter when constructing <code>BinaryBenchmark</code> due to a bug in previous refactoring</a></h4>
 <h3 id="security"><a class="header" href="#security">Security</a></h3>
 <h2 id="v022-2022-03-07"><a class="header" href="#v022-2022-03-07"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.2"><code>v0.2.2</code> (2022-03-07)</a></a></h2>
 <h3 id="fixed-1"><a class="header" href="#fixed-1">Fixed</a></h3>
@@ -889,7 +887,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v021-2022-03-05"><a class="header" href="#v021-2022-03-05"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.1"><code>v0.2.1</code> (2022-03-05)</a></a></h2>
 <h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
-<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
+<h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
 <ul>
 <li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
 </ul>
@@ -907,7 +905,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>Temurin 8, 11, 17</li>
 <li>SPECjbb 2015, 1.03</li>
 </ul>
-<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
+<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
 <ul>
 <li><code>minheap</code> gains an extra key <code>attempts</code> (can be overridden by <code>--attempts</code>) so that crashes don't cause bogus minheap measurements.</li>
 <li><code>minheap</code> stores results in a YAML file, which is also used to resume an interrupted execution.</li>
@@ -950,7 +948,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li>Whitespaces can be used in config strings for visual alignment. They are ignored when parsed.</li>
 </ul>
-<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
+<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
 <ul>
 <li>The <code>--slice</code> argument of <code>runbms</code> now accepts multiple comma-separated floating point numbers. </li>
 </ul>
@@ -960,7 +958,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>DaCapo Chopin Snapshot-69a704e</li>
 </ul>
 <h3 id="fixed-3"><a class="header" href="#fixed-3">Fixed</a></h3>
-<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
+<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
 <ul>
 <li>Resolving relative paths of runtimes before running. Otherwise, they would be resolved relative to the <code>runbms</code> working directory.</li>
 <li>Use the <code>BinaryIO</code> interface of file IO and interprocess communication to avoid invalid UTF-8 characters from crashing the script.</li>
@@ -970,7 +968,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h2 id="v010-2021-08-09"><a class="header" href="#v010-2021-08-09"><a href="https://github.com/anupli/running-ng/releases/tag/v0.1.0"><code>v0.1.0</code> (2021-08-09)</a></a></h2>
 <p>Initial release.</p>
 <h3 id="added-2"><a class="header" href="#added-2">Added</a></h3>
-<h4 id="commands-5"><a class="header" href="#commands-5">Commands</a></h4>
+<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
 <ul>
 <li><code>fillin</code></li>
 <li><code>minheap</code></li>
