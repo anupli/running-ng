@@ -2,7 +2,7 @@ import logging
 import subprocess
 import sys
 from typing import Any, List, Optional, Tuple, Union, Dict
-from running.runtime import D8, JavaScriptCore, Runtime, DummyRuntime, SpiderMonkey
+from running.runtime import D8, JavaScriptCore, OpenJDK, Runtime, DummyRuntime, SpiderMonkey
 from running.modifier import *
 from running.util import smart_quote, split_quoted
 from pathlib import Path
@@ -163,6 +163,12 @@ class JavaBenchmark(Benchmark):
         cmd = super().get_full_args(runtime)
         cmd.append(runtime.get_executable())
         cmd.extend(self.jvm_args)
+        if isinstance(runtime, OpenJDK):
+            if runtime.release >= 9:
+                cmd.extend([
+                    "--add-exports",
+                    "java.base/jdk.internal.ref=ALL-UNNAMED"
+                ])
         cmd.extend(self.get_classpath_args())
         cmd.extend(self.program_args)
         return cmd

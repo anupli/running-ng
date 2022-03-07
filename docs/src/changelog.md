@@ -14,6 +14,12 @@
 
 ### Security
 
+## [`v0.2.2` (2022-03-07)](https://github.com/anupli/running-ng/releases/tag/v0.2.2)
+
+### Fixed
+#### Benchmark Suites
+- `JavaBenchmarkSuite`: Some DaCapo benchmarks refers to internal classes (e.g., under `jdk.internal.ref`), and DaCapo implemented a workaround for this behaviour in the jar. However, since we are invoking DaCapo using `-cp` and the name of the main class, that workaround is bypassed. That workaround is now reimplemented in running-ng through an extra JVM argument `--add-exports`.
+
 ## [`v0.2.1` (2022-03-05)](https://github.com/anupli/running-ng/releases/tag/v0.2.1)
 ### Changed
 #### Commands

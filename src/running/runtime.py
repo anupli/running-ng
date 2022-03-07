@@ -80,6 +80,10 @@ class OpenJDK(JVM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.release = kwargs["release"]
+        try:
+            self.release = int(self.release)
+        except ValueError:
+            raise TypeError("The release of an OpenJDK has to be int-like")
         self.home: Path
         self.home = Path(kwargs["home"])
         if not self.home.exists():
