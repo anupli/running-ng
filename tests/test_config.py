@@ -88,4 +88,4 @@ def test_resolve_jvms():
     jdk8 = c.get("runtimes")["adoptopenjdk-8"]
     assert str(
         jdk8.executable) == "/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64/bin/java"
-    assert jdk8.release == "8"
+    assert jdk8.release == 8
