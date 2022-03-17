@@ -1,3 +1,4 @@
 includes:
   - "./dacapo.yml"
   - "./specjbb2015.yml"
+  - "./specjvm98.yml"

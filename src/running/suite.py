@@ -186,7 +186,7 @@ class DaCapo(JavaBenchmarkSuite):
                 program_args.append("--converge")
         # Input size
         program_args.extend(["-s", size])
-        # Naem of the benchmark
+        # Name of the benchmark
         program_args.append(bm_name)
         return JavaBenchmark(
             jvm_args=[],
@@ -272,7 +272,7 @@ class SPECjbb2015(JavaBenchmarkSuite):
 
     def is_passed(self, output: bytes) -> bool:
         # FIXME
-        return True
+        return b"PASSED" in output
 
 
 @register(BenchmarkSuite)
@@ -342,3 +342,53 @@ class Octane(BenchmarkSuite):
 
     def is_passed(self, output: bytes) -> bool:
         return b"PASSED" in output
+
+
+@register(BenchmarkSuite)
+class SPECjvm98(JavaBenchmarkSuite):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.release: str
+        self.release = kwargs["release"]
+        if self.release not in ["1.03_05"]:
+            raise ValueError(
+                "SPECjvm98 release {} not recongized".format(self.release))
+        self.path: Path
+        self.path = Path(kwargs["path"]).resolve()
+
+        if not self.path.exists():
+            logging.info("SPECjvm98 {} not found".format(self.path))
+        try:
+            self.timing_iteration = int(kwargs.get("timing_iteration"))
+        except ValueError:
+            timing_iteration = kwargs.get("timing_iteration")
+            if timing_iteration != "converge":
+                raise TypeError("The timing iteration of the SPECjvm98 benchmark suite `{}` is {}, which is not an "
+                                "integer".format(self.path.parent, repr(timing_iteration)))
+
+    def __str__(self) -> str:
+        return "{} SPECjvm98 {} {}".format(super().__str__(), self.release, self.path)
+
+    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JavaBenchmark':
+        assert type(bm_spec) is str
+        program_args = [
+            self.path.stem
+        ]
+        timing_iteration = self.timing_iteration
+        if type(timing_iteration) is int:
+            program_args.extend([f"-i{timing_iteration}"])
+        program_args.append(bm_spec)
+        return JavaBenchmark(
+            jvm_args=[],
+            program_args=program_args,
+            cp=[],
+            suite_name=self.name,
+            name=bm_spec
+        )
+
+    def get_minheap(self, _bm: Benchmark) -> int:
+        return 32  # SPEC recommends running with minimum 32MB of heap
+
+    def is_passed(self, output: bytes) -> bool:
+        # FIXME
+        return b"Finished in" in output
