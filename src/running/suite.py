@@ -391,4 +391,4 @@ class SPECjvm98(JavaBenchmarkSuite):
 
     def is_passed(self, output: bytes) -> bool:
         # FIXME
-        return b"Finished in" in output
+        return b"**NOT VALID**" not in output
