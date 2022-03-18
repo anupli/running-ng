@@ -101,6 +101,32 @@ Note that the property file should reside in `path/../config/specjbb2015.props` 
 Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
 Right now, only `"composite"` is supported.
 
+# `SPECjvm98` (preview ⚠️)
+[SPECjvm98](https://www.spec.org/jvm98/).
+
+### Keys
+`release`: one of the possible values `["1.03_05"]`.
+The value is required.
+
+`path`: path to the `SpecApplication.class`.
+The value is required.
+
+`timing_iteration`: specifying the timing iteration.
+It can only be a number, which is passed to SpecApplication as `-i`.
+The default value is 3.
+
+### Benchmark Specification
+Only strings are allowed, which should correspond to benchmark program of SPECjvm98.
+The following are the bechmarks:
+- _200_check
+- _201_compress
+- _202_jess
+- _209_db
+- _213_javac
+- _222_mpegaudio
+- _227_mtrt
+- _228_jack
+
 ## `Octane` (preview ⚠️)
 ### Keys
 `path`: path to the Octane benchmark folder.
