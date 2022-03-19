@@ -12,6 +12,9 @@
 #### Modifiers
 - `JVMClasspath` is now an alias of `JVMClasspathAppend`. This is backward compatible.
 
+#### Commands
+- `runbms` prints out the version number of `running-ng` in log files.
+
 ### Deprecated
 - Deprecating Python 3.6 support for users. Python 3.6 will NOT be supported once moma machines are upgraded to the latest Ubuntu LTS.
 
