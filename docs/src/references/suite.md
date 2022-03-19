@@ -101,7 +101,7 @@ Note that the property file should reside in `path/../config/specjbb2015.props` 
 Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
 Right now, only `"composite"` is supported.
 
-# `SPECjvm98` (preview ⚠️)
+## `SPECjvm98` (preview ⚠️)
 [SPECjvm98](https://www.spec.org/jvm98/).
 
 Note that you will need to prepend probes to the classpaths, so that the [modified](https://github.com/anupli/probes/blob/master/SpecApplication.java) `SpecApplication` can be used.
