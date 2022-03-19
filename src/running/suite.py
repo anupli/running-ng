@@ -381,7 +381,7 @@ class SPECjvm98(JavaBenchmarkSuite):
         return JavaBenchmark(
             jvm_args=[],
             program_args=program_args,
-            cp=[self.path],
+            cp=[str(self.path)],
             suite_name=self.name,
             name=bm_spec,
             override_cwd=self.path
