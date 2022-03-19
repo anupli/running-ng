@@ -214,8 +214,48 @@ Note that the property file should reside in <code>path/../config/specjbb2015.pr
 <h3 id="benchmark-specification-1"><a class="header" href="#benchmark-specification-1">Benchmark Specification</a></h3>
 <p>Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
 Right now, only <code>&quot;composite&quot;</code> is supported.</p>
-<h2 id="octane-preview-"><a class="header" href="#octane-preview-"><code>Octane</code> (preview ⚠️)</a></h2>
+<h2 id="specjvm98-preview-"><a class="header" href="#specjvm98-preview-"><code>SPECjvm98</code> (preview ⚠️)</a></h2>
+<p><a href="https://www.spec.org/jvm98/">SPECjvm98</a>.</p>
+<p>Note that you will need to prepend probes to the classpaths, so that the <a href="https://github.com/anupli/probes/blob/master/SpecApplication.java">modified</a> <code>SpecApplication</code> can be used.</p>
+<p>Here is an example configuration file.</p>
+<pre><code class="language-yaml">includes:
+  - &quot;/home/zixianc/running-ng/src/running/config/base/runbms.yml&quot;
+
+modifiers:
+  probes_cp:
+    type: JVMClasspathPrepend
+    val: &quot;/home/zixianc/MMTk-Dev/evaluation/probes /home/zixianc/MMTk-Dev/evaluation/probes/probes.jar&quot;
+
+benchmarks:
+  specjvm98:
+    - _213_javac
+
+configs:
+  - &quot;adoptopenjdk-8|probes_cp&quot;
+</code></pre>
 <h3 id="keys-3"><a class="header" href="#keys-3">Keys</a></h3>
+<p><code>release</code>: one of the possible values <code>[&quot;1.03_05&quot;]</code>.
+The value is required.</p>
+<p><code>path</code>: path to the SPECjvm98 folder, where you can find <code>SpecApplication.class</code>.
+The value is required.</p>
+<p><code>timing_iteration</code>: specifying the timing iteration.
+It can only be a number, which is passed to SpecApplication as <code>-i</code>.
+The value is required.</p>
+<h3 id="benchmark-specification-2"><a class="header" href="#benchmark-specification-2">Benchmark Specification</a></h3>
+<p>Only strings are allowed, which should correspond to benchmark program of SPECjvm98.
+The following are the benchmarks:</p>
+<ul>
+<li>_200_check</li>
+<li>_201_compress</li>
+<li>_202_jess</li>
+<li>_209_db</li>
+<li>_213_javac</li>
+<li>_222_mpegaudio</li>
+<li>_227_mtrt</li>
+<li>_228_jack</li>
+</ul>
+<h2 id="octane-preview-"><a class="header" href="#octane-preview-"><code>Octane</code> (preview ⚠️)</a></h2>
+<h3 id="keys-4"><a class="header" href="#keys-4">Keys</a></h3>
 <p><code>path</code>: path to the Octane benchmark folder.
 The value is required.</p>
 <p><code>wrapper</code>: path to the Octane wrapper written by Wenyu Zhao.
