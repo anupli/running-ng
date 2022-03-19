@@ -16,6 +16,7 @@ import math
 import yaml
 if TYPE_CHECKING:
     from running.plugin.runbms import RunbmsPlugin
+from running.__version__ import __VERSION__
 
 configuration: Configuration
 minheap_multiplier: float
@@ -160,6 +161,7 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output += "mkdir -p PLOTTY_WORKAROUND; timedrun; "
     output += bm.to_string(runtime)
     output += "\n"
+    output += "running-ng v{}\n".format(__VERSION__)
     output += system("date") + "\n"
     output += system("w") + "\n"
     output += system("vmstat 1 2") + "\n"
