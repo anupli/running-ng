@@ -108,16 +108,16 @@ Right now, only `"composite"` is supported.
 `release`: one of the possible values `["1.03_05"]`.
 The value is required.
 
-`path`: path to the `SpecApplication.class`.
+`path`: path to the SPECjvm98 folder, where you can find `SpecApplication.class`.
 The value is required.
 
 `timing_iteration`: specifying the timing iteration.
 It can only be a number, which is passed to SpecApplication as `-i`.
-The default value is 3.
+The value is required.
 
 ### Benchmark Specification
 Only strings are allowed, which should correspond to benchmark program of SPECjvm98.
-The following are the bechmarks:
+The following are the benchmarks:
 - _200_check
 - _201_compress
 - _202_jess

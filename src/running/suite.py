@@ -358,13 +358,15 @@ class SPECjvm98(JavaBenchmarkSuite):
 
         if not self.path.exists():
             logging.info("SPECjvm98 {} not found".format(self.path))
+        if not (self.path / "SpecApplication.class").exists():
+            logging.info(
+                "SpecApplication.class not found under SPECjvm98 {}".format(self.path))
         try:
             self.timing_iteration = int(kwargs.get("timing_iteration"))
         except ValueError:
             timing_iteration = kwargs.get("timing_iteration")
-            if timing_iteration != "converge":
-                raise TypeError("The timing iteration of the SPECjvm98 benchmark suite `{}` is {}, which is not an "
-                                "integer".format(self.path.parent, repr(timing_iteration)))
+            raise TypeError("The timing iteration of the SPECjvm98 benchmark suite `{}` is {}, which is not an "
+                            "integer".format(self.path.parent, repr(timing_iteration)))
 
     def __str__(self) -> str:
         return "{} SPECjvm98 {} {}".format(super().__str__(), self.release, self.path)
@@ -372,21 +374,21 @@ class SPECjvm98(JavaBenchmarkSuite):
     def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JavaBenchmark':
         assert type(bm_spec) is str
         program_args = [
-            self.path.stem
+            "SpecApplication",
+            "-i{}".format(self.timing_iteration),
+            bm_spec
         ]
-        timing_iteration = self.timing_iteration
-        if type(timing_iteration) is int:
-            program_args.extend([f"-i{timing_iteration}"])
-        program_args.append(bm_spec)
         return JavaBenchmark(
             jvm_args=[],
             program_args=program_args,
-            cp=[],
+            cp=[self.path],
             suite_name=self.name,
-            name=bm_spec
+            name=bm_spec,
+            override_cwd=self.path
         )
 
     def get_minheap(self, _bm: Benchmark) -> int:
+        # FIXME allow user to measure and specify minimum heap sizes
         return 32  # SPEC recommends running with minimum 32MB of heap
 
     def is_passed(self, output: bytes) -> bool:
