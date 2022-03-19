@@ -1,4 +1,5 @@
-from running.modifier import JVMArg, JVMClasspath, ProgramArg, EnvVar
+from running.benchmark import JavaBenchmark
+from running.modifier import *
 from running.config import Configuration
 
 
@@ -10,6 +11,37 @@ def test_jvm_arg():
 def test_jvm_classpath():
     j = JVMClasspath(name="j", val="/bin /foo \"/Users/John Citizen/\"")
     assert j.val == ["/bin", "/foo", "/Users/John Citizen/"]
+
+    jb = JavaBenchmark(
+        jvm_args=[], program_args=[], cp=["fizzbuzz"],
+        suite_name="dacapo", name="fop"
+    )
+    jb = jb.attach_modifiers([j])
+    assert jb.cp == ["fizzbuzz", "/bin", "/foo", "/Users/John Citizen/"]
+
+
+def test_jvm_classpath_append():
+    j = JVMClasspathAppend(name="j", val="/bin /foo \"/Users/John Citizen/\"")
+    assert j.val == ["/bin", "/foo", "/Users/John Citizen/"]
+
+    jb = JavaBenchmark(
+        jvm_args=[], program_args=[], cp=["fizzbuzz"],
+        suite_name="dacapo", name="fop"
+    )
+    jb = jb.attach_modifiers([j])
+    assert jb.cp == ["fizzbuzz", "/bin", "/foo", "/Users/John Citizen/"]
+
+
+def test_jvm_classpath_prepend():
+    j = JVMClasspathPrepend(name="j", val="/bin /foo \"/Users/John Citizen/\"")
+    assert j.val == ["/bin", "/foo", "/Users/John Citizen/"]
+
+    jb = JavaBenchmark(
+        jvm_args=[], program_args=[], cp=["fizzbuzz"],
+        suite_name="dacapo", name="fop"
+    )
+    jb = jb.attach_modifiers([j])
+    assert jb.cp == ["/bin", "/foo", "/Users/John Citizen/", "fizzbuzz"]
 
 
 def test_program_arg():

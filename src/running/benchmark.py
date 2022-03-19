@@ -114,7 +114,7 @@ class BinaryBenchmark(Benchmark):
                 bb.program_args.extend(m.val)
             elif type(m) == JVMArg:
                 logging.warning("JVMArg not respected by BinaryBenchmark")
-            elif type(m) == JVMClasspath:
+            elif isinstance(m, JVMClasspathAppend) or type(m) == JVMClasspathPrepend:
                 logging.warning(
                     "JVMClasspath not respected by BinaryBenchmark")
             elif type(m) == JSArg:
@@ -152,8 +152,10 @@ class JavaBenchmark(Benchmark):
                 jb.jvm_args.extend(m.val)
             elif type(m) == ProgramArg:
                 jb.program_args.extend(m.val)
-            elif type(m) == JVMClasspath:
+            elif isinstance(m, JVMClasspathAppend):
                 jb.cp.extend(m.val)
+            elif type(m) == JVMClasspathPrepend:
+                jb.cp = m.val + jb.cp
             elif type(m) == JSArg:
                 logging.warning(
                     "JSArg not respected by JavaBenchmark")
@@ -194,7 +196,7 @@ class JavaScriptBenchmark(Benchmark):
                 jb.program_args.extend(m.val)
             elif type(m) == JVMArg:
                 logging.warning("JVMArg not respected by JavaScriptBenchmark")
-            elif type(m) == JVMClasspath:
+            elif isinstance(m, JVMClasspathAppend) or type(m) == JVMClasspathPrepend:
                 logging.warning(
                     "JVMClasspath not respected by JavaScriptBenchmark")
             elif type(m) == JSArg:
