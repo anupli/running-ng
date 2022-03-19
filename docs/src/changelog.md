@@ -1,6 +1,19 @@
 # Changelog
 ## Unreleased
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [`v0.3.0` (2022-03-19)](https://github.com/anupli/running-ng/releases/tag/v0.3.0)
+### Added
 #### Modifiers
 - `JVMClasspathAppend`
 - `JVMClasspathPrepend`
@@ -20,10 +33,6 @@
 
 ### Removed
 - Dropping Python 3.6 support for developers (NOT users). pytest 7.1+ requires at least Python 3.7.
-
-### Fixed
-
-### Security
 
 ## [`v0.2.2` (2022-03-07)](https://github.com/anupli/running-ng/releases/tag/v0.2.2)
 
