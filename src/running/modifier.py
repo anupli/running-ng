@@ -63,13 +63,29 @@ class JVMArg(Modifier):
 
 
 @register(Modifier)
-class JVMClasspath(Modifier):
+class JVMClasspathAppend(Modifier):
     def __init__(self, value_opts=None, **kwargs):
         super().__init__(value_opts, **kwargs)
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} JVMClasspath {}".format(super().__str__(), self.val)
+        return "{} JVMClasspathAppend {}".format(super().__str__(), self.val)
+
+
+@register(Modifier)
+class JVMClasspath(JVMClasspathAppend):
+    # backward compatibility
+    pass
+
+
+@register(Modifier)
+class JVMClasspathPrepend(Modifier):
+    def __init__(self, value_opts=None, **kwargs):
+        super().__init__(value_opts, **kwargs)
+        self.val = split_quoted(self._kwargs["val"])
+
+    def __str__(self) -> str:
+        return "{} JVMClasspathPrepend {}".format(super().__str__(), self.val)
 
 
 @register(Modifier)
