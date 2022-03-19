@@ -20,7 +20,7 @@ class SubprocessrExit(Enum):
 
 
 class Benchmark(object):
-    def __init__(self, suite_name: str, name: str, wrapper: Optional[str] = None, timeout: Optional[int] = None, **kwargs):
+    def __init__(self, suite_name: str, name: str, wrapper: Optional[str] = None, timeout: Optional[int] = None, override_cwd: Optional[Path] = None, **kwargs):
         self.name = name
         self.suite_name = suite_name
         self.env_args: Dict[str, str]
@@ -31,6 +31,9 @@ class Benchmark(object):
         else:
             self.wrapper = []
         self.timeout = timeout
+        # ignore the current working directory provided by commands like runbms or minheap
+        # certain benchmarks expect to be invoked from certain directories
+        self.override_cwd = override_cwd
 
     def get_env_str(self) -> str:
         return " ".join([
@@ -85,7 +88,7 @@ class Benchmark(object):
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     timeout=self.timeout,
-                    cwd=cwd
+                    cwd=self.override_cwd if self.override_cwd else cwd
                 )
                 return p.stdout, SubprocessrExit.Normal
             except subprocess.CalledProcessError as e:
