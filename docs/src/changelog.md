@@ -1,8 +1,13 @@
 # Changelog
 ## Unreleased
 ### Added
+#### Modifiers
+- `JVMClasspathAppend`
+- `JVMClasspathPrepend`
 
 ### Changed
+#### Modifiers
+- `JVMClasspath` is now an alias of `JVMClasspathAppend`. This is backward compatible.
 
 ### Deprecated
 - Deprecating Python 3.6 support for users. Python 3.6 will NOT be supported once moma machines are upgraded to the latest Ubuntu LTS.
