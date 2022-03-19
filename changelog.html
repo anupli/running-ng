@@ -151,6 +151,10 @@
 <ul>
 <li><code>JVMClasspath</code> is now an alias of <code>JVMClasspathAppend</code>. This is backward compatible.</li>
 </ul>
+<h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
+<ul>
+<li><code>runbms</code> prints out the version number of <code>running-ng</code> in log files.</li>
+</ul>
 <h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
 <ul>
 <li>Deprecating Python 3.6 support for users. Python 3.6 will NOT be supported once moma machines are upgraded to the latest Ubuntu LTS.</li>
@@ -169,7 +173,7 @@
 </ul>
 <h2 id="v021-2022-03-05"><a class="header" href="#v021-2022-03-05"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.1"><code>v0.2.1</code> (2022-03-05)</a></a></h2>
 <h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
-<h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
+<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
 <ul>
 <li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
 </ul>
@@ -187,7 +191,7 @@
 <li>Temurin 8, 11, 17</li>
 <li>SPECjbb 2015, 1.03</li>
 </ul>
-<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
+<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
 <ul>
 <li><code>minheap</code> gains an extra key <code>attempts</code> (can be overridden by <code>--attempts</code>) so that crashes don't cause bogus minheap measurements.</li>
 <li><code>minheap</code> stores results in a YAML file, which is also used to resume an interrupted execution.</li>
@@ -230,7 +234,7 @@
 <ul>
 <li>Whitespaces can be used in config strings for visual alignment. They are ignored when parsed.</li>
 </ul>
-<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
+<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
 <ul>
 <li>The <code>--slice</code> argument of <code>runbms</code> now accepts multiple comma-separated floating point numbers. </li>
 </ul>
@@ -240,7 +244,7 @@
 <li>DaCapo Chopin Snapshot-69a704e</li>
 </ul>
 <h3 id="fixed-3"><a class="header" href="#fixed-3">Fixed</a></h3>
-<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
+<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
 <ul>
 <li>Resolving relative paths of runtimes before running. Otherwise, they would be resolved relative to the <code>runbms</code> working directory.</li>
 <li>Use the <code>BinaryIO</code> interface of file IO and interprocess communication to avoid invalid UTF-8 characters from crashing the script.</li>
@@ -250,7 +254,7 @@
 <h2 id="v010-2021-08-09"><a class="header" href="#v010-2021-08-09"><a href="https://github.com/anupli/running-ng/releases/tag/v0.1.0"><code>v0.1.0</code> (2021-08-09)</a></a></h2>
 <p>Initial release.</p>
 <h3 id="added-2"><a class="header" href="#added-2">Added</a></h3>
-<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
+<h4 id="commands-5"><a class="header" href="#commands-5">Commands</a></h4>
 <ul>
 <li><code>fillin</code></li>
 <li><code>minheap</code></li>
