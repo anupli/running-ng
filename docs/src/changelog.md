@@ -5,8 +5,10 @@
 ### Changed
 
 ### Deprecated
+- Deprecating Python 3.6 support for users. Python 3.6 will NOT be supported once moma machines are upgraded to the latest Ubuntu LTS.
 
 ### Removed
+- Dropping Python 3.6 support for developers (NOT users). pytest 7.1+ requires at least Python 3.7.
 
 ### Fixed
 
