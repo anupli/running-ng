@@ -1,0 +1,6 @@
+suites:
+  specjvm98:
+    type: SPECjvm98
+    path: "/usr/share/benchmarks/SPECjvm98"
+    release: "1.03_05"
+    timing_iteration: 3

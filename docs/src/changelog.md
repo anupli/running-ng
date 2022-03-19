@@ -5,6 +5,9 @@
 - `JVMClasspathAppend`
 - `JVMClasspathPrepend`
 
+#### Benchmark Suites
+- `SPECjvm98`
+
 ### Changed
 #### Modifiers
 - `JVMClasspath` is now an alias of `JVMClasspathAppend`. This is backward compatible.

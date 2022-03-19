@@ -101,6 +101,52 @@ Note that the property file should reside in `path/../config/specjbb2015.props` 
 Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
 Right now, only `"composite"` is supported.
 
+## `SPECjvm98` (preview ⚠️)
+[SPECjvm98](https://www.spec.org/jvm98/).
+
+Note that you will need to prepend probes to the classpaths, so that the [modified](https://github.com/anupli/probes/blob/master/SpecApplication.java) `SpecApplication` can be used.
+
+Here is an example configuration file.
+```yaml
+includes:
+  - "/home/zixianc/running-ng/src/running/config/base/runbms.yml"
+
+modifiers:
+  probes_cp:
+    type: JVMClasspathPrepend
+    val: "/home/zixianc/MMTk-Dev/evaluation/probes /home/zixianc/MMTk-Dev/evaluation/probes/probes.jar"
+
+benchmarks:
+  specjvm98:
+    - _213_javac
+
+configs:
+  - "adoptopenjdk-8|probes_cp"
+```
+
+### Keys
+`release`: one of the possible values `["1.03_05"]`.
+The value is required.
+
+`path`: path to the SPECjvm98 folder, where you can find `SpecApplication.class`.
+The value is required.
+
+`timing_iteration`: specifying the timing iteration.
+It can only be a number, which is passed to SpecApplication as `-i`.
+The value is required.
+
+### Benchmark Specification
+Only strings are allowed, which should correspond to benchmark program of SPECjvm98.
+The following are the benchmarks:
+- _200_check
+- _201_compress
+- _202_jess
+- _209_db
+- _213_javac
+- _222_mpegaudio
+- _227_mtrt
+- _228_jack
+
 ## `Octane` (preview ⚠️)
 ### Keys
 `path`: path to the Octane benchmark folder.
