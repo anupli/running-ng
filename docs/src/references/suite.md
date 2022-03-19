@@ -104,6 +104,26 @@ Right now, only `"composite"` is supported.
 # `SPECjvm98` (preview ⚠️)
 [SPECjvm98](https://www.spec.org/jvm98/).
 
+Note that you will need to prepend probes to the classpaths, so that the [modified](https://github.com/anupli/probes/blob/master/SpecApplication.java) `SpecApplication` can be used.
+
+Here is an example configuration file.
+```yaml
+includes:
+  - "/home/zixianc/running-ng/src/running/config/base/runbms.yml"
+
+modifiers:
+  probes_cp:
+    type: JVMClasspathPrepend
+    val: "/home/zixianc/MMTk-Dev/evaluation/probes /home/zixianc/MMTk-Dev/evaluation/probes/probes.jar"
+
+benchmarks:
+  specjvm98:
+    - _213_javac
+
+configs:
+  - "adoptopenjdk-8|probes_cp"
+```
+
 ### Keys
 `release`: one of the possible values `["1.03_05"]`.
 The value is required.
