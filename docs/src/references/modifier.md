@@ -25,16 +25,28 @@ Specify arguments to a JVM, as opposed to the program.
 Multiple arguments are space separated.
 
 ### Description
-Specify arguments to `d8`, as opposed to the program.
+Specify arguments to a JavaScript runtime (e.g., `d8`), as opposed to the program.
 
-## `JVMClasspath`
+## `JVMClasspathAppend`
 `JVM` specific.
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple classpaths are space separated.
 
 ### Description
-Specify Java Classpaths.
+Append a list of classpaths to the existing classpaths.
+
+## `JVMClasspathPrepend`
+`JVM` specific.
+### Keys
+`val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
+Multiple classpaths are space separated.
+
+### Description
+Prepend a list of classpaths to the existing classpaths.
+
+## `JVMClasspath`
+A backward-compatibility alias of `JVMClasspathAppend`.
 
 ## `ProgramArg`
 ### Keys
