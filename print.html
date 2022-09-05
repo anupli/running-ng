@@ -201,7 +201,7 @@ Please check <a href="https://squirrel.anu.edu.au/#customization">here</a> for h
 You will need Python 3.6+.</p>
 <p>Then, create a file <code>two_builds.yml</code> with the following content.</p>
 <pre><code class="language-yaml">includes:
-  - &quot;/path/to/running-ng/config/base/runbms.yml&quot;
+  - &quot;$RUNNING_NG_PACKAGE_DATA/base/runbms.yml&quot;
 </code></pre>
 <p>The <a href="./references/index.html">YAML file</a> represents a dictionary (key-value pairs) that defines the experiments you are running.
 The <code>includes</code> directive here will populate the dictionary with some default values shipped with <code>running-ng</code>.</p>
@@ -231,7 +231,7 @@ The <code>includes</code> directive here will populate the dictionary with some 
     - zxing
 </code></pre>
 <p>This specify a list of benchmarks used in this experiment from the <a href="./references/suite.html">benchmark suite</a> <code>dacapochopin-29a657f</code>.
-The benchmark suite is defined in <code>/path/to/running-ng/config/base/dacapo.yml</code>.
+The benchmark suite is defined in <code>$RUNNING_NG_PACKAGE_DATA/base/dacapo.yml</code>.
 By default, the minimum heap sizes of <code>dacapochopin-29a657f</code> benchmarks are measured with AdoptOpenJDK 15 using G1 GC.
 If you are using OpenJDK 11 or 17, you can override the value of <code>suites.dacapochopin-29a657f.minheap</code> to <code>temurin-17-G1</code> or <code>temurin-11-G1</code>.
 That is, you can, for example, add <code>&quot;suites.dacapochopin-29a657f.minheap&quot;: &quot;temurin-17-G1&quot;</code> to <code>overrides</code>.</p>
@@ -377,13 +377,21 @@ configuration file for definitions of some keys.</p>
 configuration files. A pre-processor step in <code>running</code> takes care of including
 all the specified files. A flattened version of the final configuration file is
 also generated and placed in the results folder for reproducibility.</p>
-<p>For example:</p>
+<p>The paths can be either absolute or relative.
+Relative paths are solved relative to the current file.
+For example, if <code>$HOME/configs/foo.yml</code> has an <code>include</code> line <code>../bar.yml</code>, the
+line is interpreted as <code>$HOME/bar.yml</code>.
+Similarly,</p>
 <pre><code class="language-yaml">includes:
  - &quot;./base/suites.yml&quot;
  - &quot;./base/modifiers.yml&quot;
 </code></pre>
 <p>includes the <code>suites.yml</code> and <code>modifiers.yml</code> files located at <code>./base</code>
 respectively.</p>
+<p>Any environment variable in the paths are also resolved before any further processing.
+This include a special environment variable <code>$RUNNING_NG_PACKAGE_DATA</code> that allows
+you to refer to various configuration files shipping with running-ng, regardless how you installed running-ng.
+For example, in a global <code>pip</code> installation, <code>$RUNNING_NG_PACKAGE_DATA</code> will look like <code>/usr/local/lib/python3.10/dist-packages/running/config</code>.</p>
 <h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
 <p>Under construction 🚧.</p>
 <h2 id="modifiers"><a class="header" href="#modifiers"><code>modifiers</code></a></h2>
@@ -923,9 +931,15 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
 <h2 id="unreleased"><a class="header" href="#unreleased">Unreleased</a></h2>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
+<ul>
+<li>Use the <code>$RUNNING_NG_PACKAGE_DATA</code> environment variable to refer to base configurations shipped with running-ng, such as <code>$RUNNING_NG_PACKAGE_DATA/base/runbms.yml</code>, regardless how you installed runnin-ng.</li>
+</ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
+<ul>
+<li>Dropping Python 3.6 support for users.</li>
+</ul>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <h3 id="security"><a class="header" href="#security">Security</a></h3>
 <h2 id="v030-2022-03-19"><a class="header" href="#v030-2022-03-19"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.0"><code>v0.3.0</code> (2022-03-19)</a></a></h2>

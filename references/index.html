@@ -185,13 +185,21 @@ configuration file for definitions of some keys.</p>
 configuration files. A pre-processor step in <code>running</code> takes care of including
 all the specified files. A flattened version of the final configuration file is
 also generated and placed in the results folder for reproducibility.</p>
-<p>For example:</p>
+<p>The paths can be either absolute or relative.
+Relative paths are solved relative to the current file.
+For example, if <code>$HOME/configs/foo.yml</code> has an <code>include</code> line <code>../bar.yml</code>, the
+line is interpreted as <code>$HOME/bar.yml</code>.
+Similarly,</p>
 <pre><code class="language-yaml">includes:
  - &quot;./base/suites.yml&quot;
  - &quot;./base/modifiers.yml&quot;
 </code></pre>
 <p>includes the <code>suites.yml</code> and <code>modifiers.yml</code> files located at <code>./base</code>
 respectively.</p>
+<p>Any environment variable in the paths are also resolved before any further processing.
+This include a special environment variable <code>$RUNNING_NG_PACKAGE_DATA</code> that allows
+you to refer to various configuration files shipping with running-ng, regardless how you installed running-ng.
+For example, in a global <code>pip</code> installation, <code>$RUNNING_NG_PACKAGE_DATA</code> will look like <code>/usr/local/lib/python3.10/dist-packages/running/config</code>.</p>
 <h2 id="overrides"><a class="header" href="#overrides"><code>overrides</code></a></h2>
 <p>Under construction 🚧.</p>
 <h2 id="modifiers"><a class="header" href="#modifiers"><code>modifiers</code></a></h2>

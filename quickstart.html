@@ -142,7 +142,7 @@
 You will need Python 3.6+.</p>
 <p>Then, create a file <code>two_builds.yml</code> with the following content.</p>
 <pre><code class="language-yaml">includes:
-  - &quot;/path/to/running-ng/config/base/runbms.yml&quot;
+  - &quot;$RUNNING_NG_PACKAGE_DATA/base/runbms.yml&quot;
 </code></pre>
 <p>The <a href="./references/index.html">YAML file</a> represents a dictionary (key-value pairs) that defines the experiments you are running.
 The <code>includes</code> directive here will populate the dictionary with some default values shipped with <code>running-ng</code>.</p>
@@ -172,7 +172,7 @@ The <code>includes</code> directive here will populate the dictionary with some 
     - zxing
 </code></pre>
 <p>This specify a list of benchmarks used in this experiment from the <a href="./references/suite.html">benchmark suite</a> <code>dacapochopin-29a657f</code>.
-The benchmark suite is defined in <code>/path/to/running-ng/config/base/dacapo.yml</code>.
+The benchmark suite is defined in <code>$RUNNING_NG_PACKAGE_DATA/base/dacapo.yml</code>.
 By default, the minimum heap sizes of <code>dacapochopin-29a657f</code> benchmarks are measured with AdoptOpenJDK 15 using G1 GC.
 If you are using OpenJDK 11 or 17, you can override the value of <code>suites.dacapochopin-29a657f.minheap</code> to <code>temurin-17-G1</code> or <code>temurin-11-G1</code>.
 That is, you can, for example, add <code>&quot;suites.dacapochopin-29a657f.minheap&quot;: &quot;temurin-17-G1&quot;</code> to <code>overrides</code>.</p>
