@@ -84,7 +84,7 @@ class Benchmark(object):
                 self.to_string(runtime),
                 file=sys.stderr
             )
-            return b"", SubprocessrExit.Dryrun
+            return b"", b"", SubprocessrExit.Dryrun
         else:
             cmd = self.get_full_args(runtime)
             cmd = [os.path.expandvars(x) for x in cmd]
