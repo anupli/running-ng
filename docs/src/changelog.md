@@ -1,7 +1,10 @@
 # Changelog
 ## Unreleased
 ### Added
+#### Base Syntax
 - Use the `$RUNNING_NG_PACKAGE_DATA` environment variable to refer to base configurations shipped with running-ng, such as `$RUNNING_NG_PACKAGE_DATA/base/runbms.yml`, regardless how you installed runnin-ng.
+#### Benchmark Suites
+- `DaCapo` gains an extra key `companion` to facilitate eBPF tracing programs.
 
 ### Changed
 
@@ -9,6 +12,7 @@
 
 ### Removed
 - Dropping Python 3.6 support for users.
+#### Base Configurations
 - Removing AdoptOpenJDK from the base configuration files. AdoptOpenJDK is now replaced by Temurin.
 
 ### Fixed

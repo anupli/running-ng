@@ -22,8 +22,17 @@ modifiers:
     var: "FOOBAR{0}"
     val: "BUZZ{1}"
 
-benchmarks:
-  dacapobach:
-    - avrora
+runtimes:
+  jdk-mmtk:
+    type: OpenJDK
+    release: 11
+    home: "/home/zixianc/MMTk-Dev/evaluation/build/jdk-mmtk/jdk"
 
-configs: []
+benchmarks:
+  dacapo2006:
+    - eclipse
+  dacapobach:
+    - fop
+
+configs:
+  - "jdk-mmtk|ms|s|c2|ss|tph|probes_cp|probes_rustmmtk|probes_native|value_opts_example-42-43"

@@ -119,9 +119,12 @@ def run_benchmark_with_config(c: str, b: Benchmark, runbms_dir: Path, size: Opti
     if fd:
         prologue = get_log_prologue(runtime, mod_b)
         fd.write(prologue.encode("ascii"))
-    output, exit_status = mod_b.run(runtime, cwd=runbms_dir)
+    output, companion_out, exit_status = mod_b.run(runtime, cwd=runbms_dir)
     if fd:
         fd.write(output)
+        if companion_out:
+            fd.write(b"*****\n")
+            fd.write(companion_out)
     if fd:
         epilogue = get_log_epilogue(runtime, mod_b)
         fd.write(epilogue.encode("ascii"))
