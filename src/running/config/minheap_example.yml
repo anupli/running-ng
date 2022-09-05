@@ -1,5 +1,5 @@
 includes:
-  - "./base/minheap.yml"
+  - "$RUNNING_NG_PACKAGE_DATA/base/minheap.yml"
 
 benchmarks:
   dacapobach:
