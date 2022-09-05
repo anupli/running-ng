@@ -1,6 +1,7 @@
 # Changelog
 ## Unreleased
 ### Added
+- Use the `$RUNNING_NG_PACKAGE_DATA` environment variable to refer to base configurations shipped with running-ng, such as `$RUNNING_NG_PACKAGE_DATA/base/runbms.yml`, regardless how you installed runnin-ng.
 
 ### Changed
 

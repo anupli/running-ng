@@ -11,6 +11,7 @@ import yaml
 from running.suite import is_dry_run
 from collections import defaultdict
 from enum import Enum
+import os
 
 configuration: Configuration
 
@@ -146,7 +147,8 @@ def run(args):
     if args.get("which") != "minheap":
         return False
     global configuration
-    configuration = Configuration.from_file(args.get("CONFIG"))
+    configuration = Configuration.from_file(
+        Path(os.getcwd()), args.get("CONFIG"))
     configuration.resolve_class()
     result_file = args.get("RESULT")
     if result_file.exists():
