@@ -7,6 +7,7 @@ from pathlib import Path
 import functools
 import copy
 import logging
+import os
 
 
 def load_class(cls, config):
@@ -96,8 +97,26 @@ class Configuration(object):
         return Configuration(new_values)
 
     @staticmethod
-    def from_file(path: Path) -> "Configuration":
-        logging.info("Loading config {}".format(path))
+    def parse_file(path: Path) -> Any:
+        with path.open("r") as fd:
+            try:
+                config = yaml.safe_load(fd)
+                return config
+            except yaml.YAMLError as e:
+                raise SyntaxError(
+                    "Not able to parse the configuration file, {}".format(e))
+
+    @staticmethod
+    def from_file(in_folder: Path, p: str) -> "Configuration":
+        expand_p = os.path.expandvars(p)
+        logging.info("Loading config {}, expanding to {}, relative to {}".format(
+            p, expand_p, in_folder))
+        path = Path(expand_p)
+        if path.is_absolute():
+            logging.info("    is absolute")
+        else:
+            path = in_folder.joinpath(p)
+            logging.info("    resolved to {}".format(path))
         if not path.exists():
             raise ValueError(
                 "Configuration not found at path '{}'".format(path))
@@ -114,7 +133,7 @@ class Configuration(object):
             raise ValueError("Parsed configuration file is None")
         if "includes" in config:
             includes = [Configuration.from_file(
-                path.parent.joinpath(p)) for p in config["includes"]]
+                path.parent, p) for p in config["includes"]]
             base = functools.reduce(
                 lambda left, right: left.combine(right), includes)
             if "overrides" in config:

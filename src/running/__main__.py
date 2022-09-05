@@ -5,6 +5,8 @@ import argparse
 from running.__version__ import __VERSION__
 from running.command import fillin, runbms, minheap, log_preprocessor
 from running.suite import set_dry_run
+import importlib.resources
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -40,12 +42,13 @@ def main():
 
     if args.get("dry_run") == True:
         set_dry_run(True)
-
-    for m in MODULES:
-        if m.run(args):
-            break
-    else:
-        parsers.print_help()
+    with importlib.resources.path(__package__, "config") as config_path:
+        os.environ["RUNNING_NG_PACKAGE_DATA"] = str(config_path)
+        for m in MODULES:
+            if m.run(args):
+                break
+        else:
+            parsers.print_help()
 
 
 if __name__ == "__main__":

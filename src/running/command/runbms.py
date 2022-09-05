@@ -357,7 +357,8 @@ def run(args):
         skip_timeout = args.get("skip_timeout")
         # Load from configuration file
         global configuration
-        configuration = Configuration.from_file(args.get("CONFIG"))
+        configuration = Configuration.from_file(
+            Path(os.getcwd()), args.get("CONFIG"))
         # Save metadata
         if not is_dry_run():
             with (log_dir / "runbms.yml").open("w") as fd:

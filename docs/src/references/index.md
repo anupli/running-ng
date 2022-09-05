@@ -63,7 +63,11 @@ configuration files. A pre-processor step in `running` takes care of including
 all the specified files. A flattened version of the final configuration file is
 also generated and placed in the results folder for reproducibility.
 
-For example:
+The paths can be either absolute or relative.
+Relative paths are solved relative to the current file.
+For example, if `$HOME/configs/foo.yml` has an `include` line `../bar.yml`, the
+line is interpreted as `$HOME/bar.yml`.
+Similarly,
 ```yaml
 includes:
  - "./base/suites.yml"
@@ -71,6 +75,11 @@ includes:
 ```
 includes the `suites.yml` and `modifiers.yml` files located at `./base`
 respectively.
+
+Any environment variable in the paths are also resolved before any further processing.
+This include a special environment variable `$RUNNING_NG_PACKAGE_DATA` that allows
+you to refer to various configuration files shipping with running-ng, regardless how you installed running-ng.
+For example, in a global `pip` installation, `$RUNNING_NG_PACKAGE_DATA` will look like `/usr/local/lib/python3.10/dist-packages/running/config`.
 
 ## `overrides`
 Under construction 🚧.
