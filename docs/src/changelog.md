@@ -7,6 +7,7 @@
 ### Deprecated
 
 ### Removed
+- Dropping Python 3.6 support for users.
 
 ### Fixed
 

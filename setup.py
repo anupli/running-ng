@@ -43,7 +43,7 @@ setuptools.setup(
         "running": ["data/**/*.yml"],
     },
     include_package_data=True,
-    python_requires=">=3.6",
+    python_requires=">=3.7",
 
     entry_points={
         'console_scripts': [
