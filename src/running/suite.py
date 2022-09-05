@@ -129,6 +129,8 @@ class DaCapo(JavaBenchmarkSuite):
         self.timeout = kwargs.get("timeout")
         self.wrapper: Optional[Union[Dict[str, str], str]]
         self.wrapper = kwargs.get("wrapper")
+        self.companion: Optional[Union[Dict[str, str], str]]
+        self.companion = kwargs.get("companion")
         self.size: str
         self.size = kwargs.get("size", "default")
 
@@ -193,6 +195,7 @@ class DaCapo(JavaBenchmarkSuite):
             program_args=program_args,
             cp=cp,
             wrapper=self.get_wrapper(bm_name),
+            companion=self.get_companion(bm_name),
             suite_name=self.name,
             name=name,
             timeout=timeout
@@ -226,6 +229,19 @@ class DaCapo(JavaBenchmarkSuite):
             raise TypeError("wrapper of {} must be either null, "
                             "a string (the same wrapper for all benchmarks), "
                             "or a dictionary (different wrappers for"
+                            "differerent benchmarks)".format(self.name))
+
+    def get_companion(self, bm_name: str) -> Optional[str]:
+        if self.companion is None:
+            return None
+        elif type(self.companion) == str:
+            return self.companion
+        elif type(self.companion) == dict:
+            return self.companion.get(bm_name)
+        else:
+            raise TypeError("companion of {} must be either null, "
+                            "a string (the same companion for all benchmarks), "
+                            "or a dictionary (different companions for"
                             "differerent benchmarks)".format(self.name))
 
 

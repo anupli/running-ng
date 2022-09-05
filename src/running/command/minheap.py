@@ -36,7 +36,7 @@ def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize:
 
     log(" ")
     for _ in range(attempts):
-        output, subprocess_exit = bm_with_heapsize.run(
+        output, _companion_output, subprocess_exit = bm_with_heapsize.run(
             runtime, cwd=minheap_dir)
         if runtime.is_oom(output):
             # if OOM is detected, we exit the loop regardless the exit statussour

@@ -1,6 +1,8 @@
+import errno
 import logging
 import subprocess
 import sys
+from time import sleep
 from typing import Any, List, Optional, Tuple, Union, Dict
 from running.runtime import D8, JavaScriptCore, OpenJDK, Runtime, DummyRuntime, SpiderMonkey
 from running.modifier import *
@@ -10,6 +12,9 @@ from copy import deepcopy
 from running import suite
 import os
 from enum import Enum
+import pty
+
+COMPANION_WAIT_START = 2.0
 
 
 class SubprocessrExit(Enum):
@@ -20,7 +25,7 @@ class SubprocessrExit(Enum):
 
 
 class Benchmark(object):
-    def __init__(self, suite_name: str, name: str, wrapper: Optional[str] = None, timeout: Optional[int] = None, override_cwd: Optional[Path] = None, **kwargs):
+    def __init__(self, suite_name: str, name: str, wrapper: Optional[str] = None, timeout: Optional[int] = None, override_cwd: Optional[Path] = None, companion: Optional[str] = None, **kwargs):
         self.name = name
         self.suite_name = suite_name
         self.env_args: Dict[str, str]
@@ -30,6 +35,10 @@ class Benchmark(object):
             self.wrapper = split_quoted(wrapper)
         else:
             self.wrapper = []
+        if companion is not None:
+            self.companion = split_quoted(companion)
+        else:
+            self.companion = []
         self.timeout = timeout
         # ignore the current working directory provided by commands like runbms or minheap
         # certain benchmarks expect to be invoked from certain directories
@@ -69,19 +78,27 @@ class Benchmark(object):
             ])
         )
 
-    def run(self, runtime: Runtime, cwd: Path = None) -> Tuple[bytes, SubprocessrExit]:
+    def run(self, runtime: Runtime, cwd: Path = None) -> Tuple[bytes, bytes, SubprocessrExit]:
         if suite.is_dry_run():
             print(
                 self.to_string(runtime),
                 file=sys.stderr
             )
-            return b"", SubprocessrExit.Dryrun
+            return b"", b"", SubprocessrExit.Dryrun
         else:
             cmd = self.get_full_args(runtime)
             cmd = [os.path.expandvars(x) for x in cmd]
             env_args = os.environ.copy()
             env_args.update(self.env_args)
+            companion_out = b""
+            if self.companion:
+                pid, fd = pty.fork()
+                if pid == 0:
+                    os.execvp(self.companion[0], self.companion)
             try:
+                if self.companion:
+                    # Wait for the companion program to start
+                    sleep(COMPANION_WAIT_START)
                 p = subprocess.run(
                     cmd,
                     env=env_args,
@@ -90,11 +107,35 @@ class Benchmark(object):
                     timeout=self.timeout,
                     cwd=self.override_cwd if self.override_cwd else cwd
                 )
-                return p.stdout, SubprocessrExit.Normal
+                subprocess_exit = SubprocessrExit.Normal
+                stdout = p.stdout
             except subprocess.CalledProcessError as e:
-                return e.stdout, SubprocessrExit.Error
+                subprocess_exit = SubprocessrExit.Error
+                stdout = e.stdout
             except subprocess.TimeoutExpired as e:
-                return e.stdout, SubprocessrExit.Timeout
+                subprocess_exit = SubprocessrExit.Timeout
+                stdout = e.stdout
+            finally:
+                if self.companion:
+                    # send ^C to the companion's controlling terminal
+                    # this is so that we can terminal setuid programs like sudo
+                    os.write(fd, b"\x03")
+                    while True:
+                        try:
+                            output = os.read(fd, 1024)
+                            if not output:
+                                break
+                            companion_out += output
+                        except OSError as e:
+                            if e.errno == errno.EIO:
+                                break
+                    pid_wait, status = os.waitpid(pid, 0)
+                    assert pid_wait == pid
+                    exitcode = os.waitstatus_to_exitcode(status)
+                    if exitcode != 0:
+                        raise subprocess.SubprocessError(
+                            "Exit code {} for the companion process".format(exitcode))
+            return stdout, companion_out, subprocess_exit
 
 
 class BinaryBenchmark(Benchmark):

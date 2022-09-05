@@ -66,6 +66,29 @@ This wrapper is used for all benchmarks in the benchmark suite.
 Second, a dictionary of strings with shell-like syntax to specify possibly different wrappers for different benchmarks.
 If a benchmark doesn't have a wrapper in the dictionary, it is treated as `null`.
 
+`companion` (preview ⚠️): the syntax is similar to `wrapper`.
+The companion program will start before the main program and run in a separate terminal.
+The main program will start two seconds after the companion program to make sure the companion is fully initialized.
+Once the main program finishes, `^C` is sent to the terminal to stop the companion program.
+Here is an example of using `companion` to launch `bpftrace` in the background to count the system calls.
+```yaml
+includes:
+  - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
+
+overrides:
+  "suites.dacapo2006.timing_iteration": 1
+  "suites.dacapo2006.companion": "sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @syscall[args->id] = count(); @process[comm] = count();} END { printf(\"Goodbye world!\\n\"); }'"
+  "invocations": 1
+
+benchmarks:
+  dacapo2006:
+    - fop
+
+configs:
+  - "temurin-17"
+```
+In the log file, the output from the main program and the output from the companion program is separated by `*****`.
+
 `size`: specifying the size of input data.
 Note that the names of the sizes are subject to change depending on the DaCapo releases.
 The default value is `default`.
