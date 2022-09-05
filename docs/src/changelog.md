@@ -9,6 +9,7 @@
 
 ### Removed
 - Dropping Python 3.6 support for users.
+- Removing AdoptOpenJDK from the base configuration files. AdoptOpenJDK is now replaced by Temurin.
 
 ### Fixed
 
