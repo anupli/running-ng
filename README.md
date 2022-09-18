@@ -15,7 +15,9 @@ To make a distribution archives, run `python -m build` within the virtual enviro
 To run an editable build in the virtual environment, run `pip install -e .`.
 To install to user `site-packages`, run `pip install dist/running_ng-<VERSION>-py3-none-any.whl` outside the virtual environment.
 
-To install extra 
+There are two [extras](https://peps.python.org/pep-0508/#extras) available.
+- `zulip`: dependencies for the `Zulip` `runbms` plugin.
+- `tests`: dependencies for running tests.
 
 ## Documentation
 Please refer to [this site](https://anupli.github.io/running-ng/) for up-to-date documentations.
