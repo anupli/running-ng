@@ -1,2 +1,1 @@
-recursive-include src/running/config *.yml
 graft docs

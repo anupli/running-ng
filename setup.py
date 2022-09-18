@@ -39,6 +39,7 @@ setuptools.setup(
 
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
+    package_data={'running': ['config/*']},
     include_package_data=True,
     python_requires=">=3.7",
 
