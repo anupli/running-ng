@@ -1,23 +1,32 @@
 # Changelog
 ## Unreleased
 ### Added
-#### Base Syntax
-- Use the `$RUNNING_NG_PACKAGE_DATA` environment variable to refer to base configurations shipped with running-ng, such as `$RUNNING_NG_PACKAGE_DATA/base/runbms.yml`, regardless how you installed runnin-ng.
-#### Benchmark Suites
-- `DaCapo` gains an extra key `companion` to facilitate eBPF tracing programs.
 
 ### Changed
 
 ### Deprecated
 
 ### Removed
-- Dropping Python 3.6 support for users.
-#### Base Configurations
-- Removing AdoptOpenJDK from the base configuration files. AdoptOpenJDK is now replaced by Temurin.
 
 ### Fixed
 
 ### Security
+
+## [`v0.3.1` (2022-09-18)](https://github.com/anupli/running-ng/releases/tag/v0.3.1)
+### Added
+#### Base Syntax
+- Use the `$RUNNING_NG_PACKAGE_DATA` environment variable to refer to base configurations shipped with running-ng, such as `$RUNNING_NG_PACKAGE_DATA/base/runbms.yml`, regardless how you installed runnin-ng.
+#### Benchmark Suites
+- `DaCapo` gains an extra key `companion` to facilitate eBPF tracing programs.
+
+### Changed
+- Overhauled Python packaging with PEP 517
+- `zulip` is now an optional Python dependency. Use `pip install running-ng[zulip]` if you want to use the `Zulip` `runbms` plugin.
+
+### Removed
+- Dropping Python 3.6 support for users.
+#### Base Configurations
+- Removing AdoptOpenJDK from the base configuration files. AdoptOpenJDK is now replaced by Temurin.
 
 ## [`v0.3.0` (2022-03-19)](https://github.com/anupli/running-ng/releases/tag/v0.3.0)
 ### Added

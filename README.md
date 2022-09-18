@@ -4,11 +4,18 @@
 ## Installation
 `pip3 install running-ng`
 
-## Create a new release
+## Development setup
 ```console
-pip install --upgrade build
-python -m build
+virtualenv env
+source env/bin/activate
+pip install -U pip setuptools build[virtualenv]
 ```
+
+To make a distribution archives, run `python -m build` within the virtual environment.
+To run an editable build in the virtual environment, run `pip install -e .`.
+To install to user `site-packages`, run `pip install dist/running_ng-<VERSION>-py3-none-any.whl` outside the virtual environment.
+
+To install extra 
 
 ## Documentation
 Please refer to [this site](https://anupli.github.io/running-ng/) for up-to-date documentations.
