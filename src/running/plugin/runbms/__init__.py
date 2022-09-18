@@ -60,4 +60,17 @@ class RunbmsPlugin(object):
 # !!! Do NOT remove this import nor change its position
 # This is to make sure that the plugin classes are correctly registered
 from running.plugin.runbms.copyfile import CopyFile
-from running.plugin.runbms.zulip import Zulip
+if TYPE_CHECKING:
+    from running.plugin.runbms.zulip import Zulip
+else:
+    try:
+        from running.plugin.runbms.zulip import Zulip
+    except:
+        from running.util import register
+        @register(RunbmsPlugin)
+        class Zulip(RunbmsPlugin):
+            def __init__(self, **kwargs):
+                raise RuntimeError("Trying to create an instance of the Zulip "
+                "plugin for runbms, but the import failed. This is most likely due "
+                "to the required dependencies not being installed. Try pip install "
+                "running-ng[zulip] to install the extra dependencies.")
