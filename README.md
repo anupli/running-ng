@@ -4,6 +4,12 @@
 ## Installation
 `pip3 install running-ng`
 
+## Create a new release
+```console
+pip install --upgrade build
+python -m build
+```
+
 ## Documentation
 Please refer to [this site](https://anupli.github.io/running-ng/) for up-to-date documentations.
 
