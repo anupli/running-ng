@@ -2,6 +2,11 @@ import setuptools
 from codecs import open
 from os import path
 
+SETUPTOOLS_VERSION = [int(x) for x in setuptools.__version__.split(".")]
+if SETUPTOOLS_VERSION[0] < 62 or (SETUPTOOLS_VERSION[0] == 62 and SETUPTOOLS_VERSION[1] < 3):
+    raise RuntimeError(
+        "setuptools >= 62.3.0 required to support recursive globs for package_data. See pypa/setuptools#3309")
+
 NAME = 'running'
 REQUIRED = ["pyyaml", "zulip"]
 
@@ -39,7 +44,7 @@ setuptools.setup(
 
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
-    package_data={'running': ['config/*']},
+    package_data={'running': ['config/**/*.yml']},
     include_package_data=True,
     python_requires=">=3.7",
 
