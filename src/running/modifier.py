@@ -133,3 +133,12 @@ class JSArg(Modifier):
 
     def __str__(self) -> str:
         return "{} JSArg {}".format(super().__str__(), self.val)
+
+@register(Modifier)
+class Companion(Modifier):
+    def __init__(self, value_opts=None, **kwargs):
+        super().__init__(value_opts, **kwargs)
+        self.val = split_quoted(self._kwargs["val"])
+
+    def __str__(self) -> str:
+        return "{} Companion {}".format(super().__str__(), self.val)

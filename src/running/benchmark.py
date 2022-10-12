@@ -63,6 +63,8 @@ class Benchmark(object):
                     continue
             elif type(m) == Wrapper:
                 b.wrapper.extend(m.val)
+            elif type(m) == Companion:
+                b.companion.extend(m.val)
             elif type(m) == EnvVar:
                 b.env_args[m.var] = m.val
             elif type(m) == ModifierSet:
