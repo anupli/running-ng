@@ -18,7 +18,7 @@ class Modifier(object):
         self.__original_kwargs = kwargs
         self._kwargs = copy.deepcopy(kwargs)
         self.excludes = kwargs.get("excludes", {})
-        if self.value_opts is not None:
+        if self.value_opts: # Neither None nor empty
             # Expand value opts
             for k, v in kwargs.items():
                 if type(v) is not str:
