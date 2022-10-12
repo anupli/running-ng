@@ -1,5 +1,5 @@
 import logging
-from typing import DefaultDict, Dict, List, Any, Optional, Tuple, BinaryIO, TYPE_CHECKING
+from typing import DefaultDict, Dict, List, Any, Optional, Set, Tuple, BinaryIO, TYPE_CHECKING
 from running.suite import BenchmarkSuite, is_dry_run
 from running.benchmark import Benchmark, SubprocessrExit
 from running.config import Configuration
@@ -220,8 +220,10 @@ def run_one_benchmark(
     oomed_count = DefaultDict(int)
     timeout_count: DefaultDict[str, int]
     timeout_count = DefaultDict(int)
-    if len(get_logged_in_users()) > 1:
-        logging.warning("More than one user logged in!")
+    logged_in_users: Set[str]
+    logged_in_users = get_logged_in_users()
+    if len(logged_in_users) > 1:
+        logging.warning("More than one user logged in: {}".format(" ".join(logged_in_users)))
     ever_ran = [False] * len(configs)
     for i in range(0, invocations):
         for p in plugins.values():
