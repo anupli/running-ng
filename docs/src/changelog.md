@@ -12,6 +12,12 @@
 
 ### Security
 
+## [`v0.3.2` (2022-10-12)](https://github.com/anupli/running-ng/releases/tag/v0.3.2)
+### Added
+
+#### Modifiers
+- `Companion`
+
 ## [`v0.3.1` (2022-09-18)](https://github.com/anupli/running-ng/releases/tag/v0.3.1)
 ### Added
 #### Base Syntax

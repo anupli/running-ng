@@ -72,3 +72,12 @@ Multiple arguments are space separated.
 ### Description
 Specify a wrapper.
 If a wrapper also exist for the benchmark suite you use, this wrapper will follow that.
+
+## `Companion` (preview ⚠️)
+### Keys
+`val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
+Multiple arguments are space separated.
+
+### Description
+Specify a companion program.
+If a companion program also exist for the benchmark suite you use, this companion program will follow that.
