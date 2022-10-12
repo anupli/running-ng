@@ -12,6 +12,11 @@
 
 ### Security
 
+## [`v0.3.4` (2022-10-13)](https://github.com/anupli/running-ng/releases/tag/v0.3.4)
+### Fixed
+#### Commands
+- `runbms`: fix the file descriptor leak when running benchmarks with companion programs.
+
 ## [`v0.3.3` (2022-10-12)](https://github.com/anupli/running-ng/releases/tag/v0.3.3)
 ### Changed
 #### Commands
