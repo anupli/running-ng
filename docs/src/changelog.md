@@ -12,6 +12,15 @@
 
 ### Security
 
+## [`v0.3.3` (2022-10-12)](https://github.com/anupli/running-ng/releases/tag/v0.3.2)
+### Changed
+#### Commands
+- `runbms` prints out the logged in users when emitting warnings when the machine has more than one logged in users.
+
+### Fixed
+#### Modifiers
+- `Companion`: skip value options expansion if no value option is provided to avoid interpreting bpftrace syntax as replacement fields.
+
 ## [`v0.3.2` (2022-10-12)](https://github.com/anupli/running-ng/releases/tag/v0.3.2)
 ### Added
 

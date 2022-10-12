@@ -18,7 +18,7 @@ class Modifier(object):
         self.__original_kwargs = kwargs
         self._kwargs = copy.deepcopy(kwargs)
         self.excludes = kwargs.get("excludes", {})
-        if self.value_opts: # Neither None nor empty
+        if self.value_opts:  # Neither None nor empty
             # Expand value opts
             for k, v in kwargs.items():
                 if type(v) is not str:
@@ -133,6 +133,7 @@ class JSArg(Modifier):
 
     def __str__(self) -> str:
         return "{} JSArg {}".format(super().__str__(), self.val)
+
 
 @register(Modifier)
 class Companion(Modifier):

@@ -223,7 +223,8 @@ def run_one_benchmark(
     logged_in_users: Set[str]
     logged_in_users = get_logged_in_users()
     if len(logged_in_users) > 1:
-        logging.warning("More than one user logged in: {}".format(" ".join(logged_in_users)))
+        logging.warning("More than one user logged in: {}".format(
+            " ".join(logged_in_users)))
     ever_ran = [False] * len(configs)
     for i in range(0, invocations):
         for p in plugins.values():

@@ -67,6 +67,7 @@ else:
         from running.plugin.runbms.zulip import Zulip
     except:
         from running.util import register
+
         @register(RunbmsPlugin)
         class Zulip(RunbmsPlugin):
             def __init__(self, **kwargs):
