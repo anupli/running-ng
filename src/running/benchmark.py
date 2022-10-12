@@ -137,6 +137,7 @@ class Benchmark(object):
                     if exitcode != 0:
                         raise subprocess.SubprocessError(
                             "Exit code {} for the companion process".format(exitcode))
+                    os.close(fd)
             return stdout, companion_out, subprocess_exit
 
 
