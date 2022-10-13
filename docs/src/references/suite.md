@@ -88,6 +88,9 @@ configs:
   - "temurin-17"
 ```
 In the log file, the output from the main program and the output from the companion program is separated by `*****`.
+A companion program should shutdown cleanly upon receiving `SIGINT` (Ctrl-C).
+In the case of `bpftrace`, one should avoid using `exit()`.
+Otherwise, a `SIGINT` during `exit()` will stop printing the rest of the maps, resulting in data loss.
 
 `size`: specifying the size of input data.
 Note that the names of the sizes are subject to change depending on the DaCapo releases.
