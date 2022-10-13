@@ -15,7 +15,7 @@
 ## [`v0.3.5` (2022-10-13)](https://github.com/anupli/running-ng/releases/tag/v0.3.5)
 ### Changed
 #### Commands
-- `runbms`: when a companion exits with non-zero code, a warning is generated instead of an exception to prevent stopping the entire experiment.
+- `runbms`: when a companion program exits with a non-zero code, a warning is generated instead of an exception to prevent stopping the entire experiment.
 
 ## [`v0.3.4` (2022-10-13)](https://github.com/anupli/running-ng/releases/tag/v0.3.4)
 ### Fixed
