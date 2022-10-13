@@ -208,7 +208,10 @@ benchmarks:
 configs:
   - &quot;temurin-17&quot;
 </code></pre>
-<p>In the log file, the output from the main program and the output from the companion program is separated by <code>*****</code>.</p>
+<p>In the log file, the output from the main program and the output from the companion program is separated by <code>*****</code>.
+A companion program should shutdown cleanly upon receiving <code>SIGINT</code> (Ctrl-C).
+In the case of <code>bpftrace</code>, one should avoid using <code>exit()</code>.
+Otherwise, a <code>SIGINT</code> during <code>exit()</code> will stop printing the rest of the maps, resulting in data loss.</p>
 <p><code>size</code>: specifying the size of input data.
 Note that the names of the sizes are subject to change depending on the DaCapo releases.
 The default value is <code>default</code>.</p>
