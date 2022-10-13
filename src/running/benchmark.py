@@ -135,7 +135,7 @@ class Benchmark(object):
                     assert pid_wait == pid
                     exitcode = os.waitstatus_to_exitcode(status)
                     if exitcode != 0:
-                        raise subprocess.SubprocessError(
+                        logging.warning(
                             "Exit code {} for the companion process".format(exitcode))
                     os.close(fd)
             return stdout, companion_out, subprocess_exit
