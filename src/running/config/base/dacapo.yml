@@ -178,3 +178,57 @@ suites:
         zxing: 101
     timing_iteration: 3
     timeout: 120
+  dacapochopin-6e411f33:
+    type: DaCapo
+    release: evaluation
+    path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-6e411f33.jar
+    minheap: mmtk-openjdk-11-MarkCompact
+    minheap_values:
+      mmtk-openjdk-11-MarkCompact:
+        avrora: 8
+        batik: 426
+        biojava: 197
+        cassandra: 117
+        eclipse: 439
+        fop: 24
+        graphchi: 187
+        h2: 1122
+        h2o: 893
+        jme: 236
+        jython: 48
+        kafka: 233
+        luindex: 25
+        lusearch: 36
+        pmd: 291
+        spring: 110
+        sunflow: 37
+        tradebeans: .inf
+        tradesoap: .inf
+        tomcat: 55
+        xalan: 22
+        zxing: 427
+      mmtk-openjdk-11-G1:
+        avrora: 7
+        batik: 1068
+        biojava: 189
+        cassandra: 119
+        eclipse: 427
+        fop: 73
+        graphchi: 258
+        h2: 908
+        h2o: 175
+        jme: 235
+        jython: 309
+        kafka: 219
+        luindex: 39
+        lusearch: 29
+        pmd: 262
+        spring: 78
+        sunflow: 33
+        tomcat: 47
+        tradebeans: .inf
+        tradesoap: .inf
+        xalan: 19
+        zxing: 95
+    timing_iteration: 3
+    timeout: 120
