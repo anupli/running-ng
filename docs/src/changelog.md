@@ -12,6 +12,14 @@
 
 ### Security
 
+## [`v0.3.6` (2022-10-13)](https://github.com/anupli/running-ng/releases/tag/v0.3.6)
+### Added
+#### Base Configurations
+- DaCapo Chopin Snapshot-6e411f33
+
+### Fixed
+- Fixed type annotations in untyped functions and make `Optional`s explicit.
+
 ## [`v0.3.5` (2022-10-13)](https://github.com/anupli/running-ng/releases/tag/v0.3.5)
 ### Changed
 #### Commands
