@@ -130,6 +130,7 @@ class Zulip(RunbmsPlugin):
                 reservation.end
             )
         elif reservation.status is MomaReservationStatus.RESERVED_BY_ME:
+            assert reservation.end is not None
             delta = reservation.end - datetime.now()
             if delta < RESERVATION_WARNING_THRESHOLD:
                 return "# ** Warning: less than {} hours of reservation left. Current reservation ends at {}. **\n".format(

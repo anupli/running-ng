@@ -414,7 +414,7 @@ def run(args):
             ))
             for hfac in hfacs:
                 run_one_hfac(invocations, hfac, suites, benchmarks,
-                             configs, runbms_dir, log_dir)
+                             configs, Path(runbms_dir), log_dir)
                 print()
 
         def run_N_ns(N, ns):
@@ -427,7 +427,7 @@ def run(args):
 
         if N is None:
             run_one_hfac(invocations, None, suites, benchmarks,
-                         configs, runbms_dir, log_dir)
+                         configs, Path(runbms_dir), log_dir)
             return True
 
         if len(ns) == 0:

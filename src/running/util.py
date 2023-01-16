@@ -117,7 +117,9 @@ class Moma(object):
         self.reserve_time_url = "http://10.0.0.1/reserve-time?host={}".format(
             self.host)
         self.frequency = frequency
+        self.last_checked: Optional[float]
         self.last_checked = None
+        self.reservation: Optional[MomaReservaton]
         self.reservation = None
         self.update_reservation()
 

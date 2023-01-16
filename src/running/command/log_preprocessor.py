@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, List
 import functools
 import re
 from running.config import Configuration
+import os
 
 MMTk_HEADER = "============================ MMTk Statistics Totals ============================"
 MMTk_FOOTER = "------------------------------ End MMTk Statistics -----------------------------"
@@ -199,7 +200,8 @@ def process(configuration: Configuration, source: Path, target: Path):
 def run(args):
     if args.get("which") != "preproc":
         return False
-    configuration = Configuration.from_file(args.get("CONFIG"))
+    configuration = Configuration.from_file(
+        Path(os.getcwd()), args.get("CONFIG"))
     source = args.get("SOURCE")
     target = args.get("TARGET")
     target.mkdir(parents=True, exist_ok=True)
