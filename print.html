@@ -974,6 +974,16 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <h3 id="security"><a class="header" href="#security">Security</a></h3>
+<h2 id="v036-2023-01-16"><a class="header" href="#v036-2023-01-16"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.6"><code>v0.3.6</code> (2023-01-16)</a></a></h2>
+<h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
+<h4 id="base-configurations"><a class="header" href="#base-configurations">Base Configurations</a></h4>
+<ul>
+<li>DaCapo Chopin Snapshot-6e411f33</li>
+</ul>
+<h3 id="fixed-1"><a class="header" href="#fixed-1">Fixed</a></h3>
+<ul>
+<li>Fixed type annotations in untyped functions and make <code>Optional</code>s explicit.</li>
+</ul>
 <h2 id="v035-2022-10-13"><a class="header" href="#v035-2022-10-13"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.5"><code>v0.3.5</code> (2022-10-13)</a></a></h2>
 <h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
 <h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
@@ -981,7 +991,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>runbms</code>: when a companion program exits with a non-zero code, a warning is generated instead of an exception to prevent stopping the entire experiment.</li>
 </ul>
 <h2 id="v034-2022-10-13"><a class="header" href="#v034-2022-10-13"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.4"><code>v0.3.4</code> (2022-10-13)</a></a></h2>
-<h3 id="fixed-1"><a class="header" href="#fixed-1">Fixed</a></h3>
+<h3 id="fixed-2"><a class="header" href="#fixed-2">Fixed</a></h3>
 <h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: fix the file descriptor leak when running benchmarks with companion programs.</li>
@@ -992,19 +1002,19 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li><code>runbms</code> prints out the logged in users when emitting warnings when the machine has more than one logged in users.</li>
 </ul>
-<h3 id="fixed-2"><a class="header" href="#fixed-2">Fixed</a></h3>
+<h3 id="fixed-3"><a class="header" href="#fixed-3">Fixed</a></h3>
 <h4 id="modifiers-1"><a class="header" href="#modifiers-1">Modifiers</a></h4>
 <ul>
 <li><code>Companion</code>: skip value options expansion if no value option is provided to avoid interpreting bpftrace syntax as replacement fields.</li>
 </ul>
 <h2 id="v032-2022-10-12"><a class="header" href="#v032-2022-10-12"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.2"><code>v0.3.2</code> (2022-10-12)</a></a></h2>
-<h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
+<h3 id="added-2"><a class="header" href="#added-2">Added</a></h3>
 <h4 id="modifiers-2"><a class="header" href="#modifiers-2">Modifiers</a></h4>
 <ul>
 <li><code>Companion</code></li>
 </ul>
 <h2 id="v031-2022-09-18"><a class="header" href="#v031-2022-09-18"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.1"><code>v0.3.1</code> (2022-09-18)</a></a></h2>
-<h3 id="added-2"><a class="header" href="#added-2">Added</a></h3>
+<h3 id="added-3"><a class="header" href="#added-3">Added</a></h3>
 <h4 id="base-syntax"><a class="header" href="#base-syntax">Base Syntax</a></h4>
 <ul>
 <li>Use the <code>$RUNNING_NG_PACKAGE_DATA</code> environment variable to refer to base configurations shipped with running-ng, such as <code>$RUNNING_NG_PACKAGE_DATA/base/runbms.yml</code>, regardless how you installed runnin-ng.</li>
@@ -1022,12 +1032,12 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li>Dropping Python 3.6 support for users.</li>
 </ul>
-<h4 id="base-configurations"><a class="header" href="#base-configurations">Base Configurations</a></h4>
+<h4 id="base-configurations-1"><a class="header" href="#base-configurations-1">Base Configurations</a></h4>
 <ul>
 <li>Removing AdoptOpenJDK from the base configuration files. AdoptOpenJDK is now replaced by Temurin.</li>
 </ul>
 <h2 id="v030-2022-03-19"><a class="header" href="#v030-2022-03-19"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.0"><code>v0.3.0</code> (2022-03-19)</a></a></h2>
-<h3 id="added-3"><a class="header" href="#added-3">Added</a></h3>
+<h3 id="added-4"><a class="header" href="#added-4">Added</a></h3>
 <h4 id="modifiers-3"><a class="header" href="#modifiers-3">Modifiers</a></h4>
 <ul>
 <li><code>JVMClasspathAppend</code></li>
@@ -1055,7 +1065,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>Dropping Python 3.6 support for developers (NOT users). pytest 7.1+ requires at least Python 3.7.</li>
 </ul>
 <h2 id="v022-2022-03-07"><a class="header" href="#v022-2022-03-07"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.2"><code>v0.2.2</code> (2022-03-07)</a></a></h2>
-<h3 id="fixed-3"><a class="header" href="#fixed-3">Fixed</a></h3>
+<h3 id="fixed-4"><a class="header" href="#fixed-4">Fixed</a></h3>
 <h4 id="benchmark-suites-2"><a class="header" href="#benchmark-suites-2">Benchmark Suites</a></h4>
 <ul>
 <li><code>JavaBenchmarkSuite</code>: Some DaCapo benchmarks refers to internal classes (e.g., under <code>jdk.internal.ref</code>), and DaCapo implemented a workaround for this behaviour in the jar. However, since we are invoking DaCapo using <code>-cp</code> and the name of the main class, that workaround is bypassed. That workaround is now reimplemented in running-ng through an extra JVM argument <code>--add-exports</code>.</li>
@@ -1066,14 +1076,14 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
 </ul>
-<h3 id="fixed-4"><a class="header" href="#fixed-4">Fixed</a></h3>
+<h3 id="fixed-5"><a class="header" href="#fixed-5">Fixed</a></h3>
 <h4 id="benchmark-suites-3"><a class="header" href="#benchmark-suites-3">Benchmark Suites</a></h4>
 <ul>
 <li><code>BinaryBenchmarkSuite</code>: fixes missing parameter when constructing <code>BinaryBenchmark</code> due to a bug in previous refactoring</li>
 </ul>
 <h2 id="v020-2022-02-20"><a class="header" href="#v020-2022-02-20"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.0"><code>v0.2.0</code> (2022-02-20)</a></a></h2>
-<h3 id="added-4"><a class="header" href="#added-4">Added</a></h3>
-<h4 id="base-configurations-1"><a class="header" href="#base-configurations-1">Base Configurations</a></h4>
+<h3 id="added-5"><a class="header" href="#added-5">Added</a></h3>
+<h4 id="base-configurations-2"><a class="header" href="#base-configurations-2">Base Configurations</a></h4>
 <ul>
 <li>AdoptOpenJDK 16</li>
 <li>DaCapo Chopin Snapshot-29a657f, Chopin Snapshot-f480064</li>
@@ -1128,11 +1138,11 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>The <code>--slice</code> argument of <code>runbms</code> now accepts multiple comma-separated floating point numbers. </li>
 </ul>
 <h3 id="removed-3"><a class="header" href="#removed-3">Removed</a></h3>
-<h4 id="base-configurations-2"><a class="header" href="#base-configurations-2">Base Configurations</a></h4>
+<h4 id="base-configurations-3"><a class="header" href="#base-configurations-3">Base Configurations</a></h4>
 <ul>
 <li>DaCapo Chopin Snapshot-69a704e</li>
 </ul>
-<h3 id="fixed-5"><a class="header" href="#fixed-5">Fixed</a></h3>
+<h3 id="fixed-6"><a class="header" href="#fixed-6">Fixed</a></h3>
 <h4 id="commands-7"><a class="header" href="#commands-7">Commands</a></h4>
 <ul>
 <li>Resolving relative paths of runtimes before running. Otherwise, they would be resolved relative to the <code>runbms</code> working directory.</li>
@@ -1142,7 +1152,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v010-2021-08-09"><a class="header" href="#v010-2021-08-09"><a href="https://github.com/anupli/running-ng/releases/tag/v0.1.0"><code>v0.1.0</code> (2021-08-09)</a></a></h2>
 <p>Initial release.</p>
-<h3 id="added-5"><a class="header" href="#added-5">Added</a></h3>
+<h3 id="added-6"><a class="header" href="#added-6">Added</a></h3>
 <h4 id="commands-8"><a class="header" href="#commands-8">Commands</a></h4>
 <ul>
 <li><code>fillin</code></li>
@@ -1167,7 +1177,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>BinaryBenchmarkSuite</code></li>
 <li><code>DaCapo</code></li>
 </ul>
-<h4 id="base-configurations-3"><a class="header" href="#base-configurations-3">Base Configurations</a></h4>
+<h4 id="base-configurations-4"><a class="header" href="#base-configurations-4">Base Configurations</a></h4>
 <ul>
 <li>AdoptOpenJDK 8, 11, 12, 13, 14, 15</li>
 <li>DaCapo 2006, 9.12 (Bach), 9.12 MR1, 9.12 MR1 for Java 6, Chopin Snapshot-69a704e</li>
