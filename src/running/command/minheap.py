@@ -164,8 +164,9 @@ def run(args):
     with tempfile.TemporaryDirectory(prefix="minheap-") as minheap_dir:
         logging.info("Temporary directory: {}".format(minheap_dir))
         if is_dry_run():
-            run_with_persistence(result, minheap_dir, None, attempts)
+            run_with_persistence(result, Path(minheap_dir), None, attempts)
         else:
-            run_with_persistence(result, minheap_dir, result_file, attempts)
+            run_with_persistence(result, Path(
+                minheap_dir), result_file, attempts)
     print_best(result)
     return True

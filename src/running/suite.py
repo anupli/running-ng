@@ -18,6 +18,18 @@ def set_dry_run(val: bool):
     __DRY_RUN = val
 
 
+def parse_timing_iteration(t: Optional[str], suite_name: str) -> Union[str, int]:
+    if not t:
+        raise KeyError(
+            "You need to specify the timing_iteration for a {} suite".format(suite_name))
+    assert t is not None
+    try:
+        t_parsed = int(t)
+        return t_parsed
+    except ValueError:
+        return t
+
+
 class BenchmarkSuite(object):
     CLS_MAPPING: Dict[str, Any]
     CLS_MAPPING = {}
@@ -112,17 +124,13 @@ class DaCapo(JavaBenchmarkSuite):
             if self.minheap not in self.minheap_values:
                 raise KeyError(
                     "{} is not a valid entry of {}.minheap_values".format(self.name, self.name))
-        self.timing_iteration: Union[str, int]
-        try:
-            self.timing_iteration = int(kwargs.get("timing_iteration"))
-        except ValueError:
-            timing_iteration = kwargs.get("timing_iteration")
-            if timing_iteration != "converge":
-                raise TypeError("The timing iteration of the DaCapo benchmark suite `{}` is {}, which neither an integer nor 'converge'".format(
-                    self.path,
-                    repr(timing_iteration)
-                ))
-            self.timing_iteration = "converge"
+        self.timing_iteration = parse_timing_iteration(
+            kwargs.get("timing_iteration"), "DaCapo")
+        if isinstance(self.timing_iteration, str) and self.timing_iteration != "converge":
+            raise TypeError("The timing iteration of the DaCapo benchmark suite `{}` is {}, which neither an integer nor 'converge'".format(
+                self.path,
+                repr(self.timing_iteration)
+            ))
         self.callback: Optional[str]
         self.callback = kwargs.get("callback")
         self.timeout: Optional[int]
@@ -303,8 +311,14 @@ class Octane(BenchmarkSuite):
         self.wrapper = Path(kwargs["wrapper"]).resolve()
         if not self.wrapper.exists():
             logging.info("Octane folder {} not found".format(self.wrapper))
+        timing_iteration = parse_timing_iteration(
+            kwargs.get("timing_iteration"), "Octane")
         self.timing_iteration: int
-        self.timing_iteration = int(kwargs.get("timing_iteration"))
+        if isinstance(timing_iteration, str):
+            raise TypeError(
+                "timing_iteration for Octane has to be an integer")
+        else:
+            self.timing_iteration = timing_iteration
         self.minheap: Optional[str]
         self.minheap = kwargs.get("minheap")
         self.minheap_values: Dict[str, Dict[str, int]]
@@ -377,12 +391,14 @@ class SPECjvm98(JavaBenchmarkSuite):
         if not (self.path / "SpecApplication.class").exists():
             logging.info(
                 "SpecApplication.class not found under SPECjvm98 {}".format(self.path))
-        try:
-            self.timing_iteration = int(kwargs.get("timing_iteration"))
-        except ValueError:
-            timing_iteration = kwargs.get("timing_iteration")
-            raise TypeError("The timing iteration of the SPECjvm98 benchmark suite `{}` is {}, which is not an "
-                            "integer".format(self.path.parent, repr(timing_iteration)))
+        timing_iteration = parse_timing_iteration(
+            kwargs.get("timing_iteration"), "SPECjvm98")
+        self.timing_iteration: int
+        if isinstance(timing_iteration, str):
+            raise TypeError(
+                "timing_iteration for SPECjvm98 has to be an integer")
+        else:
+            self.timing_iteration = timing_iteration
 
     def __str__(self) -> str:
         return "{} SPECjvm98 {} {}".format(super().__str__(), self.release, self.path)

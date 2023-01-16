@@ -80,7 +80,7 @@ class Benchmark(object):
             ])
         )
 
-    def run(self, runtime: Runtime, cwd: Path = None) -> Tuple[bytes, bytes, SubprocessrExit]:
+    def run(self, runtime: Runtime, cwd: Optional[Path] = None) -> Tuple[bytes, bytes, SubprocessrExit]:
         if suite.is_dry_run():
             print(
                 self.to_string(runtime),
@@ -93,6 +93,7 @@ class Benchmark(object):
             env_args = os.environ.copy()
             env_args.update(self.env_args)
             companion_out = b""
+            stdout: Optional[bytes]
             if self.companion:
                 pid, fd = pty.fork()
                 if pid == 0:
@@ -138,7 +139,7 @@ class Benchmark(object):
                         logging.warning(
                             "Exit code {} for the companion process".format(exitcode))
                     os.close(fd)
-            return stdout, companion_out, subprocess_exit
+            return stdout if stdout else b"", companion_out, subprocess_exit
 
 
 class BinaryBenchmark(Benchmark):

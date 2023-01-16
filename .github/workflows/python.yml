@@ -41,4 +41,4 @@ jobs:
           pip install .[zulip,tests]
       - name: Test with mypy
         run: |
-          mypy src/running
+          mypy --check-untyped-defs src/running
