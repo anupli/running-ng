@@ -12,7 +12,7 @@
 
 ### Security
 
-## [`v0.3.6` (2022-10-13)](https://github.com/anupli/running-ng/releases/tag/v0.3.6)
+## [`v0.3.6` (2023-01-16)](https://github.com/anupli/running-ng/releases/tag/v0.3.6)
 ### Added
 #### Base Configurations
 - DaCapo Chopin Snapshot-6e411f33
