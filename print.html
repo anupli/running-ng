@@ -778,7 +778,8 @@ No message will be sent if it'a dry run.</p>
 <h4 id="keys-18"><a class="header" href="#keys-18">Keys</a></h4>
 <p><code>request</code>: please follow the <a href="https://zulip.com/api/send-message">Zulip API documentation</a>.
 Note that you don't need to put in <code>content</code> here.
-Please contact the administrators of your organization for your user ID.</p>
+Please contact the administrators of your organization for your user ID.
+If you use a bot user and want to post to a channel, please <a href="https://github.com/zulip/zulip/issues/13658#issuecomment-573959765">subscribe the bot user to the channel so that messages can be edited</a>.</p>
 <p><code>config_file</code>: an optional string to the path of config file.
 If not specified, the default is <code>~/.zuliprc</code>.
 Please make sure that this file can only be accessed by you (e.g., <code>chmod 600 ~/.zulip</code>).
