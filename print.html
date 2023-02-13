@@ -273,10 +273,10 @@ Add the following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes /path/to/probes/probes.jar&quot;
+    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes -Dprobes=RustMMTk&quot;
+    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
 </code></pre>
 <p>This defines two <a href="./references/modifier.html">modifiers</a>, which will be used later to modify the JVM command line arguments.</p>
 <p>Please only use absolute paths for all the above.</p>
