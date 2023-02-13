@@ -105,8 +105,8 @@ class MomaReservaton(object):
 class Moma(object):
     def __init__(self, host: Optional[str] = None, frequency: int = 60):
         if host is None:
-            self.host = socket.gethostname()
-            self.is_moma = socket.getfqdn().endswith(".moma")
+            self.host = system("hostname -s").strip()
+            self.is_moma = system("hostname -d").strip() == "moma"
         else:
             self.host = host
             try:
