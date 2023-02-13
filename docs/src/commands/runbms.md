@@ -84,6 +84,7 @@ plugins:
 `request`: please follow the [Zulip API documentation](https://zulip.com/api/send-message).
 Note that you don't need to put in `content` here.
 Please contact the administrators of your organization for your user ID.
+If you use a bot user and want to post to a channel, please [subscribe the bot user to the channel so that messages can be edited](https://github.com/zulip/zulip/issues/13658#issuecomment-573959765).
 
 `config_file`: an optional string to the path of config file.
 If not specified, the default is `~/.zuliprc`.
