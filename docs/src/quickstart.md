@@ -86,10 +86,10 @@ Add the following to `two_builds.yml`.
 modifiers:
   probes_cp:
     type: JVMClasspath
-    val: "/path/to/probes /path/to/probes/probes.jar"
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: "-Djava.library.path=/path/to/probes -Dprobes=RustMMTk"
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 ```
 This defines two [modifiers](./references/modifier.md), which will be used later to modify the JVM command line arguments.
 
