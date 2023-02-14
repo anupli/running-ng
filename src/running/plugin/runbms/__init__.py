@@ -72,6 +72,7 @@ else:
         class Zulip(RunbmsPlugin):
             def __init__(self, **kwargs):
                 raise RuntimeError("Trying to create an instance of the Zulip "
-                "plugin for runbms, but the import failed. This is most likely due "
-                "to the required dependencies not being installed. Try pip install "
-                "running-ng[zulip] to install the extra dependencies.")
+                                   "plugin for runbms, but the import failed. "
+                                   "This is most likely due to the required "
+                                   "dependencies not being installed. Try pip "
+                                   "install running-ng[zulip] to install the extra dependencies.")
