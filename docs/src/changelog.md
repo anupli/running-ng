@@ -12,6 +12,11 @@
 
 ### Security
 
+## [`v0.3.7` (2023-02-14)](https://github.com/anupli/running-ng/releases/tag/v0.3.7)
+### Fixed
+#### Commands
+- `runbms`: better heuristics to detect whether a host is in the moma subnet.
+
 ## [`v0.3.6` (2023-01-16)](https://github.com/anupli/running-ng/releases/tag/v0.3.6)
 ### Added
 #### Base Configurations
