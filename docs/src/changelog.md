@@ -12,6 +12,11 @@
 
 ### Security
 
+## [`v0.3.8` (2023-02-21)](https://github.com/anupli/running-ng/releases/tag/v0.3.8)
+### Changed
+#### Commands
+- `runbms`: companion programs are now expected to self-terminate.
+
 ## [`v0.3.7` (2023-02-14)](https://github.com/anupli/running-ng/releases/tag/v0.3.7)
 ### Fixed
 #### Commands

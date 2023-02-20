@@ -95,13 +95,10 @@ class Benchmark(object):
             companion_out = b""
             stdout: Optional[bytes]
             if self.companion:
-                pid, fd = pty.fork()
-                if pid == 0:
-                    os.execvp(self.companion[0], self.companion)
+                companion_p = subprocess.Popen(
+                    self.companion, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                sleep(COMPANION_WAIT_START)
             try:
-                if self.companion:
-                    # Wait for the companion program to start
-                    sleep(COMPANION_WAIT_START)
                 p = subprocess.run(
                     cmd,
                     env=env_args,
@@ -120,25 +117,20 @@ class Benchmark(object):
                 stdout = e.stdout
             finally:
                 if self.companion:
-                    # send ^C to the companion's controlling terminal
-                    # this is so that we can terminal setuid programs like sudo
-                    os.write(fd, b"\x03")
-                    while True:
-                        try:
-                            output = os.read(fd, 1024)
-                            if not output:
-                                break
-                            companion_out += output
-                        except OSError as e:
-                            if e.errno == errno.EIO:
-                                break
-                    pid_wait, status = os.waitpid(pid, 0)
-                    assert pid_wait == pid
-                    exitcode = os.waitstatus_to_exitcode(status)
-                    if exitcode != 0:
+                    try:
+                        companion_stdout, _ = companion_p.communicate(
+                            timeout=10)
+                        companion_out += companion_stdout
+                    except subprocess.TimeoutExpired:
                         logging.warning(
-                            "Exit code {} for the companion process".format(exitcode))
-                    os.close(fd)
+                            "Companion program not exited after 10 seconds timeout. Trying to kill ...")
+                        try:
+                            companion_p.kill()
+                        except PermissionError:
+                            logging.warning("Failed to kill.")
+                        companion_stdout, _ = companion_p.communicate()
+                        companion_out += companion_stdout
+
             return stdout if stdout else b"", companion_out, subprocess_exit
 
 
