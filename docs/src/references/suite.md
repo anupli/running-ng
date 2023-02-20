@@ -67,9 +67,10 @@ Second, a dictionary of strings with shell-like syntax to specify possibly diffe
 If a benchmark doesn't have a wrapper in the dictionary, it is treated as `null`.
 
 `companion` (preview ⚠️): the syntax is similar to `wrapper`.
-The companion program will start before the main program and run in a separate terminal.
+The companion program will start before the main program.
 The main program will start two seconds after the companion program to make sure the companion is fully initialized.
-Once the main program finishes, `^C` is sent to the terminal to stop the companion program.
+Once the main program finishes, we will wait for the companion program to finish.
+Therefore, companion programs should have appropriate timeouts or detect when main program finishes.
 Here is an example of using `companion` to launch `bpftrace` in the background to count the system calls.
 ```yaml
 includes:
@@ -77,7 +78,7 @@ includes:
 
 overrides:
   "suites.dacapo2006.timing_iteration": 1
-  "suites.dacapo2006.companion": "sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @syscall[args->id] = count(); @process[comm] = count();} END { printf(\"Goodbye world!\\n\"); }'"
+  "suites.dacapo2006.companion": "sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @syscall[args->id] = count(); @process[comm] = count();} interval:s:10 { printf(\"Goodbye world!\\n\"); exit(); }'"
   "invocations": 1
 
 benchmarks:
