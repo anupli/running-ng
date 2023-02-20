@@ -95,7 +95,8 @@ class Benchmark(object):
             companion_out = b""
             stdout: Optional[bytes]
             if self.companion:
-                companion_p = subprocess.Popen(self.companion, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                companion_p = subprocess.Popen(
+                    self.companion, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 sleep(COMPANION_WAIT_START)
             try:
                 p = subprocess.run(
@@ -117,17 +118,19 @@ class Benchmark(object):
             finally:
                 if self.companion:
                     try:
-                        companion_stdout, _ = companion_p.communicate(timeout=1)
+                        companion_stdout, _ = companion_p.communicate(
+                            timeout=10)
                         companion_out += companion_stdout
                     except subprocess.TimeoutExpired:
-                        logging.warning("Companion program not exited after 10 seconds timeout. Trying to kill ...")
+                        logging.warning(
+                            "Companion program not exited after 10 seconds timeout. Trying to kill ...")
                         try:
                             companion_p.kill()
                         except PermissionError:
                             logging.warning("Failed to kill.")
                         companion_stdout, _ = companion_p.communicate()
                         companion_out += companion_stdout
-                
+
             return stdout if stdout else b"", companion_out, subprocess_exit
 
 
