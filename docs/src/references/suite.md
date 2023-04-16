@@ -21,7 +21,7 @@ A possible use-case could use wrapper shell scripts around the benchmark to
 output timing and other information in a tab-separated table.
 
 ## `DaCapo`
-[DaCapo benchmark suite](http://dacapo-bench.org/).
+[DaCapo benchmark suite](https://www.dacapobench.org/).
 ### Keys
 `release`: one of the possible values `["2006", "9.12", "evaluation"]`.
 The value is required.
