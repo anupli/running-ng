@@ -115,7 +115,7 @@ def run_benchmark_with_config(c: str, b: Benchmark, runbms_dir: Path, size: Opti
     runtime, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     if size is not None:
-        mod_b = mod_b.attach_modifiers([runtime.get_heapsize_modifier(size)])
+        mod_b = mod_b.attach_modifiers(runtime.get_heapsize_modifiers(size))
     if fd:
         prologue = get_log_prologue(runtime, mod_b)
         fd.write(prologue.encode("ascii"))
@@ -132,8 +132,10 @@ def run_benchmark_with_config(c: str, b: Benchmark, runbms_dir: Path, size: Opti
 
 
 def get_filename_no_ext(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
+    # If we have / in benchmark names, replace with -.
+    safe_bm_name = bm.name.replace("/", "-")
     return "{}.{}.{}.{}.{}".format(
-        bm.name,
+        safe_bm_name,
         # plotty uses "^(\w+)\.(\d+)\.(\d+)\.([a-zA-Z0-9_\-\.\:\,]+)\.log\.gz$"
         # to match filenames
         hfac_str(hfac) if hfac is not None else "0",
@@ -287,11 +289,11 @@ def run_one_benchmark(
         p.end_benchmark(hfac, size, bm)
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
-        if not is_dry_run() and ever_ran[j]:
-            subprocess.check_call([
-                "gzip",
-                log_dir / log_filename
-            ])
+        # if not is_dry_run() and ever_ran[j]:
+        #     subprocess.check_call([
+        #         "gzip",
+        #         log_dir / log_filename
+        #     ])
     print()
 
 

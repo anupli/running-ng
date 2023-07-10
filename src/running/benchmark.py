@@ -259,3 +259,34 @@ class JavaScriptBenchmark(Benchmark):
                 runtime, type(runtime)))
         cmd.extend(self.program_args)
         return cmd
+
+
+class JuliaBenchmark(Benchmark):
+    def __init__(self, julia_args: List[str], suite_path: str, **kwargs):
+        super().__init__(**kwargs)
+        self.julia_args = julia_args
+        self.suite_path = suite_path
+        self.julia_gc_benchmarks_args = []
+
+    def __str__(self) -> str:
+        return "JuliaBenchmark __str__()"
+
+    def attach_modifiers(self, modifiers: List[Modifier]) -> 'JuliaBenchmark':
+        jb = super().attach_modifiers(modifiers)
+        for m in modifiers:
+            if type(m) == JuliaArg:
+                jb.julia_args.extend(m.val)
+            elif type(m) == JuliaGCBenchmarksArg:
+                jb.julia_gc_benchmarks_args.extend(m.val)
+        return jb
+
+    def get_full_args(self, runtime: Runtime) -> List[Union[str, Path]]:
+        cmd = super().get_full_args(runtime)
+        cmd.append(runtime.get_executable())
+        cmd.extend(self.julia_args)
+        cmd.append("--project={}".format(self.suite_path))
+        cmd.append(os.path.join(self.suite_path, "run_benchmarks.jl"))
+        cmd.extend(self.name.split("/"))
+        cmd.extend(["-n", "1"]) # one run
+        cmd.extend(self.julia_gc_benchmarks_args)
+        return cmd
