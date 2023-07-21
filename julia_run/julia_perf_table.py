@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 
-NORMALIZE_TO = "julia-stock(0.0x minheap,.gcthreads-16)"
-# NORMALIZE_TO = None
+# NORMALIZE_TO = "julia-stock(0.0x minheap,.gcthreads-16)"
+NORMALIZE_TO = None
 
 # Regular expressions to find the benchmark name and the table data
 bench_regex = re.compile(r'bench = "(.*).jl"')
@@ -49,6 +49,77 @@ def extract_data_from_log_file(log_file_path):
 
     # Instead of returning a DataFrame, return the average_values Series
     return benchmark_name_from_file, f'{build_name}({heap_size_factor}x minheap{other_configs_str})', average_values
+
+import matplotlib.pyplot as plt
+import re
+
+# Extract heap size factor from build name
+def extract_heap_size(build_name):
+    match = re.search(r"\((.*?)x minheap", build_name)
+    if match:
+        return float(match.group(1))
+    else:
+        return None
+
+def plot(all_data_df):
+    # Filter out rows that contain the baseline build
+    df = all_data_df.copy().reset_index()
+    assert(NORMALIZE_TO is not None)
+    baseline_build = NORMALIZE_TO
+    df = df[df['level_1'] != baseline_build]
+    df.set_index(['level_0', 'level_1'], inplace=True)
+
+    # Extract benchmarks
+    benchmarks = df.index.get_level_values(0).unique()
+
+    # Determine the layout of the subplots
+    nrows = int(np.ceil(len(benchmarks) ** 0.5))
+    ncols = int(np.ceil(len(benchmarks) / nrows))
+
+    # Create a figure and axes for the subplots
+    fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(5*ncols, 5*nrows), constrained_layout=True)
+    axs = axs.flatten()  # flatten the array of axes for easy indexing
+
+    # Plot for each benchmark
+    for i, benchmark in enumerate(benchmarks):
+        ax = axs[i]  # current axis
+
+        # Filter data for the benchmark
+        df_benchmark = df.loc[benchmark]
+
+        # Extract the build names from the index
+        build_names = df_benchmark.index.map(lambda x: x.split('(')[0])
+
+        # Group data by the build names
+        grouped = df_benchmark.groupby(build_names)
+
+        # For each group, plot a line
+        for build, group in grouped:
+            heap_sizes = group.index.map(extract_heap_size)
+            ax.plot(heap_sizes, group['total time'], marker='o', label=build)
+
+        # Draw a dashed horizontal line for the baseline at Y=1
+        ax.axhline(y=1, color='r', linestyle='--')
+
+        # Set the limits of the x-axis
+        ax.set_xlim(1, 6)
+        # Set the limits of the y-axis
+        ax.set_ylim(0, 2)
+
+        ax.set_title(benchmark)
+        ax.set_xlabel('Heap Size Factor')
+        ax.set_ylabel('Total Time (normalized)')
+        ax.legend()
+
+    # Remove unused subplots
+    for j in range(i+1, len(axs)):
+        fig.delaxes(axs[j])
+
+    # Save the entire figure to a file
+    fig.savefig('output.png')  # replace 'output.png' with your preferred file name
+    fig.savefig('output_hr.png', dpi=300)  # replace 'output.png' with your preferred file name
+    fig.savefig('output.svg')  # replace 'output.png' with your preferred file name
+
 
 def main():
     # Initialize an empty dictionary to store all data
@@ -101,6 +172,9 @@ def main():
 
     # Print the final DataFrame
     print(all_data_df.to_markdown())
+
+    if NORMALIZE_TO is not None:
+        plot(all_data_df)
 
 if __name__ == "__main__":
     main()
