@@ -4,7 +4,7 @@ Please clone and build [`probes`](../quickstart.md#prepare-probes), and then bui
 You might need to change the paths referred in the `Makefile`s to match your environment.
 
 Under the `distillation` folder, you will find a JVMTI agent, `libperf_statistics.so`.
-You can check the source code [here](https://github.com/anupli/probes/blob/master/native/jvmti_agents/perf_statistics.c).
+You can check the source code [here](https://github.com/caizixian/distillation/blob/master/perf_statistics.c).
 To use the agent, there are four things you need to do.
 
 First, you will need to tell the dynamic linker to load the shared library before the VM boots.
