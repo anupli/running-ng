@@ -88,11 +88,33 @@
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
                                 <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
@@ -146,8 +168,9 @@
                     <main>
                         <h1 id="whole-process-performance-event-monitoring"><a class="header" href="#whole-process-performance-event-monitoring">Whole-Process Performance Event Monitoring</a></h1>
 <h2 id="jvmti"><a class="header" href="#jvmti">JVMTI</a></h2>
-<p>Please clone and build <a href="../quickstart.html#prepare-probes"><code>probes</code></a>.</p>
-<p>Under the <code>probes</code> folder, you will find a JVMTI agent, <code>libperf_statistics.so</code>.
+<p>Please clone and build <a href="../quickstart.html#prepare-probes"><code>probes</code></a>, and then build <a href="https://github.com/caizixian/distillation"><code>distillation</code></a>.
+You might need to change the paths referred in the <code>Makefile</code>s to match your environment.</p>
+<p>Under the <code>distillation</code> folder, you will find a JVMTI agent, <code>libperf_statistics.so</code>.
 You can check the source code <a href="https://github.com/anupli/probes/blob/master/native/jvmti_agents/perf_statistics.c">here</a>.
 To use the agent, there are four things you need to do.</p>
 <p>First, you will need to tell the dynamic linker to load the shared library before the VM boots.
@@ -156,7 +179,7 @@ This ensures that the <code>inherit</code> flag of <code>perf_event_attr</code> 
   jvmti_env:
     type: EnvVar
     var: &quot;LD_PRELOAD&quot;
-    val: &quot;/path/to/probes/libperf_statistics.so&quot;
+    val: &quot;/path/to/distillation/libperf_statistics.so&quot;
 </code></pre>
 <p>Second, you need to specify a list of events you want to measure.</p>
 <pre><code class="language-yaml">modifiers:
@@ -171,17 +194,17 @@ Note that you need to specify the absolute path.</p>
 <pre><code class="language-yaml">modifiers:
   jvmti:
     type: JVMArg
-    val: &quot;-agentpath:/path/to/probes/libperf_statistics.so&quot;
+    val: &quot;-agentpath:/path/to/distillation/libperf_statistics.so&quot;
 </code></pre>
 <p>Finally, you need to let the DaCapo benchmark inform the start and the end of a benchmark iteration.
 We will reuse the <code>RustMMTk</code> probe here, as the callback functions in the JVMTI agent are also called <code>harness_begin</code> and <code>harness_end</code>.</p>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes /path/to/probes/probes.jar&quot;
+    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes -Dprobes=RustMMTk&quot;
+    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
 </code></pre>
 <p>Now, putting it all together, you can define a set of modifiers, and use that set in your config strings.</p>
 <pre><code class="language-yaml">modifiers:
@@ -196,10 +219,10 @@ You will need to build <code>mmtk-core</code> with the <code>perf_counter</code>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes /path/to/probes/probes.jar&quot;
+    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes -Dprobes=RustMMTk&quot;
+    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
 </code></pre>
 <p>Then, you can specify a list of events you want to measure.</p>
 <pre><code class="language-yaml">modifiers:
@@ -219,8 +242,8 @@ For some events, such as RAPL, only package-wide measurement is supported, and y
 <h1 id="work-packet-performance-event-monitoring"><a class="header" href="#work-packet-performance-event-monitoring">Work-Packet Performance Event Monitoring</a></h1>
 <p>It's similar to the whole-process performance event monitoring for MMTk.
 Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVENTS</code>.</p>
-<h1 id="machine-specific-notes"><a class="header" href="#machine-specific-notes">Machine-Specific Notes</a></h1>
-<p>On Xeon D-1540 Broadwell (<code>mole</code> and <code>vole</code>), the <code>PERF_COUNT_HW_CACHE_LL:MISS</code> event is always zero.</p>
+<h1 id="machine-specific-known-problems"><a class="header" href="#machine-specific-known-problems">Machine-Specific Known Problems</a></h1>
+<p>On Xeon D-1540 Broadwell, the <code>PERF_COUNT_HW_CACHE_LL:MISS</code> event is always zero.</p>
 <pre><code class="language-console">perf stat -e LLC-load-misses,cycles /bin/ls
 
  Performance counter stats for '/bin/ls':
