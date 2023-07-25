@@ -171,7 +171,7 @@
 <p>Please clone and build <a href="../quickstart.html#prepare-probes"><code>probes</code></a>, and then build <a href="https://github.com/caizixian/distillation"><code>distillation</code></a>.
 You might need to change the paths referred in the <code>Makefile</code>s to match your environment.</p>
 <p>Under the <code>distillation</code> folder, you will find a JVMTI agent, <code>libperf_statistics.so</code>.
-You can check the source code <a href="https://github.com/anupli/probes/blob/master/native/jvmti_agents/perf_statistics.c">here</a>.
+You can check the source code <a href="https://github.com/caizixian/distillation/blob/master/perf_statistics.c">here</a>.
 To use the agent, there are four things you need to do.</p>
 <p>First, you will need to tell the dynamic linker to load the shared library before the VM boots.
 This ensures that the <code>inherit</code> flag of <code>perf_event_attr</code> works properly and all child threads subsequently spawned are included in the results.</p>
