@@ -1,8 +1,9 @@
 # Whole-Process Performance Event Monitoring
 ## JVMTI
-Please clone and build [`probes`](../quickstart.md#prepare-probes).
+Please clone and build [`probes`](../quickstart.md#prepare-probes), and then build [`distillation`](https://github.com/caizixian/distillation).
+You might need to change the paths referred in the `Makefile`s to match your environment.
 
-Under the `probes` folder, you will find a JVMTI agent, `libperf_statistics.so`.
+Under the `distillation` folder, you will find a JVMTI agent, `libperf_statistics.so`.
 You can check the source code [here](https://github.com/anupli/probes/blob/master/native/jvmti_agents/perf_statistics.c).
 To use the agent, there are four things you need to do.
 
@@ -13,7 +14,7 @@ modifiers:
   jvmti_env:
     type: EnvVar
     var: "LD_PRELOAD"
-    val: "/path/to/probes/libperf_statistics.so"
+    val: "/path/to/distillation/libperf_statistics.so"
 ```
 
 Second, you need to specify a list of events you want to measure.
@@ -32,7 +33,7 @@ Note that you need to specify the absolute path.
 modifiers:
   jvmti:
     type: JVMArg
-    val: "-agentpath:/path/to/probes/libperf_statistics.so"
+    val: "-agentpath:/path/to/distillation/libperf_statistics.so"
 ```
 
 Finally, you need to let the DaCapo benchmark inform the start and the end of a benchmark iteration.
@@ -41,10 +42,10 @@ We will reuse the `RustMMTk` probe here, as the callback functions in the JVMTI 
 modifiers:
   probes_cp:
     type: JVMClasspath
-    val: "/path/to/probes /path/to/probes/probes.jar"
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: "-Djava.library.path=/path/to/probes -Dprobes=RustMMTk"
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 ```
 
 Now, putting it all together, you can define a set of modifiers, and use that set in your config strings.
@@ -64,10 +65,10 @@ First, you need to let the DaCapo benchmark inform the start and the end of a be
 modifiers:
   probes_cp:
     type: JVMClasspath
-    val: "/path/to/probes /path/to/probes/probes.jar"
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: "-Djava.library.path=/path/to/probes -Dprobes=RustMMTk"
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 ```
 
 Then, you can specify a list of events you want to measure.
@@ -92,8 +93,8 @@ For some events, such as RAPL, only package-wide measurement is supported, and y
 It's similar to the whole-process performance event monitoring for MMTk.
 Just use `MMTK_WORK_PERF_EVENTS` instead of `MMTK_PHASE_PERF_EVENTS`.
 
-# Machine-Specific Notes
-On Xeon D-1540 Broadwell (`mole` and `vole`), the `PERF_COUNT_HW_CACHE_LL:MISS` event is always zero.
+# Machine-Specific Known Problems
+On Xeon D-1540 Broadwell, the `PERF_COUNT_HW_CACHE_LL:MISS` event is always zero.
 ```console
 perf stat -e LLC-load-misses,cycles /bin/ls
 
