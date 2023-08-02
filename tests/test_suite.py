@@ -24,20 +24,32 @@ def test_dacapo_size():
                 "release": "2006",
                 "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
                 "timing_iteration": 3
+            },
+            "dacapo2006_default": {
+                "type": "DaCapo",
+                "release": "2006",
+                "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
+                "timing_iteration": 3,
+                "size": "default"
             }
         },
         "benchmarks": {
             "dacapo2006": [
                 "fop",
                 dict(name="fop_small", bm_name="fop", size="small")
+            ],
+            "dacapo2006_default": [
+                "fop"
             ]
         }
     })
 
     c.resolve_class()
     fop = c.get("benchmarks")["dacapo2006"][0]
+    fop_default = c.get("benchmarks")["dacapo2006_default"][0]
     fop_small = c.get("benchmarks")["dacapo2006"][1]
-    assert "-s default" in fop.to_string(DummyRuntime("java"))
+    assert "-s" not in fop.to_string(DummyRuntime("java"))
+    assert "-s default" in fop_default.to_string(DummyRuntime("java"))
     assert "-s small" in fop_small.to_string(DummyRuntime("java"))
 
 
