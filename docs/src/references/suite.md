@@ -92,7 +92,7 @@ In the log file, the output from the main program and the output from the compan
 
 `size`: specifying the size of input data.
 Note that the names of the sizes are subject to change depending on the DaCapo releases.
-The default value is `default`.
+The default value is `null`, which means DaCapo will use the default size unless you override that for individual benchmarks.
 
 ### Benchmark Specification
 Some of the suite-wide keys can be overridden in a per-benchmark-basis.

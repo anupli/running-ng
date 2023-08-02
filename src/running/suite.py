@@ -139,8 +139,9 @@ class DaCapo(JavaBenchmarkSuite):
         self.wrapper = kwargs.get("wrapper")
         self.companion: Optional[Union[Dict[str, str], str]]
         self.companion = kwargs.get("companion")
-        self.size: str
-        self.size = kwargs.get("size", "default")
+        # user overriding the default size for the entire suite
+        self.size: Optional[str]
+        self.size = kwargs.get("size")
 
     def __str__(self) -> str:
         return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
@@ -174,6 +175,7 @@ class DaCapo(JavaBenchmarkSuite):
             if "timing_iteration" in bm_spec:
                 timing_iteration = DaCapo.parse_timing_iteration(
                     bm_spec["timing_iteration"])
+            # user overriding the size for that benchmark
             if "size" in bm_spec:
                 size = bm_spec["size"]
             if "timeout" in bm_spec:
@@ -195,7 +197,8 @@ class DaCapo(JavaBenchmarkSuite):
             else:
                 program_args.append("--converge")
         # Input size
-        program_args.extend(["-s", size])
+        if size:
+            program_args.extend(["-s", size])
         # Name of the benchmark
         program_args.append(bm_name)
         return JavaBenchmark(

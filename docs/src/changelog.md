@@ -12,6 +12,11 @@
 
 ### Security
 
+## [`v0.3.9` (2023-08-02)](https://github.com/anupli/running-ng/releases/tag/v0.3.9)
+### Fixed
+#### Benchmark Suites
+- `DaCapo`: don't explicitly pass `-s default` to DaCapo unless the user requests so by setting the `size` key of `DaCapo` or overriding the sizes for individual benchmarks using the [benchmark specification syntax](./references/suite.md#benchmark-specification). This is so that users can override the size via `ProgramArg`.
+
 ## [`v0.3.8` (2023-02-21)](https://github.com/anupli/running-ng/releases/tag/v0.3.8)
 ### Changed
 #### Commands
