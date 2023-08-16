@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Sequence
-from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark, JavaScriptBenchmark
+from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark, JavaScriptBenchmark, JuliaBenchmark
 from running.runtime import OpenJDK, Runtime
 from running.modifier import JVMArg, Modifier
 import logging
@@ -445,3 +445,58 @@ class SPECjvm98(JavaBenchmarkSuite):
     def is_passed(self, output: bytes) -> bool:
         # FIXME
         return b"**NOT VALID**" not in output
+
+
+@register(BenchmarkSuite)
+class JuliaGCBenchmarks(BenchmarkSuite):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.path: Path
+        self.path = Path(kwargs["path"])
+        if not self.path.exists():
+            logging.warning(
+                "JuliaGCBenchmarks does not exist at {}".format(self.path))
+        self.minheap: Optional[str]
+        self.minheap = kwargs.get("minheap")
+        self.minheap_values: Dict[str, Dict[str, int]]
+        self.minheap_values = kwargs.get("minheap_values", {})
+        if not isinstance(self.minheap_values, dict):
+            raise TypeError(
+                "The minheap_values of {} should be a dictionary".format(self.name))
+        if self.minheap:
+            if not isinstance(self.minheap, str):
+                raise TypeError(
+                    "The minheap of {} should be a string that selects from a minheap_values".format(self.name))
+            if self.minheap not in self.minheap_values:
+                raise KeyError(
+                    "{} is not a valid entry of {}.minheap_values".format(self.name, self.name))
+
+    def __str__(self) -> str:
+        return "{} JuliaGCBenchmarks {}".format(super().__str__(), self.path)
+
+    def get_minheap(self, bm: Benchmark) -> int:
+        name = bm.name
+        if not self.minheap:
+            logging.warning(
+                "No minheap_value of {} is selected".format(self))
+            return __DEFAULT_MINHEAP
+        minheap = self.minheap_values[self.minheap]
+        if name not in minheap:
+            logging.warning(
+                "Minheap for {} of {} not set".format(name, self))
+            return __DEFAULT_MINHEAP
+        return minheap[name]
+
+    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JuliaBenchmark':
+        assert type(bm_spec) is str
+        return JuliaBenchmark(
+            julia_args=[],
+            suite_name=self.name,
+            name=bm_spec,
+            suite_path=self.path,
+            program_args=[],
+        )
+
+    def is_passed(self, output: bytes) -> bool:
+        # FIXME
+        return True

@@ -65,10 +65,10 @@ def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap:
     mid = (lo + hi) // 2
     minh = float('inf')
     while hi - lo > 1:
-        heapsize = runtime.get_heapsize_modifier(mid)
+        heapsize = runtime.get_heapsize_modifiers(mid)
         size_str = "{}M".format(mid)
         print(size_str, end="", flush=True)
-        bm_with_heapsize = bm.attach_modifiers([heapsize])
+        bm_with_heapsize = bm.attach_modifiers(heapsize)
         result = run_bm_with_retry(
             suite, runtime, bm_with_heapsize, minheap_dir, attempts)
         if result is ContinueSearch.Abort:

@@ -143,3 +143,13 @@ class Companion(Modifier):
 
     def __str__(self) -> str:
         return "{} Companion {}".format(super().__str__(), self.val)
+
+
+@register(Modifier)
+class JuliaArg(Modifier):
+    def __init__(self, value_opts=None, **kwargs):
+        super().__init__(value_opts, **kwargs)
+        self.val = split_quoted(self._kwargs["val"])
+
+    def __str__(self) -> str:
+        return "{} JuliaArg {}".format(super().__str__(), self.val)

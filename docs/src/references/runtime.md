@@ -21,3 +21,12 @@ tandem with
 ## `JavaScriptCore` (preview ⚠️)
 ### Keys
 `executable`: path to the `jsc` executable.
+
+## `JuliaMMTK` (preview ⚠️)
+### Keys
+`executable`: path to the `julia` executable.
+
+## `JuliaStock` (preview ⚠️)
+Julia with the stock GC. It does not allow setting a heap size, and will not throw OOM unless killed by the operating system.
+### Keys
+`executable`: path to the `julia` executable.

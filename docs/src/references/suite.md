@@ -198,3 +198,31 @@ minheap_values:
       codeload: 159
       crypto: 3
 ```
+
+## `JuliaGCBenchmarks` (preview ⚠️)
+
+GC benchmarks for Julia: https://github.com/JuliaCI/GCBenchmarks
+
+### Keys
+`path`: path to the GCBenchmarks folder.
+The value is required.
+
+`minheap`:  a string that selects one of the `minheap_values` sets to use.
+
+`minheap_values`: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering `Out of Memory!`.
+An example looks like this:
+```yaml
+    minheap_values:
+      julia-mmtk-immix:
+        multithreaded/binary_tree/tree_immutable: 225
+        multithreaded/binary_tree/tree_mutable: 384
+        multithreaded/bigarrays/objarray: 9225
+        serial/TimeZones: 5960
+        serial/append: 1563
+        serial/bigint/pollard: 198
+        serial/linked/list: 4325
+        serial/linked/tree: 216
+        serial/strings/strings: 2510
+        slow/bigint/pidigits: 198
+        slow/rb_tree/rb_tree: 8640
+```
