@@ -470,9 +470,6 @@ class JuliaGCBenchmarks(BenchmarkSuite):
     def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JuliaBenchmark':
         print(bm_spec)
         return JuliaBenchmark(
-            # jvm_args=[],
-            # program_args=program_args,
-            # cp=[str(self.path)],
             julia_args=[],
             suite_name=self.name,
             name=bm_spec,

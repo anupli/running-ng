@@ -81,3 +81,9 @@ Multiple arguments are space separated.
 ### Description
 Specify a companion program.
 If a companion program also exist for the benchmark suite you use, this companion program will follow that.
+
+## `JuliaArg` (preview ⚠️)
+`JuliaMMTk` and `JuliaStock` specific.
+### Keys
+`val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
+Multiple arguments are space separated.

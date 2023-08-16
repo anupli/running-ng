@@ -266,7 +266,7 @@ class JuliaBenchmark(Benchmark):
         super().__init__(**kwargs)
         self.julia_args = julia_args
         self.suite_path = suite_path
-        self.julia_gc_benchmarks_args = []
+        self.program_args = []
 
     def __str__(self) -> str:
         return "JuliaBenchmark __str__()"
@@ -276,8 +276,8 @@ class JuliaBenchmark(Benchmark):
         for m in modifiers:
             if type(m) == JuliaArg:
                 jb.julia_args.extend(m.val)
-            elif type(m) == JuliaGCBenchmarksArg:
-                jb.julia_gc_benchmarks_args.extend(m.val)
+            elif type(m) == ProgramArg:
+                jb.program_args.extend(m.val)
         return jb
 
     def get_full_args(self, runtime: Runtime) -> List[Union[str, Path]]:
@@ -288,5 +288,5 @@ class JuliaBenchmark(Benchmark):
         cmd.append(os.path.join(self.suite_path, "run_benchmarks.jl"))
         cmd.extend(self.name.split("/"))
         cmd.extend(["-n", "1"]) # one run
-        cmd.extend(self.julia_gc_benchmarks_args)
+        cmd.extend(self.program_args)
         return cmd

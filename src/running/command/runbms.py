@@ -23,6 +23,7 @@ minheap_multiplier: float
 remote_host: Optional[str]
 skip_oom: Optional[int]
 skip_timeout: Optional[int]
+skip_log_compression: bool = False
 plugins: Dict[str, Any]
 resume: Optional[str]
 
@@ -42,6 +43,7 @@ def setup_parser(subparsers):
     f.add_argument("--skip-timeout", type=int)
     f.add_argument("--resume", type=str)
     f.add_argument("--workdir", type=Path)
+    f.add_argument("--skip-log-compression", action="store_true", help="Skip compressing log files")
 
 
 def getid() -> str:
@@ -289,11 +291,11 @@ def run_one_benchmark(
         p.end_benchmark(hfac, size, bm)
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
-        # if not is_dry_run() and ever_ran[j]:
-        #     subprocess.check_call([
-        #         "gzip",
-        #         log_dir / log_filename
-        #     ])
+        if not is_dry_run() and not skip_log_compression and ever_ran[j]:
+            subprocess.check_call([
+                "gzip",
+                log_dir / log_filename
+            ])
     print()
 
 
@@ -363,6 +365,8 @@ def run(args):
         skip_oom = args.get("skip_oom")
         global skip_timeout
         skip_timeout = args.get("skip_timeout")
+        global skip_log_compression
+        skip_log_compression = args.get("skip_log_compression")
         # Load from configuration file
         global configuration
         configuration = Configuration.from_file(
