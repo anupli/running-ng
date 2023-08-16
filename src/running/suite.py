@@ -1,6 +1,8 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, List, Sequence
 from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark, JavaScriptBenchmark
+from running.runtime import OpenJDK, Runtime
+from running.modifier import JVMArg, Modifier
 import logging
 from running.util import register, split_quoted
 
@@ -201,6 +203,17 @@ class DaCapo(JavaBenchmarkSuite):
             program_args.extend(["-s", size])
         # Name of the benchmark
         program_args.append(bm_name)
+
+        def strategy(runtime: Runtime) -> Sequence[Modifier]:
+            modifiers = []
+            if isinstance(runtime, OpenJDK):
+                if runtime.release >= 9:
+                    modifiers.append(JVMArg(
+                        name="add_exports",
+                        val="--add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
+                    ))
+            return modifiers
+        
         return JavaBenchmark(
             jvm_args=[],
             program_args=program_args,
@@ -209,7 +222,8 @@ class DaCapo(JavaBenchmarkSuite):
             companion=self.get_companion(bm_name),
             suite_name=self.name,
             name=name,
-            timeout=timeout
+            timeout=timeout,
+            runtime_specific_modifiers_strategy=strategy
         )
 
     def get_minheap(self, bm: Benchmark) -> int:

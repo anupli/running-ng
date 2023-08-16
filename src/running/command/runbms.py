@@ -114,6 +114,7 @@ def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> Lis
 def run_benchmark_with_config(c: str, b: Benchmark, runbms_dir: Path, size: Optional[int], fd: Optional[BinaryIO]) -> Tuple[bytes, SubprocessrExit]:
     runtime, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
+    mod_b = b.attach_modifiers(b.get_runtime_specific_modifiers(runtime))
     if size is not None:
         mod_b = mod_b.attach_modifiers([runtime.get_heapsize_modifier(size)])
     if fd:

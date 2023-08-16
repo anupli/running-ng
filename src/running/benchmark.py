@@ -1,10 +1,9 @@
-import errno
 import logging
 import subprocess
 import sys
 from time import sleep
-from typing import Any, List, Optional, Tuple, Union, Dict
-from running.runtime import D8, JavaScriptCore, OpenJDK, Runtime, DummyRuntime, SpiderMonkey
+from typing import Callable, Sequence, TypeVar, List, Optional, Tuple, Union, Dict
+from running.runtime import D8, JavaScriptCore, Runtime, DummyRuntime, SpiderMonkey
 from running.modifier import *
 from running.util import smart_quote, split_quoted
 from pathlib import Path
@@ -12,7 +11,6 @@ from copy import deepcopy
 from running import suite
 import os
 from enum import Enum
-import pty
 
 COMPANION_WAIT_START = 2.0
 
@@ -24,8 +22,11 @@ class SubprocessrExit(Enum):
     Dryrun = 4
 
 
+B = TypeVar('B', bound='Benchmark')
+
+
 class Benchmark(object):
-    def __init__(self, suite_name: str, name: str, wrapper: Optional[str] = None, timeout: Optional[int] = None, override_cwd: Optional[Path] = None, companion: Optional[str] = None, **kwargs):
+    def __init__(self, suite_name: str, name: str, wrapper: Optional[str] = None, timeout: Optional[int] = None, override_cwd: Optional[Path] = None, companion: Optional[str] = None, runtime_specific_modifiers_strategy: Optional[Callable[[Runtime], Sequence[Modifier]]] = None, **kwargs):
         self.name = name
         self.suite_name = suite_name
         self.env_args: Dict[str, str]
@@ -43,6 +44,12 @@ class Benchmark(object):
         # ignore the current working directory provided by commands like runbms or minheap
         # certain benchmarks expect to be invoked from certain directories
         self.override_cwd = override_cwd
+        self.runtime_specific_modifiers_strategy: Callable[[
+            Runtime], Sequence[Modifier]]
+        if runtime_specific_modifiers_strategy is not None:
+            self.runtime_specific_modifiers_strategy = runtime_specific_modifiers_strategy
+        else:
+            self.runtime_specific_modifiers_strategy = lambda _runtime: []
 
     def get_env_str(self) -> str:
         return " ".join([
@@ -55,7 +62,10 @@ class Benchmark(object):
         # also to type check https://mypy.readthedocs.io/en/stable/common_issues.html#variance
         return list(self.wrapper)
 
-    def attach_modifiers(self, modifiers: List[Modifier]) -> Any:
+    def get_runtime_specific_modifiers(self, runtime: Runtime) -> Sequence[Modifier]:
+        return self.runtime_specific_modifiers_strategy(runtime)
+
+    def attach_modifiers(self: B, modifiers: Sequence[Modifier]) -> B:
         b = deepcopy(self)
         for m in modifiers:
             if self.suite_name in m.excludes:
@@ -144,7 +154,7 @@ class BinaryBenchmark(Benchmark):
     def __str__(self) -> str:
         return self.to_string(DummyRuntime(""))
 
-    def attach_modifiers(self, modifiers: List[Modifier]) -> 'BinaryBenchmark':
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'BinaryBenchmark':
         bb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if self.suite_name in m.excludes:
@@ -182,7 +192,7 @@ class JavaBenchmark(Benchmark):
     def __str__(self) -> str:
         return self.to_string(DummyRuntime("java"))
 
-    def attach_modifiers(self, modifiers: List[Modifier]) -> 'JavaBenchmark':
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JavaBenchmark':
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if self.suite_name in m.excludes:
@@ -205,12 +215,6 @@ class JavaBenchmark(Benchmark):
         cmd = super().get_full_args(runtime)
         cmd.append(runtime.get_executable())
         cmd.extend(self.jvm_args)
-        if isinstance(runtime, OpenJDK):
-            if runtime.release >= 9:
-                cmd.extend([
-                    "--add-exports",
-                    "java.base/jdk.internal.ref=ALL-UNNAMED"
-                ])
         cmd.extend(self.get_classpath_args())
         cmd.extend(self.program_args)
         return cmd
@@ -226,7 +230,7 @@ class JavaScriptBenchmark(Benchmark):
     def __str__(self) -> str:
         return self.to_string(DummyRuntime("js"))
 
-    def attach_modifiers(self, modifiers: List[Modifier]) -> 'JavaScriptBenchmark':
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JavaScriptBenchmark':
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if self.suite_name in m.excludes:
