@@ -1,3 +1,4 @@
+from running.plugin.runbms.copyfile import CopyFile
 from pathlib import Path
 from typing import Any, Dict, Optional, TYPE_CHECKING
 if TYPE_CHECKING:
@@ -59,7 +60,6 @@ class RunbmsPlugin(object):
 
 # !!! Do NOT remove this import nor change its position
 # This is to make sure that the plugin classes are correctly registered
-from running.plugin.runbms.copyfile import CopyFile
 if TYPE_CHECKING:
     from running.plugin.runbms.zulip import Zulip
 else:
