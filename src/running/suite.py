@@ -1,6 +1,8 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, List, Sequence
 from running.benchmark import JavaBenchmark, BinaryBenchmark, Benchmark, JavaScriptBenchmark, JuliaBenchmark
+from running.runtime import OpenJDK, Runtime
+from running.modifier import JVMArg, Modifier
 import logging
 from running.util import register, split_quoted
 
@@ -139,8 +141,9 @@ class DaCapo(JavaBenchmarkSuite):
         self.wrapper = kwargs.get("wrapper")
         self.companion: Optional[Union[Dict[str, str], str]]
         self.companion = kwargs.get("companion")
-        self.size: str
-        self.size = kwargs.get("size", "default")
+        # user overriding the default size for the entire suite
+        self.size: Optional[str]
+        self.size = kwargs.get("size")
 
     def __str__(self) -> str:
         return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
@@ -174,6 +177,7 @@ class DaCapo(JavaBenchmarkSuite):
             if "timing_iteration" in bm_spec:
                 timing_iteration = DaCapo.parse_timing_iteration(
                     bm_spec["timing_iteration"])
+            # user overriding the size for that benchmark
             if "size" in bm_spec:
                 size = bm_spec["size"]
             if "timeout" in bm_spec:
@@ -195,9 +199,23 @@ class DaCapo(JavaBenchmarkSuite):
             else:
                 program_args.append("--converge")
         # Input size
-        program_args.extend(["-s", size])
+        if size:
+            program_args.extend(["-s", size])
         # Name of the benchmark
         program_args.append(bm_name)
+
+        # https://github.com/anupli/running-ng/issues/111
+        # https://mmtk.zulipchat.com/#narrow/stream/262677-ANU-Research/topic/Using.20new.20dacapo/near/270150954
+        def strategy(runtime: Runtime) -> Sequence[Modifier]:
+            modifiers = []
+            if isinstance(runtime, OpenJDK):
+                if runtime.release >= 9:
+                    modifiers.append(JVMArg(
+                        name="add_exports",
+                        val="--add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
+                    ))
+            return modifiers
+
         return JavaBenchmark(
             jvm_args=[],
             program_args=program_args,
@@ -206,7 +224,8 @@ class DaCapo(JavaBenchmarkSuite):
             companion=self.get_companion(bm_name),
             suite_name=self.name,
             name=name,
-            timeout=timeout
+            timeout=timeout,
+            runtime_specific_modifiers_strategy=strategy
         )
 
     def get_minheap(self, bm: Benchmark) -> int:

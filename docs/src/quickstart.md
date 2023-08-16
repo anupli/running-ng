@@ -15,6 +15,8 @@ includes:
 The [YAML file](./references/index.md) represents a dictionary (key-value pairs) that defines the experiments you are running.
 The `includes` directive here will populate the dictionary with some default values shipped with `running-ng`.
 
+**If you use moma machines, please substitute `runbms.yml` with `runbms-anu.yml`.**
+
 ## Prepare Benchmarks
 Add the following to `two_builds.yml`.
 ```yaml
