@@ -266,16 +266,16 @@ class JavaScriptBenchmark(Benchmark):
 
 
 class JuliaBenchmark(Benchmark):
-    def __init__(self, julia_args: List[str], suite_path: str, **kwargs):
+    def __init__(self, julia_args: List[str], suite_path: Path, program_args: List[str], **kwargs):
         super().__init__(**kwargs)
         self.julia_args = julia_args
         self.suite_path = suite_path
-        self.program_args = []
+        self.program_args = program_args
 
     def __str__(self) -> str:
         return "JuliaBenchmark __str__()"
 
-    def attach_modifiers(self, modifiers: List[Modifier]) -> 'JuliaBenchmark':
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JuliaBenchmark':
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if type(m) == JuliaArg:

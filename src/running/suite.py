@@ -492,7 +492,8 @@ class JuliaGCBenchmarks(BenchmarkSuite):
             julia_args=[],
             suite_name=self.name,
             name=bm_spec,
-            suite_path=self.path
+            suite_path=self.path,
+            program_args=[],
         )
 
     def is_passed(self, output: bytes) -> bool:
