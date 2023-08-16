@@ -291,6 +291,6 @@ class JuliaBenchmark(Benchmark):
         cmd.append("--project={}".format(self.suite_path))
         cmd.append(str(self.suite_path / "run_benchmarks.jl"))
         cmd.extend(self.name.split("/"))
-        cmd.extend(["-n", "1"]) # one run
+        cmd.extend(["-n", "1"])  # one run
         cmd.extend(self.program_args)
         return cmd

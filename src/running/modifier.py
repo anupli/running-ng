@@ -144,6 +144,7 @@ class Companion(Modifier):
     def __str__(self) -> str:
         return "{} Companion {}".format(super().__str__(), self.val)
 
+
 @register(Modifier)
 class JuliaArg(Modifier):
     def __init__(self, value_opts=None, **kwargs):

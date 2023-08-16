@@ -43,7 +43,8 @@ def setup_parser(subparsers):
     f.add_argument("--skip-timeout", type=int)
     f.add_argument("--resume", type=str)
     f.add_argument("--workdir", type=Path)
-    f.add_argument("--skip-log-compression", action="store_true", help="Skip compressing log files")
+    f.add_argument("--skip-log-compression", action="store_true",
+                   help="Skip compressing log files")
 
 
 def getid() -> str:

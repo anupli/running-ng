@@ -454,7 +454,8 @@ class JuliaGCBenchmarks(BenchmarkSuite):
         self.path: Path
         self.path = Path(kwargs["path"])
         if not self.path.exists():
-            logging.warning("JuliaGCBenchmarks does not exist at {}".format(self.path))
+            logging.warning(
+                "JuliaGCBenchmarks does not exist at {}".format(self.path))
         self.minheap: Optional[str]
         self.minheap = kwargs.get("minheap")
         self.minheap_values: Dict[str, Dict[str, int]]
