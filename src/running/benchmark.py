@@ -273,7 +273,7 @@ class JuliaBenchmark(Benchmark):
         self.program_args = program_args
 
     def __str__(self) -> str:
-        return "JuliaBenchmark __str__()"
+        return self.to_string(DummyRuntime("julia"))
 
     def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JuliaBenchmark':
         jb = super().attach_modifiers(modifiers)
@@ -289,7 +289,7 @@ class JuliaBenchmark(Benchmark):
         cmd.append(runtime.get_executable())
         cmd.extend(self.julia_args)
         cmd.append("--project={}".format(self.suite_path))
-        cmd.append(os.path.join(self.suite_path, "run_benchmarks.jl"))
+        cmd.append(str(self.suite_path / "run_benchmarks.jl"))
         cmd.extend(self.name.split("/"))
         cmd.extend(["-n", "1"]) # one run
         cmd.extend(self.program_args)

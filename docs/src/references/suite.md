@@ -199,7 +199,7 @@ minheap_values:
       crypto: 3
 ```
 
-## `Julia GC Benchmarks` (preview ⚠️)
+## `JuliaGCBenchmarks` (preview ⚠️)
 
 GC benchmarks for Julia: https://github.com/JuliaCI/GCBenchmarks
 

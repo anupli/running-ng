@@ -292,11 +292,14 @@ def run_one_benchmark(
         p.end_benchmark(hfac, size, bm)
     for j, c in enumerate(configs):
         log_filename = get_filename(bm, hfac, size, c)
-        if not is_dry_run() and not skip_log_compression and ever_ran[j]:
-            subprocess.check_call([
-                "gzip",
-                log_dir / log_filename
-            ])
+        # Check that this is not a dry-run and we have actually executed this
+        # config for a particular benchmark/hfac (method parameters)
+        if not is_dry_run() and ever_ran[j]:
+            if not skip_log_compression:
+                subprocess.check_call([
+                    "gzip",
+                    log_dir / log_filename
+                ])
     print()
 
 
