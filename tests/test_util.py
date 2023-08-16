@@ -11,7 +11,7 @@ def test_smart_quote():
     assert smart_quote(Path("/bin")/"123 456") == "\"/bin/123 456\""
 
 
-def test_empty_modifier_in_config():
+def test_issue104():
     c = Configuration({
         "suites": {
             "dacapo2006": {

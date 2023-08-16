@@ -11,6 +11,8 @@
 ### Removed
 
 ### Fixed
+- DaCapo specific workarounds are now handled by the `DaCapo` class rather than the `JavaBenchmark` class to avoid confusions.
+- Gracifully handle empty modifiers strings in configs, such as `openjdk7||foobar`.
 
 ### Security
 
