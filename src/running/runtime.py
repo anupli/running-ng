@@ -207,6 +207,9 @@ class Julia(Runtime):
 
     def get_executable(self) -> Path:
         return self.executable
+    
+    def __str__(self):
+        return "Julia {} {}".format(self.name, self.executable)
 
 
 @register(Runtime)
@@ -219,7 +222,7 @@ class JuliaMMTK(Julia):
         return [min, max]
 
     def __str__(self):
-        return "Julia MMTK"
+        return "{} with MMTk".format(super().__str__())
 
     def is_oom(self, output: bytes) -> bool:
         return b"Out of Memory!" in output
@@ -228,9 +231,9 @@ class JuliaMMTK(Julia):
 class JuliaStock(Julia):
     def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
         return []
-
+    
     def __str__(self):
-        return "Julia Stock"
+        return "{} stock version".format(super().__str__())
 
     def is_oom(self, output: bytes) -> bool:
         return False

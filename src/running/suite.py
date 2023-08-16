@@ -486,8 +486,7 @@ class JuliaGCBenchmarks(BenchmarkSuite):
             return __DEFAULT_MINHEAP
         return minheap[name]
 
-    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'JuliaBenchmark':
-        print(bm_spec)
+    def get_benchmark(self, bm_spec: Union[str, str]) -> 'JuliaBenchmark':
         return JuliaBenchmark(
             julia_args=[],
             suite_name=self.name,
@@ -497,4 +496,5 @@ class JuliaGCBenchmarks(BenchmarkSuite):
         )
 
     def is_passed(self, output: bytes) -> bool:
+        # FIXME
         return True
