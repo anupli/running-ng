@@ -204,6 +204,8 @@ class DaCapo(JavaBenchmarkSuite):
         # Name of the benchmark
         program_args.append(bm_name)
 
+        # https://github.com/anupli/running-ng/issues/111
+        # https://mmtk.zulipchat.com/#narrow/stream/262677-ANU-Research/topic/Using.20new.20dacapo/near/270150954
         def strategy(runtime: Runtime) -> Sequence[Modifier]:
             modifiers = []
             if isinstance(runtime, OpenJDK):
@@ -213,7 +215,7 @@ class DaCapo(JavaBenchmarkSuite):
                         val="--add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
                     ))
             return modifiers
-        
+
         return JavaBenchmark(
             jvm_args=[],
             program_args=program_args,

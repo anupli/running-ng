@@ -39,6 +39,8 @@ def parse_modifier_strs(configuration: 'Configuration', mod_strs: List[str]) -> 
     mods = []
     for m in mod_strs:
         m = m.strip()
+        if not m:
+            break
         mod_name = m.split("-")[0]
         mod_value_opts = m.split("-")[1:]
         mod = configuration.get("modifiers").get(mod_name)
