@@ -1,6 +1,15 @@
 # Changelog
 ## Unreleased
 ### Added
+#### Modifiers
+- `JuliaArg`
+
+#### Runtimes
+- `JuliaMMTK`
+- `JuliaStock`
+
+#### Benchmark Suites
+- `JuliaGCBenchmarks`
 
 ### Changed
 #### Base Configurations
