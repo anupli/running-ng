@@ -9,4 +9,4 @@ invocations: 10
 minheap_multiplier: 1.0
 heap_range: 6
 spread_factor: 1
-remote_host: "squirrel.moma"
+remote_host: null
