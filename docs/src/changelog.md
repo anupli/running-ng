@@ -3,6 +3,8 @@
 ### Added
 
 ### Changed
+#### Base Configurations
+- `runbms`: don't sync to `squirrel.moma` for the default `runbms.yml`. moma machine users should use `runbms-anu.yml` for the old behaviour.
 
 ### Deprecated
 
