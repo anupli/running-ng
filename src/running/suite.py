@@ -213,7 +213,7 @@ class DaCapo(JavaBenchmarkSuite):
                         val="--add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
                     ))
             return modifiers
-        
+
         return JavaBenchmark(
             jvm_args=[],
             program_args=program_args,
