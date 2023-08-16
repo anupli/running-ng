@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 
-# NORMALIZE_TO = "julia-stock(0.0x minheap,.gcthreads-16)"
-NORMALIZE_TO = None
+NORMALIZE_TO = "julia-stock(0.0x minheap,.gcthreads-16)"
+# NORMALIZE_TO = None
 
 # Regular expressions to find the benchmark name and the table data
 bench_regex = re.compile(r'bench = "(.*).jl"')

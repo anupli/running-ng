@@ -13,6 +13,7 @@ suites:
       julia-mmtk-immix:
         multithreaded/binary_tree/tree_immutable: 225
         multithreaded/binary_tree/tree_mutable: 384
+        multithreaded/bigarrays/objarray: 9225
         serial/TimeZones: 5960
         serial/append: 1563
         serial/bigint/pollard: 198
@@ -39,6 +40,7 @@ benchmarks:
     - slow/bigint/pidigits
     - multithreaded/binary_tree/tree_immutable
     - multithreaded/binary_tree/tree_mutable
+    - multithreaded/bigarrays/objarray
 
 runtimes:
   julia-mmtk-immix:

@@ -2,6 +2,7 @@ julia-mmtk-immix:
   gcbenchmarks:
     multithreaded/binary_tree/tree_immutable: 225
     multithreaded/binary_tree/tree_mutable: 384
+    multithreaded/bigarrays/objarray: 9225
     serial/TimeZones: 5960
     serial/append: 1563
     serial/bigint/pollard: 198

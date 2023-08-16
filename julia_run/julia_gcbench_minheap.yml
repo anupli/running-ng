@@ -11,16 +11,17 @@ suites:
 
 benchmarks:
   gcbenchmarks:
-    - serial/TimeZones
-    - serial/append
-    - serial/bigint/pollard
-    - serial/linked/list
-    - serial/linked/tree
-    - serial/strings/strings
-    - slow/rb_tree
-    - slow/bigint/pidigits
-    - multithreaded/binary_tree/tree_immutable
-    - multithreaded/binary_tree/tree_mutable
+    # - serial/TimeZones
+    # - serial/append
+    # - serial/bigint/pollard
+    # - serial/linked/list
+    # - serial/linked/tree
+    # - serial/strings/strings
+    # - slow/rb_tree
+    # - slow/bigint/pidigits
+    # - multithreaded/binary_tree/tree_immutable
+    # - multithreaded/binary_tree/tree_mutable
+    - multithreaded/bigarrays/objarray
 
 runtimes:
   julia-mmtk-immix:

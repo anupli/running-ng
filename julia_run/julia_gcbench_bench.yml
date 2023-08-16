@@ -13,6 +13,7 @@ suites:
       julia-mmtk-immix:
         multithreaded/binary_tree/tree_immutable: 225
         multithreaded/binary_tree/tree_mutable: 384
+        multithreaded/bigarrays/objarray: 9225
         serial/TimeZones: 5960
         serial/append: 1563
         serial/bigint/pollard: 198
@@ -39,19 +40,20 @@ benchmarks:
     - slow/bigint/pidigits
     - multithreaded/binary_tree/tree_immutable
     - multithreaded/binary_tree/tree_mutable
+    - multithreaded/bigarrays/objarray
 
 runtimes:
-  julia-mmtk-immix:
+  julia-mmtk-immix-master:
     type: JuliaMMTK
-    executable: /home/yilin/julia/julia-mmtk-immix/usr/bin/julia
-  julia-mmtk-stickyimmix:
+    executable: /home/yilin/julia/julia-mmtk-immix-master/usr/bin/julia
+  julia-mmtk-immix-scan-stack:
     type: JuliaMMTK
-    executable: /home/yilin/julia/julia-mmtk-stickyimmix/usr/bin/julia
+    executable: /home/yilin/julia/julia-mmtk-immix-scan-stack/usr/bin/julia
   julia-stock:
     type: JuliaStock
     executable: /home/yilin/julia-upstream/julia-stock/usr/bin/julia
 
 configs:
-  - "julia-mmtk-immix"
-  - "julia-mmtk-stickyimmix"
+  - "julia-mmtk-immix-master"
+  - "julia-mmtk-immix-scan-stack"
   # - "julia-stock|gcthreads-16"
