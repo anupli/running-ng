@@ -330,6 +330,28 @@ An example looks like this.</p>
       codeload: 159
       crypto: 3
 </code></pre>
+<h2 id="juliagcbenchmarks-preview-"><a class="header" href="#juliagcbenchmarks-preview-"><code>JuliaGCBenchmarks</code> (preview ⚠️)</a></h2>
+<p>GC benchmarks for Julia: https://github.com/JuliaCI/GCBenchmarks</p>
+<h3 id="keys-5"><a class="header" href="#keys-5">Keys</a></h3>
+<p><code>path</code>: path to the GCBenchmarks folder.
+The value is required.</p>
+<p><code>minheap</code>:  a string that selects one of the <code>minheap_values</code> sets to use.</p>
+<p><code>minheap_values</code>: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering <code>Out of Memory!</code>.
+An example looks like this:</p>
+<pre><code class="language-yaml">    minheap_values:
+      julia-mmtk-immix:
+        multithreaded/binary_tree/tree_immutable: 225
+        multithreaded/binary_tree/tree_mutable: 384
+        multithreaded/bigarrays/objarray: 9225
+        serial/TimeZones: 5960
+        serial/append: 1563
+        serial/bigint/pollard: 198
+        serial/linked/list: 4325
+        serial/linked/tree: 216
+        serial/strings/strings: 2510
+        slow/bigint/pidigits: 198
+        slow/rb_tree/rb_tree: 8640
+</code></pre>
 
                     </main>
 
