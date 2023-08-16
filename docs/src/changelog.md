@@ -11,6 +11,9 @@
 #### Benchmark Suites
 - `JuliaGCBenchmarks`
 
+#### Commands
+- `runbms` gains an extra argument, `--skip-log-compression`, to skip compressing log files with `gzip`.
+
 ### Changed
 #### Base Configurations
 - `runbms`: don't sync to `squirrel.moma` for the default `runbms.yml`. moma machine users should use `runbms-anu.yml` for the old behaviour.
