@@ -1,6 +1,19 @@
 # Changelog
 ## Unreleased
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [`v0.4.0` (2023-08-17)](https://github.com/anupli/running-ng/releases/tag/v0.4.0)
+### Added
 #### Modifiers
 - `JuliaArg`
 
@@ -16,17 +29,13 @@
 
 ### Changed
 #### Base Configurations
-- `runbms`: don't sync to `squirrel.moma` for the default `runbms.yml`. moma machine users should use `runbms-anu.yml` for the old behaviour.
-
-### Deprecated
-
-### Removed
+- `runbms`: don't sync to `squirrel.moma` for the default `runbms.yml`. **moma machine users should use `runbms-anu.yml` for the old behaviour.**
 
 ### Fixed
-- DaCapo specific workarounds are now handled by the `DaCapo` class rather than the `JavaBenchmark` class to avoid confusions.
 - Gracifully handle empty modifiers strings in configs, such as `openjdk7||foobar`.
 
-### Security
+#### Benchmark Suites
+- DaCapo specific workarounds are now handled by the `DaCapo` class rather than the `JavaBenchmark` class to avoid confusions.
 
 ## [`v0.3.9` (2023-08-02)](https://github.com/anupli/running-ng/releases/tag/v0.3.9)
 ### Fixed
