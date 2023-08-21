@@ -108,7 +108,7 @@ def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file:
                     continue
                 print("\t {}-{} ".format(b.suite_name, b.name), end="")
                 mod_b = b.attach_modifiers(mods)
-                mod_b = b.attach_modifiers(
+                mod_b = mod_b.attach_modifiers(
                     b.get_runtime_specific_modifiers(runtime))
                 minheap = minheap_one_bm(
                     suite, runtime, mod_b, maxheap, minheap_dir, attempts)

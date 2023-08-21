@@ -12,6 +12,12 @@
 
 ### Security
 
+## [`v0.4.1` (2023-08-22)](https://github.com/anupli/running-ng/releases/tag/v0.4.1)
+### Fixed
+#### Commands
+- `runbms`: apply modifiers in the config file.
+- `minheap`: apply modifiers in the config file.
+
 ## [`v0.4.0` (2023-08-17)](https://github.com/anupli/running-ng/releases/tag/v0.4.0)
 ### Added
 #### Modifiers
