@@ -9,6 +9,8 @@
 ### Removed
 
 ### Fixed
+#### Runtimes
+- `D8` now detects new JavaScript OOM error pattern.
 
 ### Security
 
