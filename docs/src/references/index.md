@@ -54,6 +54,16 @@ the example above, we assume that both the `runtimes` and modifiers have been
 previously defined (in either the current configuration file or in an [`includes`
 file](#includes)).
 
+Each segment in the configuration strings can have whitespaces in them,
+so that it's easier for multi-line editing.
+
+For example:
+```yaml
+configs:
+  - "openjdk8 |foo-1 |bar|buzz"
+  - "openjdk15|foo-16|   |buzz"
+```
+
 ## `includes`
 A YAML list of paths to YAML files that are to be included into the current
 configuration file for definitions of some keys.
@@ -92,7 +102,7 @@ Each modifier requires a `type` key with other keys being specific to that
 please refer to [this page](./modifier.md).
 
 **Warning preview feature ⚠️**. We can exclude certain benchmarks from using a
-specific modifier by using an `exclude` key along with a YAML list of benchmarks
+specific modifier by using an `excludes` key along with a YAML list of benchmarks
 to be excluded from each benchmark suite.
 
 For example:
@@ -112,6 +122,42 @@ specifies two modifiers, `s` and `c2`, both of `type`
 [`JVMArg`](./modifier.md#JVMArg) with their respective values. Here, the
 `eclipse` benchmark from the `dacapo2006` benchmark suite has been excluded from
 the `c2` modifier.
+
+**Warning preview feature ⚠️**. Similarly, we can attach the modifier only to
+specific benchmarks by using an `includes` key.
+
+For example:
+```yaml
+modifiers:
+  c2:
+    type: JVMArg
+    val: "-XX:-TieredCompilation -Xcomp"
+    includes:
+      dacapo2006:
+        - eclipse
+```
+The `c2` modifier will only be attached when running the `eclipse` benchmark
+from the `dacapo2006` benchmark suite.
+
+`excludes` has a **higher** priority than `includes`.
+
+For example:
+```yaml
+modifiers:
+  c2:
+    type: JVMArg
+    val: "-XX:-TieredCompilation -Xcomp"
+    includes:
+      dacapo2006:
+        - eclipse
+        - fop
+    excludes:
+      dacapo2006:
+        - fop
+```
+The `c2` modifier will only be attached when running the `eclipse` benchmark
+from the `dacapo2006` benchmark suite, no other benchmark will run with this
+modifier (not even `fop` even though it appears in the `includes`).
 
 ### Value Options
 These are special modifiers whose values can be specified through their use in a

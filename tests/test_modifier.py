@@ -89,3 +89,79 @@ def test_modifier_set():
     mods = c.get("modifiers")["set_nested"].apply_value_opts(
         value_opts=["NoGC"]).flatten(c)
     assert len(mods) == 3
+
+
+def test_no_includes_no_excludes():
+    c = Configuration({
+        "modifiers": {
+            "a": {
+                "type": "EnvVar",
+                "var": "FOO",
+                "val": "BAR"
+            }
+        }
+    })
+    c.resolve_class()
+    m = c.get("modifiers")["a"]
+    assert m.should_attach("dacapo2006", "fop")
+
+
+def test_excludes():
+    c = Configuration({
+        "modifiers": {
+            "a": {
+                "type": "EnvVar",
+                "var": "FOO",
+                "val": "BAR",
+                "excludes": {
+                    "dacapo2006": ["fop"]
+                }
+            }
+        }
+    })
+    c.resolve_class()
+    m = c.get("modifiers")["a"]
+    assert not m.should_attach("dacapo2006", "fop")
+    assert m.should_attach("dacapo2006", "avrora")
+
+
+def test_includes():
+    c = Configuration({
+        "modifiers": {
+            "a": {
+                "type": "EnvVar",
+                "var": "FOO",
+                "val": "BAR",
+                "includes": {
+                    "dacapo2006": ["fop"]
+                }
+            }
+        }
+    })
+    c.resolve_class()
+    m = c.get("modifiers")["a"]
+    assert m.should_attach("dacapo2006", "fop")
+    assert not m.should_attach("dacapo2006", "avrora")
+
+
+def test_includes_excludes():
+    c = Configuration({
+        "modifiers": {
+            "a": {
+                "type": "EnvVar",
+                "var": "FOO",
+                "val": "BAR",
+                "includes": {
+                    "dacapo2006": ["fop", "hsqldb"]
+                },
+                "excludes": {
+                    "dacapo2006": ["fop"]
+                }
+            }
+        }
+    })
+    c.resolve_class()
+    m = c.get("modifiers")["a"]
+    assert not m.should_attach("dacapo2006", "fop")
+    assert not m.should_attach("dacapo2006", "avrora")
+    assert m.should_attach("dacapo2006", "hsqldb")

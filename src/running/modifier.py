@@ -18,6 +18,7 @@ class Modifier(object):
         self.__original_kwargs = kwargs
         self._kwargs = copy.deepcopy(kwargs)
         self.excludes = kwargs.get("excludes", {})
+        self.includes = kwargs.get("includes", {})
         if self.value_opts:  # Neither None nor empty
             # Expand value opts
             for k, v in kwargs.items():
@@ -34,6 +35,20 @@ class Modifier(object):
 
     def apply_value_opts(self, value_opts):
         return type(self)(value_opts=value_opts, **self.__original_kwargs)
+
+    def should_attach(self, suite_name: str, bm_name: str):
+        # We only attach this modifier to the benchmark listed in the
+        # includes list
+        if self.includes:
+            if suite_name not in self.includes:
+                return False
+            if bm_name not in self.includes[suite_name]:
+                return False
+        # If a benchmark is in the excludes list, then we don't attach
+        # the modifier
+        if suite_name in self.excludes and bm_name in self.excludes[suite_name]:
+            return False
+        return True
 
     def __str__(self) -> str:
         return "Modifier {}".format(self.name)

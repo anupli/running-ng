@@ -9,6 +9,14 @@
 ### Removed
 
 ### Fixed
+
+### Security
+
+## [`v0.4.2` (2023-09-10)](https://github.com/anupli/running-ng/releases/tag/v0.4.2)
+### Changed
+- All `Modifier` instances now supports `includes` for only attaching them to certain benchmarks
+
+### Fixed
 #### Runtimes
 - `D8` now detects new JavaScript OOM error pattern.
 

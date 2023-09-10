@@ -68,9 +68,8 @@ class Benchmark(object):
     def attach_modifiers(self: B, modifiers: Sequence[Modifier]) -> B:
         b = deepcopy(self)
         for m in modifiers:
-            if self.suite_name in m.excludes:
-                if self.name in m.excludes[self.suite_name]:
-                    continue
+            if not m.should_attach(self.suite_name, self.name):
+                continue
             elif type(m) == Wrapper:
                 b.wrapper.extend(m.val)
             elif type(m) == Companion:
@@ -157,9 +156,8 @@ class BinaryBenchmark(Benchmark):
     def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'BinaryBenchmark':
         bb = super().attach_modifiers(modifiers)
         for m in modifiers:
-            if self.suite_name in m.excludes:
-                if self.name in m.excludes[self.suite_name]:
-                    continue
+            if not m.should_attach(self.suite_name, self.name):
+                continue
             elif type(m) == ProgramArg:
                 bb.program_args.extend(m.val)
             elif type(m) == JVMArg:
@@ -195,9 +193,8 @@ class JavaBenchmark(Benchmark):
     def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JavaBenchmark':
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
-            if self.suite_name in m.excludes:
-                if self.name in m.excludes[self.suite_name]:
-                    continue
+            if not m.should_attach(self.suite_name, self.name):
+                continue
             if type(m) == JVMArg:
                 jb.jvm_args.extend(m.val)
             elif type(m) == ProgramArg:
@@ -233,9 +230,8 @@ class JavaScriptBenchmark(Benchmark):
     def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JavaScriptBenchmark':
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
-            if self.suite_name in m.excludes:
-                if self.name in m.excludes[self.suite_name]:
-                    continue
+            if not m.should_attach(self.suite_name, self.name):
+                continue
             if type(m) == ProgramArg:
                 jb.program_args.extend(m.val)
             elif type(m) == JVMArg:
