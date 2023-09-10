@@ -210,6 +210,13 @@ modifiers; and the <code>openjdk15</code> <code>runtime</code> with the <code>ms
 the example above, we assume that both the <code>runtimes</code> and modifiers have been
 previously defined (in either the current configuration file or in an <a href="#includes"><code>includes</code>
 file</a>).</p>
+<p>Each segment in the configuration strings can have whitespaces in them,
+so that it's easier for multi-line editing.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">configs:
+  - &quot;openjdk8 |foo-1 |bar|buzz&quot;
+  - &quot;openjdk15|foo-16|   |buzz&quot;
+</code></pre>
 <h2 id="includes"><a class="header" href="#includes"><code>includes</code></a></h2>
 <p>A YAML list of paths to YAML files that are to be included into the current
 configuration file for definitions of some keys.</p>
@@ -241,7 +248,7 @@ Each modifier requires a <code>type</code> key with other keys being specific to
 <code>type</code>. For more information regarding the different <code>type</code>s of modifiers,
 please refer to <a href="./modifier.html">this page</a>.</p>
 <p><strong>Warning preview feature ⚠️</strong>. We can exclude certain benchmarks from using a
-specific modifier by using an <code>exclude</code> key along with a YAML list of benchmarks
+specific modifier by using an <code>excludes</code> key along with a YAML list of benchmarks
 to be excluded from each benchmark suite.</p>
 <p>For example:</p>
 <pre><code class="language-yaml">modifiers:
@@ -259,6 +266,36 @@ to be excluded from each benchmark suite.</p>
 <a href="./modifier.html#JVMArg"><code>JVMArg</code></a> with their respective values. Here, the
 <code>eclipse</code> benchmark from the <code>dacapo2006</code> benchmark suite has been excluded from
 the <code>c2</code> modifier.</p>
+<p><strong>Warning preview feature ⚠️</strong>. Similarly, we can attach the modifier only to
+specific benchmarks by using an <code>includes</code> key.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">modifiers:
+  c2:
+    type: JVMArg
+    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    includes:
+      dacapo2006:
+        - eclipse
+</code></pre>
+<p>The <code>c2</code> modifier will only be attached when running the <code>eclipse</code> benchmark
+from the <code>dacapo2006</code> benchmark suite.</p>
+<p><code>excludes</code> has a <strong>higher</strong> priority than <code>includes</code>.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">modifiers:
+  c2:
+    type: JVMArg
+    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    includes:
+      dacapo2006:
+        - eclipse
+        - fop
+    excludes:
+      dacapo2006:
+        - fop
+</code></pre>
+<p>The <code>c2</code> modifier will only be attached when running the <code>eclipse</code> benchmark
+from the <code>dacapo2006</code> benchmark suite, no other benchmark will run with this
+modifier (not even <code>fop</code> even though it appears in the <code>includes</code>).</p>
 <h3 id="value-options"><a class="header" href="#value-options">Value Options</a></h3>
 <p>These are special modifiers whose values can be specified through their use in a
 <a href="#configs">configuration string</a>. Concrete values are specified as <code>-</code> separated
