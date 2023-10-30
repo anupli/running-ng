@@ -90,7 +90,7 @@ If you use a bot user and want to post to a channel, please [subscribe the bot u
 
 `config_file`: an optional string to the path of config file.
 If not specified, the default is `~/.zuliprc`.
-Please make sure that this file can only be accessed by you (e.g., `chmod 600 ~/.zulip`).
+Please make sure that this file can only be accessed by you (e.g., `chmod 600 ~/.zuliprc`).
 If you are a moma user, please create this file on `squirrel`, and it will then be synced to other machines.
 Please follow the Zulip documentation for the [syntax](https://zulip.com/api/configuring-python-bindings) of the config file and for [obtaining an API key](https://zulip.com/api/api-keys).
 If you can't create a new bot, please contact the administrators of your organization.
