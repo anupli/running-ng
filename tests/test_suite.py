@@ -5,44 +5,38 @@ from running.suite import BinaryBenchmarkSuite
 
 def test_binary_benchmark_suite_quoted():
     b = BinaryBenchmarkSuite(
-        name="foobar",
-        programs={
-            "ls": {
-                "path": "/bin/ls",
-                "args": "foo \"bar buzz\""
-            }
-        }
+        name="foobar", programs={"ls": {"path": "/bin/ls", "args": 'foo "bar buzz"'}}
     )
     assert b.programs["ls"]["args"] == ["foo", "bar buzz"]
 
 
 def test_dacapo_size():
-    c = Configuration({
-        "suites": {
-            "dacapo2006": {
-                "type": "DaCapo",
-                "release": "2006",
-                "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
-                "timing_iteration": 3
+    c = Configuration(
+        {
+            "suites": {
+                "dacapo2006": {
+                    "type": "DaCapo",
+                    "release": "2006",
+                    "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
+                    "timing_iteration": 3,
+                },
+                "dacapo2006_default": {
+                    "type": "DaCapo",
+                    "release": "2006",
+                    "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
+                    "timing_iteration": 3,
+                    "size": "default",
+                },
             },
-            "dacapo2006_default": {
-                "type": "DaCapo",
-                "release": "2006",
-                "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
-                "timing_iteration": 3,
-                "size": "default"
-            }
-        },
-        "benchmarks": {
-            "dacapo2006": [
-                "fop",
-                dict(name="fop_small", bm_name="fop", size="small")
-            ],
-            "dacapo2006_default": [
-                "fop"
-            ]
+            "benchmarks": {
+                "dacapo2006": [
+                    "fop",
+                    dict(name="fop_small", bm_name="fop", size="small"),
+                ],
+                "dacapo2006_default": ["fop"],
+            },
         }
-    })
+    )
 
     c.resolve_class()
     fop = c.get("benchmarks")["dacapo2006"][0]
@@ -54,23 +48,26 @@ def test_dacapo_size():
 
 
 def test_dacapo_timing_iteration():
-    c = Configuration({
-        "suites": {
-            "dacapo2006": {
-                "type": "DaCapo",
-                "release": "2006",
-                "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
-                "timing_iteration": 3
-            }
-        },
-        "benchmarks": {
-            "dacapo2006": [
-                "fop",
-                dict(name="fop_converge", bm_name="fop",
-                     timing_iteration="converge")
-            ]
+    c = Configuration(
+        {
+            "suites": {
+                "dacapo2006": {
+                    "type": "DaCapo",
+                    "release": "2006",
+                    "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
+                    "timing_iteration": 3,
+                }
+            },
+            "benchmarks": {
+                "dacapo2006": [
+                    "fop",
+                    dict(
+                        name="fop_converge", bm_name="fop", timing_iteration="converge"
+                    ),
+                ]
+            },
         }
-    })
+    )
 
     c.resolve_class()
     fop = c.get("benchmarks")["dacapo2006"][0]
@@ -80,39 +77,35 @@ def test_dacapo_timing_iteration():
 
 
 def test_dacapo_openjdk_9_workaround():
-    c = Configuration({
-        "suites": {
-            "dacapo2006": {
-                "type": "DaCapo",
-                "release": "2006",
-                "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
-                "timing_iteration": 3
-            }
-        },
-        "benchmarks": {
-            "dacapo2006": [
-                "fop"
-            ]
-        },
-        "runtimes": {
-            "jdk8": {
-                "type": "OpenJDK",
-                "release": 8,
-                "home": "/usr/lib/jvm/temurin-8-jdk-amd64"
+    c = Configuration(
+        {
+            "suites": {
+                "dacapo2006": {
+                    "type": "DaCapo",
+                    "release": "2006",
+                    "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
+                    "timing_iteration": 3,
+                }
             },
-            "jdk11": {
-                "type": "OpenJDK",
-                "release": 11,
-                "home": "/usr/lib/jvm/temurin-11-jdk-amd64"
+            "benchmarks": {"dacapo2006": ["fop"]},
+            "runtimes": {
+                "jdk8": {
+                    "type": "OpenJDK",
+                    "release": 8,
+                    "home": "/usr/lib/jvm/temurin-8-jdk-amd64",
+                },
+                "jdk11": {
+                    "type": "OpenJDK",
+                    "release": 11,
+                    "home": "/usr/lib/jvm/temurin-11-jdk-amd64",
+                },
             },
-        },
-        "configs": [
-            "jdk8",
-            "jdk11"
-        ]
-    })
+            "configs": ["jdk8", "jdk11"],
+        }
+    )
     c.resolve_class()
     from running.benchmark import JavaBenchmark
+
     fop: JavaBenchmark
     fop = c.get("benchmarks")["dacapo2006"][0]
     jdk8 = c.get("runtimes")["jdk8"]

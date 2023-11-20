@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, TYPE_CHECKING
+
 if TYPE_CHECKING:
     from running.benchmark import Benchmark
 
@@ -38,28 +39,62 @@ class RunbmsPlugin(object):
     def end_hfac(self, _hfac: Optional[float]):
         pass
 
-    def start_benchmark(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark"):
+    def start_benchmark(
+        self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark"
+    ):
         pass
 
-    def end_benchmark(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark"):
+    def end_benchmark(
+        self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark"
+    ):
         pass
 
-    def start_invocation(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int):
+    def start_invocation(
+        self,
+        _hfac: Optional[float],
+        _size: Optional[int],
+        _bm: "Benchmark",
+        _invocation: int,
+    ):
         pass
 
-    def end_invocation(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int):
+    def end_invocation(
+        self,
+        _hfac: Optional[float],
+        _size: Optional[int],
+        _bm: "Benchmark",
+        _invocation: int,
+    ):
         pass
 
-    def start_config(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int, _config: str, _config_index: int):
+    def start_config(
+        self,
+        _hfac: Optional[float],
+        _size: Optional[int],
+        _bm: "Benchmark",
+        _invocation: int,
+        _config: str,
+        _config_index: int,
+    ):
         pass
 
-    def end_config(self, _hfac: Optional[float], _size: Optional[int], _bm: "Benchmark", _invocation: int, _config: str, _config_index: int, _passed: bool):
+    def end_config(
+        self,
+        _hfac: Optional[float],
+        _size: Optional[int],
+        _bm: "Benchmark",
+        _invocation: int,
+        _config: str,
+        _config_index: int,
+        _passed: bool,
+    ):
         pass
 
 
 # !!! Do NOT remove this import nor change its position
 # This is to make sure that the plugin classes are correctly registered
 from running.plugin.runbms.copyfile import CopyFile
+
 if TYPE_CHECKING:
     from running.plugin.runbms.zulip import Zulip
 else:
@@ -71,8 +106,10 @@ else:
         @register(RunbmsPlugin)
         class Zulip(RunbmsPlugin):
             def __init__(self, **kwargs):
-                raise RuntimeError("Trying to create an instance of the Zulip "
-                                   "plugin for runbms, but the import failed. "
-                                   "This is most likely due to the required "
-                                   "dependencies not being installed. Try pip "
-                                   "install running-ng[zulip] to install the extra dependencies.")
+                raise RuntimeError(
+                    "Trying to create an instance of the Zulip "
+                    "plugin for runbms, but the import failed. "
+                    "This is most likely due to the required "
+                    "dependencies not being installed. Try pip "
+                    "install running-ng[zulip] to install the extra dependencies."
+                )

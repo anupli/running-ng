@@ -12,8 +12,12 @@ ADVICE_EXTS = ["ca", "dc", "ec"]
 advice_folder = sys.argv[1]
 
 
-JikesRVM_HEADER = "============================ MMTk Statistics Totals ============================"
-JikesRVM_FOOTER = "------------------------------ End MMTk Statistics -----------------------------"
+JikesRVM_HEADER = (
+    "============================ MMTk Statistics Totals ============================"
+)
+JikesRVM_FOOTER = (
+    "------------------------------ End MMTk Statistics -----------------------------"
+)
 
 
 def extract_blocks(lines, header, footer):
@@ -33,7 +37,7 @@ def extract_blocks(lines, header, footer):
 
 
 def cleanse(filename):
-    sed_pattern = 's/{urls[^}]*}//g'
+    sed_pattern = "s/{urls[^}]*}//g"
     if sys.platform == "linux" or sys.platform == "linux2":
         cmd = ["sed", "-i", sed_pattern, filename]
     elif sys.platform == "darwin":
@@ -46,11 +50,9 @@ def select_best_invocation(scenario):
     filename = "{}.log.gz".format(scenario)
     metrics = []
     with gzip.open(os.path.join(advice_folder, filename)) as log_file:
-        stats_blocks = extract_blocks(
-            log_file, JikesRVM_HEADER, JikesRVM_FOOTER)
+        stats_blocks = extract_blocks(log_file, JikesRVM_HEADER, JikesRVM_FOOTER)
         for stats_block in stats_blocks:
-            stats = dict(zip(stats_block[0].split(
-                "\t"), stats_block[1].split("\t")))
+            stats = dict(zip(stats_block[0].split("\t"), stats_block[1].split("\t")))
             metrics.append(float(stats["time.gc"]) + float(stats["time.mu"]))
     if not metrics:
         print("No metric is found")
@@ -76,14 +78,12 @@ def select_advice_file(scenario, best_invocation):
 
 def main():
     scenario_logs = glob.glob(os.path.join(advice_folder, "*.log.gz"))
-    scenarios = [os.path.basename(s).replace(".log.gz", "")
-                 for s in scenario_logs]
+    scenarios = [os.path.basename(s).replace(".log.gz", "") for s in scenario_logs]
     print("Found scenarios {}".format(scenarios))
     for scenario in scenarios:
         print("Processing scenario {}".format(scenario))
         best_invocation = select_best_invocation(scenario)
-        print("Best invocation for scenario {} is {}".format(scenario,
-                                                             best_invocation))
+        print("Best invocation for scenario {} is {}".format(scenario, best_invocation))
         select_advice_file(scenario, best_invocation)
 
 

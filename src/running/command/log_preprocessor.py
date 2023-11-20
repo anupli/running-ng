@@ -8,8 +8,12 @@ import re
 from running.config import Configuration
 import os
 
-MMTk_HEADER = "============================ MMTk Statistics Totals ============================"
-MMTk_FOOTER = "------------------------------ End MMTk Statistics -----------------------------"
+MMTk_HEADER = (
+    "============================ MMTk Statistics Totals ============================"
+)
+MMTk_FOOTER = (
+    "------------------------------ End MMTk Statistics -----------------------------"
+)
 
 
 class EditingMode(enum.Enum):
@@ -30,6 +34,7 @@ def setup_parser(subparsers):
 def filter_stats(predicate: Callable[[str], bool]):
     def inner(stats: Dict[str, float]):
         return {k: v for (k, v) in stats.items() if predicate(k)}
+
     return inner
 
 
@@ -43,6 +48,7 @@ def reduce_stats(pattern: str, new_column: str, func):
         new_stats = deepcopy(stats)
         new_stats[new_column] = functools.reduce(func, to_reduce)
         return new_stats
+
     return inner
 
 
@@ -64,6 +70,7 @@ def ratio_work_perf_event(event_name: str):
                 new_column = k.replace(".total", ".ratio")
                 new_stats[new_column] = v / stats[aggregated_column]
         return new_stats
+
     return inner
 
 
@@ -79,6 +86,7 @@ def ratio_event(event_name: str):
             new_stats["{}.ratio".format(stw_key)] = gc / total
             new_stats["{}.ratio".format(other_key)] = mu / total
         return new_stats
+
     return inner
 
 
@@ -91,8 +99,7 @@ def calc_ipc(stats: Dict[str, float]):
             if cycles == 0:
                 assert inst == 0
                 continue
-            new_stats["INSTRUCTIONS_PER_CYCLE.{}".format(
-                phase)] = inst / cycles
+            new_stats["INSTRUCTIONS_PER_CYCLE.{}".format(phase)] = inst / cycles
     return new_stats
 
 
@@ -102,10 +109,10 @@ def calc_work_ipc(stats: Dict[str, float]):
     new_stats = deepcopy(stats)
     for (k, v) in stats.items():
         if compiled.match(k):
-            cycles = k.replace("PERF_COUNT_HW_INSTRUCTIONS",
-                               "PERF_COUNT_HW_CPU_CYCLES")
-            ipc = k.replace("PERF_COUNT_HW_INSTRUCTIONS.total",
-                            "INSTRUCTIONS_PER_CYCLE.ratio")
+            cycles = k.replace("PERF_COUNT_HW_INSTRUCTIONS", "PERF_COUNT_HW_CPU_CYCLES")
+            ipc = k.replace(
+                "PERF_COUNT_HW_INSTRUCTIONS.total", "INSTRUCTIONS_PER_CYCLE.ratio"
+            )
             new_stats[ipc] = stats[k] / stats[cycles]
     return new_stats
 
@@ -140,8 +147,9 @@ def process_lines(configuration: Configuration, lines: List[str]):
                     funcs.append(ratio_event(v))
             elif f["name"] == "filter_stats":
                 patterns_to_keep = f["val"].split(",")
-                funcs.append(filter_stats(lambda n: any(
-                    [p in n for p in patterns_to_keep])))
+                funcs.append(
+                    filter_stats(lambda n: any([p in n for p in patterns_to_keep]))
+                )
             elif f["name"] == "calc_ipc":
                 funcs.append(calc_ipc)
             else:
@@ -162,15 +170,13 @@ def process_lines(configuration: Configuration, lines: List[str]):
         elif editing == EditingMode.Values:
             values = map(float, line.strip().split("\t"))
             stats = dict(zip(names, values))
-            new_stats = functools.reduce(
-                lambda accum, val: val(accum), funcs, stats)
+            new_stats = functools.reduce(lambda accum, val: val(accum), funcs, stats)
             if len(new_stats):
                 new_stat_list = list(new_stats.items())
                 new_stat_list.sort(key=lambda x: stat_sort_helper(x[0], x[1]))
                 new_names, new_values = list(zip(*new_stat_list))
                 new_lines.append("{}\n".format("\t".join(new_names)))
-                new_lines.append("{}\n".format(
-                    "\t".join(map(str, new_values))))
+                new_lines.append("{}\n".format("\t".join(map(str, new_values))))
             else:
                 new_lines.append("empty_after_preprocessing\n")
                 new_lines.append("0\n")
@@ -200,8 +206,7 @@ def process(configuration: Configuration, source: Path, target: Path):
 def run(args):
     if args.get("which") != "preproc":
         return False
-    configuration = Configuration.from_file(
-        Path(os.getcwd()), args.get("CONFIG"))
+    configuration = Configuration.from_file(Path(os.getcwd()), args.get("CONFIG"))
     source = args.get("SOURCE")
     target = args.get("TARGET")
     target.mkdir(parents=True, exist_ok=True)
