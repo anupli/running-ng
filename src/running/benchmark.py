@@ -68,7 +68,10 @@ class Benchmark(object):
 
     def get_env_str(self) -> str:
         return " ".join(
-            ["{}={}".format(k, smart_quote(v)) for (k, v) in self.env_args.items()]
+            [
+                "{}={}".format(k, smart_quote(os.path.expandvars(v)))
+                for (k, v) in self.env_args.items()
+            ]
         )
 
     def get_full_args(self, _runtime: Runtime) -> List[Union[str, Path]]:
@@ -114,8 +117,11 @@ class Benchmark(object):
         else:
             cmd = self.get_full_args(runtime)
             cmd = [os.path.expandvars(x) for x in cmd]
+            env_args_to_add = {
+                k: os.path.expandvars(v) for k, v in self.env_args.items()
+            }
             env_args = os.environ.copy()
-            env_args.update(self.env_args)
+            env_args.update(env_args_to_add)
             companion_out = b""
             stdout: Optional[bytes]
             if self.companion:

@@ -1,6 +1,7 @@
 from running.benchmark import JavaBenchmark
 from running.modifier import *
 from running.config import Configuration
+from running.runtime import OpenJDK
 
 
 def test_jvm_arg():
@@ -141,3 +142,24 @@ def test_includes_excludes():
     assert not m.should_attach("dacapo2006", "fop")
     assert not m.should_attach("dacapo2006", "avrora")
     assert m.should_attach("dacapo2006", "hsqldb")
+
+
+def test_envvar():
+    jb = JavaBenchmark(
+        jvm_args=[], program_args=[], cp=[], suite_name="dacapo", name="fop"
+    )
+    jb = jb.attach_modifiers([EnvVar(name="foobar", var="FOOBAR", val="$HOME")])
+    jb = jb.attach_modifiers(
+        [
+            EnvVar(
+                name="fizzbuzz",
+                var="FIZZBUZZ",
+                val="$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI",
+            )
+        ]
+    )
+    openjdk = OpenJDK(
+        release=11, home="/usr/lib/jvm/temurin-11-jdk-amd64", name="temurin-11"
+    )
+    assert "$HOME" not in jb.to_string(openjdk)
+    assert "$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI" in jb.to_string(openjdk)
