@@ -9,6 +9,9 @@
 #### Base Configurations
 - Environment variables are expanded when resolving paths of runtimes and benchmark suites.
 
+#### Modifiers
+- `EnvVar` `val` is expanded using the outside environment prior to benchmark execution.
+
 ### Deprecated
 - Deprecating Python 3.7 support for users. Python 3.7 was last released on June 6, 2023 (3.7.17), which was recent.
 
