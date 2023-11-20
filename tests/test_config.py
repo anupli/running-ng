@@ -3,10 +3,7 @@ import pytest
 
 
 def test_override():
-    c = Configuration({
-        "a": {"b": 1, "c": 42},
-        "d": ["foo", "bar"]
-    })
+    c = Configuration({"a": {"b": 1, "c": 42}, "d": ["foo", "bar"]})
     c.override("a.c", 43)
     c.override("d.1", "buzz")
     assert c.get("a")["b"] == 1
@@ -15,16 +12,9 @@ def test_override():
 
 
 def test_combine():
-    c1 = Configuration({
-        "a": {"b": 1, "c": 42},
-        "d": ["foo", "bar"]
-    })
+    c1 = Configuration({"a": {"b": 1, "c": 42}, "d": ["foo", "bar"]})
 
-    c2 = Configuration({
-        "a": {"b": 2, "e": 43},
-        "d": ["fizz", "buzz"],
-        "f": 100
-    })
+    c2 = Configuration({"a": {"b": 2, "e": 43}, "d": ["fizz", "buzz"], "f": 100})
 
     c = c1.combine(c2)
     assert c.get("a") == {"b": 2, "c": 42, "e": 43}
@@ -33,29 +23,27 @@ def test_combine():
 
 
 def test_combine_fail():
-    c1 = Configuration({
-        "a": "val1",
-        "b": "b"
-    })
+    c1 = Configuration({"a": "val1", "b": "b"})
 
-    c2 = Configuration({
-        "a": "val2",
-        "c": "c"
-    })
+    c2 = Configuration({"a": "val2", "c": "c"})
 
     with pytest.raises(TypeError):
         c1.combine(c2)
 
 
 def test_resolve_suites():
-    c = Configuration({"suites": {
-        "dacapo2006": {
-            "type": "DaCapo",
-            "release": "2006",
-            "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
-            "timing_iteration": 3
+    c = Configuration(
+        {
+            "suites": {
+                "dacapo2006": {
+                    "type": "DaCapo",
+                    "release": "2006",
+                    "path": "/usr/share/benchmarks/dacapo/dacapo-2006-10-MR2.jar",
+                    "timing_iteration": 3,
+                }
+            }
         }
-    }})
+    )
     c.resolve_class()
     dacapo2006 = c.get("suites")["dacapo2006"]
     assert dacapo2006.release == "2006"
@@ -63,13 +51,13 @@ def test_resolve_suites():
 
 
 def test_resolve_modifiers():
-    c = Configuration({"modifiers": {
-        "ss": {
-            "type": "EnvVar",
-            "var": "MMTK_PLAN",
-            "val": "SemiSpace"
+    c = Configuration(
+        {
+            "modifiers": {
+                "ss": {"type": "EnvVar", "var": "MMTK_PLAN", "val": "SemiSpace"}
+            }
         }
-    }})
+    )
     c.resolve_class()
     ss = c.get("modifiers")["ss"]
     assert ss.var == "MMTK_PLAN"
@@ -77,15 +65,18 @@ def test_resolve_modifiers():
 
 
 def test_resolve_jvms():
-    c = Configuration({"runtimes": {
-        "adoptopenjdk-8": {
-            "type": "OpenJDK",
-            "release": "8",
-            "home": "/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64"
+    c = Configuration(
+        {
+            "runtimes": {
+                "adoptopenjdk-8": {
+                    "type": "OpenJDK",
+                    "release": "8",
+                    "home": "/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64",
+                }
+            }
         }
-    }})
+    )
     c.resolve_class()
     jdk8 = c.get("runtimes")["adoptopenjdk-8"]
-    assert str(
-        jdk8.executable) == "/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64/bin/java"
+    assert str(jdk8.executable) == "/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64/bin/java"
     assert jdk8.release == 8

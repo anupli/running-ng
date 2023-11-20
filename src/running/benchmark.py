@@ -22,11 +22,23 @@ class SubprocessrExit(Enum):
     Dryrun = 4
 
 
-B = TypeVar('B', bound='Benchmark')
+B = TypeVar("B", bound="Benchmark")
 
 
 class Benchmark(object):
-    def __init__(self, suite_name: str, name: str, wrapper: Optional[str] = None, timeout: Optional[int] = None, override_cwd: Optional[Path] = None, companion: Optional[str] = None, runtime_specific_modifiers_strategy: Optional[Callable[[Runtime], Sequence[Modifier]]] = None, **kwargs):
+    def __init__(
+        self,
+        suite_name: str,
+        name: str,
+        wrapper: Optional[str] = None,
+        timeout: Optional[int] = None,
+        override_cwd: Optional[Path] = None,
+        companion: Optional[str] = None,
+        runtime_specific_modifiers_strategy: Optional[
+            Callable[[Runtime], Sequence[Modifier]]
+        ] = None,
+        **kwargs
+    ):
         self.name = name
         self.suite_name = suite_name
         self.env_args: Dict[str, str]
@@ -44,18 +56,20 @@ class Benchmark(object):
         # ignore the current working directory provided by commands like runbms or minheap
         # certain benchmarks expect to be invoked from certain directories
         self.override_cwd = override_cwd
-        self.runtime_specific_modifiers_strategy: Callable[[
-            Runtime], Sequence[Modifier]]
+        self.runtime_specific_modifiers_strategy: Callable[
+            [Runtime], Sequence[Modifier]
+        ]
         if runtime_specific_modifiers_strategy is not None:
-            self.runtime_specific_modifiers_strategy = runtime_specific_modifiers_strategy
+            self.runtime_specific_modifiers_strategy = (
+                runtime_specific_modifiers_strategy
+            )
         else:
             self.runtime_specific_modifiers_strategy = lambda _runtime: []
 
     def get_env_str(self) -> str:
-        return " ".join([
-            "{}={}".format(k, smart_quote(v))
-            for (k, v) in self.env_args.items()
-        ])
+        return " ".join(
+            ["{}={}".format(k, smart_quote(v)) for (k, v) in self.env_args.items()]
+        )
 
     def get_full_args(self, _runtime: Runtime) -> List[Union[str, Path]]:
         # makes a copy because the subclass might change the list
@@ -83,18 +97,19 @@ class Benchmark(object):
     def to_string(self, runtime: Runtime) -> str:
         return "{} {}".format(
             self.get_env_str(),
-            " ".join([
-                smart_quote(os.path.expandvars(x))
-                for x in self.get_full_args(runtime)
-            ])
+            " ".join(
+                [
+                    smart_quote(os.path.expandvars(x))
+                    for x in self.get_full_args(runtime)
+                ]
+            ),
         )
 
-    def run(self, runtime: Runtime, cwd: Optional[Path] = None) -> Tuple[bytes, bytes, SubprocessrExit]:
+    def run(
+        self, runtime: Runtime, cwd: Optional[Path] = None
+    ) -> Tuple[bytes, bytes, SubprocessrExit]:
         if suite.is_dry_run():
-            print(
-                self.to_string(runtime),
-                file=sys.stderr
-            )
+            print(self.to_string(runtime), file=sys.stderr)
             return b"", b"", SubprocessrExit.Dryrun
         else:
             cmd = self.get_full_args(runtime)
@@ -105,7 +120,8 @@ class Benchmark(object):
             stdout: Optional[bytes]
             if self.companion:
                 companion_p = subprocess.Popen(
-                    self.companion, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                    self.companion, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+                )
                 sleep(COMPANION_WAIT_START)
             try:
                 p = subprocess.run(
@@ -114,7 +130,7 @@ class Benchmark(object):
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     timeout=self.timeout,
-                    cwd=self.override_cwd if self.override_cwd else cwd
+                    cwd=self.override_cwd if self.override_cwd else cwd,
                 )
                 subprocess_exit = SubprocessrExit.Normal
                 stdout = p.stdout
@@ -127,12 +143,12 @@ class Benchmark(object):
             finally:
                 if self.companion:
                     try:
-                        companion_stdout, _ = companion_p.communicate(
-                            timeout=10)
+                        companion_stdout, _ = companion_p.communicate(timeout=10)
                         companion_out += companion_stdout
                     except subprocess.TimeoutExpired:
                         logging.warning(
-                            "Companion program not exited after 10 seconds timeout. Trying to kill ...")
+                            "Companion program not exited after 10 seconds timeout. Trying to kill ..."
+                        )
                         try:
                             companion_p.kill()
                         except PermissionError:
@@ -153,7 +169,7 @@ class BinaryBenchmark(Benchmark):
     def __str__(self) -> str:
         return self.to_string(DummyRuntime(""))
 
-    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'BinaryBenchmark':
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> "BinaryBenchmark":
         bb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if not m.should_attach(self.suite_name, self.name):
@@ -163,11 +179,9 @@ class BinaryBenchmark(Benchmark):
             elif type(m) == JVMArg:
                 logging.warning("JVMArg not respected by BinaryBenchmark")
             elif isinstance(m, JVMClasspathAppend) or type(m) == JVMClasspathPrepend:
-                logging.warning(
-                    "JVMClasspath not respected by BinaryBenchmark")
+                logging.warning("JVMClasspath not respected by BinaryBenchmark")
             elif type(m) == JSArg:
-                logging.warning(
-                    "JSArg not respected by BinaryBenchmark")
+                logging.warning("JSArg not respected by BinaryBenchmark")
         return bb
 
     def get_full_args(self, _runtime: Runtime) -> List[Union[str, Path]]:
@@ -178,7 +192,9 @@ class BinaryBenchmark(Benchmark):
 
 
 class JavaBenchmark(Benchmark):
-    def __init__(self, jvm_args: List[str], program_args: List[str], cp: List[str], **kwargs):
+    def __init__(
+        self, jvm_args: List[str], program_args: List[str], cp: List[str], **kwargs
+    ):
         super().__init__(**kwargs)
         self.jvm_args = jvm_args
         self.program_args = program_args
@@ -190,7 +206,7 @@ class JavaBenchmark(Benchmark):
     def __str__(self) -> str:
         return self.to_string(DummyRuntime("java"))
 
-    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JavaBenchmark':
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> "JavaBenchmark":
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if not m.should_attach(self.suite_name, self.name):
@@ -204,8 +220,7 @@ class JavaBenchmark(Benchmark):
             elif type(m) == JVMClasspathPrepend:
                 jb.cp = m.val + jb.cp
             elif type(m) == JSArg:
-                logging.warning(
-                    "JSArg not respected by JavaBenchmark")
+                logging.warning("JSArg not respected by JavaBenchmark")
         return jb
 
     def get_full_args(self, runtime: Runtime) -> List[Union[str, Path]]:
@@ -218,7 +233,9 @@ class JavaBenchmark(Benchmark):
 
 
 class JavaScriptBenchmark(Benchmark):
-    def __init__(self, js_args: List[str], program: str, program_args: List[str], **kwargs):
+    def __init__(
+        self, js_args: List[str], program: str, program_args: List[str], **kwargs
+    ):
         super().__init__(**kwargs)
         self.js_args = js_args
         self.program = program
@@ -227,7 +244,7 @@ class JavaScriptBenchmark(Benchmark):
     def __str__(self) -> str:
         return self.to_string(DummyRuntime("js"))
 
-    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JavaScriptBenchmark':
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> "JavaScriptBenchmark":
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if not m.should_attach(self.suite_name, self.name):
@@ -237,8 +254,7 @@ class JavaScriptBenchmark(Benchmark):
             elif type(m) == JVMArg:
                 logging.warning("JVMArg not respected by JavaScriptBenchmark")
             elif isinstance(m, JVMClasspathAppend) or type(m) == JVMClasspathPrepend:
-                logging.warning(
-                    "JVMClasspath not respected by JavaScriptBenchmark")
+                logging.warning("JVMClasspath not respected by JavaScriptBenchmark")
             elif type(m) == JSArg:
                 jb.js_args.extend(m.val)
         return jb
@@ -255,14 +271,19 @@ class JavaScriptBenchmark(Benchmark):
         elif isinstance(runtime, SpiderMonkey):
             pass
         else:
-            raise TypeError("{} is of type {}, and not a valid runtime for JavaScriptBenchmark".format(
-                runtime, type(runtime)))
+            raise TypeError(
+                "{} is of type {}, and not a valid runtime for JavaScriptBenchmark".format(
+                    runtime, type(runtime)
+                )
+            )
         cmd.extend(self.program_args)
         return cmd
 
 
 class JuliaBenchmark(Benchmark):
-    def __init__(self, julia_args: List[str], suite_path: Path, program_args: List[str], **kwargs):
+    def __init__(
+        self, julia_args: List[str], suite_path: Path, program_args: List[str], **kwargs
+    ):
         super().__init__(**kwargs)
         self.julia_args = julia_args
         self.suite_path = suite_path
@@ -271,7 +292,7 @@ class JuliaBenchmark(Benchmark):
     def __str__(self) -> str:
         return self.to_string(DummyRuntime("julia"))
 
-    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'JuliaBenchmark':
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> "JuliaBenchmark":
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
             if type(m) == JuliaArg:

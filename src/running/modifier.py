@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, TYPE_CHECKING
 from running.util import register, smart_quote, split_quoted, parse_modifier_strs
 import copy
+
 if TYPE_CHECKING:
     from running.config import Configuration
 
@@ -14,7 +15,10 @@ class Modifier(object):
         self.value_opts = value_opts
         if "-" in self.name:
             raise ValueError(
-                "Modifier {} has - in its name. - is reserved for value options.".format(self.name))
+                "Modifier {} has - in its name. - is reserved for value options.".format(
+                    self.name
+                )
+            )
         self.__original_kwargs = kwargs
         self._kwargs = copy.deepcopy(kwargs)
         self.excludes = kwargs.get("excludes", {})
@@ -60,7 +64,7 @@ class ModifierSet(Modifier):
         super().__init__(value_opts, **kwargs)
         self.val = self._kwargs["val"].split("|")
 
-    def flatten(self, configuration: 'Configuration') -> List[Modifier]:
+    def flatten(self, configuration: "Configuration") -> List[Modifier]:
         return parse_modifier_strs(configuration, self.val)
 
     def __str__(self) -> str:
@@ -109,15 +113,23 @@ class EnvVar(Modifier):
         super().__init__(value_opts, **kwargs)
         if "var" not in self._kwargs:
             raise ValueError(
-                "Please specify the name of the environment variable for modifier {}".format(self.name))
+                "Please specify the name of the environment variable for modifier {}".format(
+                    self.name
+                )
+            )
         if "val" not in self._kwargs:
             raise ValueError(
-                "Please specify the value for the environment variable for modifier {}".format(self.name))
+                "Please specify the value for the environment variable for modifier {}".format(
+                    self.name
+                )
+            )
         self.var = self._kwargs["var"]
         self.val = self._kwargs["val"]
 
     def __str__(self) -> str:
-        return "{} EnvVar {}={}".format(super().__str__(), self.var, smart_quote(self.val))
+        return "{} EnvVar {}={}".format(
+            super().__str__(), self.var, smart_quote(self.val)
+        )
 
 
 @register(Modifier)

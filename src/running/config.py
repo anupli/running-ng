@@ -17,7 +17,7 @@ def load_class(cls, config):
 KEY_CLASS_MAPPING = {
     "suites": BenchmarkSuite,
     "modifiers": Modifier,
-    "runtimes": Runtime
+    "runtimes": Runtime,
 }
 
 
@@ -36,15 +36,14 @@ class Configuration(object):
         For example, self.values["suites"] is a Dict[str, Dict[str, str]],
         where in the inner dictionary contains the string representation of a
         benchmark suite.
-        After this function returns, self.values["suites"] becomes a 
+        After this function returns, self.values["suites"] becomes a
         Dict[str, BenchmarkSuite].
 
         Change the KEY_CLASS_MAPPING to change which classes get resolved.
         """
         for cls_name, cls in KEY_CLASS_MAPPING.items():
             if cls_name in self.__items:
-                self.__items[cls_name] = load_class(
-                    cls, self.__items[cls_name])
+                self.__items[cls_name] = load_class(cls, self.__items[cls_name])
         if "benchmarks" in self.__items:
             for suite_name, bms in self.__items["benchmarks"].items():
                 suite = self.__items["suites"][suite_name]
@@ -88,9 +87,8 @@ class Configuration(object):
                             "Key `{}` has been defined in one of the "
                             "included files, and the value of `{}`, {}, "
                             "is not an array or a dictionary. "
-                            "Please use overrides instead.".format(
-                                k, k, repr(v)
-                            ))
+                            "Please use overrides instead.".format(k, k, repr(v))
+                        )
                     new_values[k].update(copy.deepcopy(other.__items[k]))
             else:
                 new_values[k] = copy.deepcopy(other.__items[k])
@@ -104,13 +102,17 @@ class Configuration(object):
                 return config
             except yaml.YAMLError as e:
                 raise SyntaxError(
-                    "Not able to parse the configuration file, {}".format(e))
+                    "Not able to parse the configuration file, {}".format(e)
+                )
 
     @staticmethod
     def from_file(in_folder: Path, p: str) -> "Configuration":
         expand_p = os.path.expandvars(p)
-        logging.info("Loading config {}, expanding to {}, relative to {}".format(
-            p, expand_p, in_folder))
+        logging.info(
+            "Loading config {}, expanding to {}, relative to {}".format(
+                p, expand_p, in_folder
+            )
+        )
         path = Path(expand_p)
         if path.is_absolute():
             logging.info("    is absolute")
@@ -118,24 +120,23 @@ class Configuration(object):
             path = in_folder.joinpath(p)
             logging.info("    resolved to {}".format(path))
         if not path.exists():
-            raise ValueError(
-                "Configuration not found at path '{}'".format(path))
+            raise ValueError("Configuration not found at path '{}'".format(path))
         if not path.is_file():
-            raise ValueError(
-                "Configuration at path '{}' is not a file".format(path))
+            raise ValueError("Configuration at path '{}' is not a file".format(path))
         with path.open("r") as fd:
             try:
                 config = yaml.safe_load(fd)
             except yaml.YAMLError as e:
                 raise SyntaxError(
-                    "Not able to parse the configuration file, {}".format(e))
+                    "Not able to parse the configuration file, {}".format(e)
+                )
         if config is None:
             raise ValueError("Parsed configuration file is None")
         if "includes" in config:
-            includes = [Configuration.from_file(
-                path.parent, p) for p in config["includes"]]
-            base = functools.reduce(
-                lambda left, right: left.combine(right), includes)
+            includes = [
+                Configuration.from_file(path.parent, p) for p in config["includes"]
+            ]
+            base = functools.reduce(lambda left, right: left.combine(right), includes)
             if "overrides" in config:
                 for selector, new_value in config["overrides"].items():
                     base.override(selector, new_value)
@@ -146,6 +147,7 @@ class Configuration(object):
         else:
             if "overrides" in config:
                 raise KeyError(
-                    'You specified "overrides" but not "includes". This does not make sense.')
+                    'You specified "overrides" but not "includes". This does not make sense.'
+                )
             final_config = Configuration(config)
         return final_config

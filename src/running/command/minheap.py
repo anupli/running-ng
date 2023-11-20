@@ -30,14 +30,21 @@ class ContinueSearch(Enum):
     HeapTooSmall = 3
 
 
-def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize: Benchmark, minheap_dir: Path, attempts: int) -> ContinueSearch:
+def run_bm_with_retry(
+    suite: BenchmarkSuite,
+    runtime: Runtime,
+    bm_with_heapsize: Benchmark,
+    minheap_dir: Path,
+    attempts: int,
+) -> ContinueSearch:
     def log(s):
         return print(s, end="", flush=True)
 
     log(" ")
     for _ in range(attempts):
         output, _companion_output, subprocess_exit = bm_with_heapsize.run(
-            runtime, cwd=minheap_dir)
+            runtime, cwd=minheap_dir
+        )
         if runtime.is_oom(output):
             # if OOM is detected, we exit the loop regardless the exit statussour
             log("x ")
@@ -59,20 +66,28 @@ def run_bm_with_retry(suite: BenchmarkSuite, runtime: Runtime, bm_with_heapsize:
     return ContinueSearch.Abort
 
 
-def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap: int, minheap_dir: Path, attempts: int) -> float:
+def minheap_one_bm(
+    suite: BenchmarkSuite,
+    runtime: Runtime,
+    bm: Benchmark,
+    heap: int,
+    minheap_dir: Path,
+    attempts: int,
+) -> float:
     lo = 2
     hi = heap
     mid = (lo + hi) // 2
-    minh = float('inf')
+    minh = float("inf")
     while hi - lo > 1:
         heapsize = runtime.get_heapsize_modifiers(mid)
         size_str = "{}M".format(mid)
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers(heapsize)
         result = run_bm_with_retry(
-            suite, runtime, bm_with_heapsize, minheap_dir, attempts)
+            suite, runtime, bm_with_heapsize, minheap_dir, attempts
+        )
         if result is ContinueSearch.Abort:
-            return float('inf')
+            return float("inf")
         elif result is ContinueSearch.HeapTooBig:
             minh = mid
             hi = mid
@@ -85,7 +100,12 @@ def minheap_one_bm(suite: BenchmarkSuite, runtime: Runtime, bm: Benchmark, heap:
     return minh
 
 
-def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file: Optional[Path], attempts: int):
+def run_with_persistence(
+    result: Dict[str, Any],
+    minheap_dir: Path,
+    result_file: Optional[Path],
+    attempts: int,
+):
     suites = configuration.get("suites")
     maxheap = configuration.get("maxheap")
     for c in configuration.get("configs"):
@@ -95,8 +115,7 @@ def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file:
         runtime, mods = parse_config_str(configuration, c)
         print("{} ".format(c_encoded))
         if isinstance(runtime, NativeExecutable):
-            logging.warning(
-                "Minheap measurement not supported for NativeExecutable")
+            logging.warning("Minheap measurement not supported for NativeExecutable")
             continue
         for suite_name, bms in configuration.get("benchmarks").items():
             if suite_name not in result[c_encoded]:
@@ -109,9 +128,11 @@ def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file:
                 print("\t {}-{} ".format(b.suite_name, b.name), end="")
                 mod_b = b.attach_modifiers(mods)
                 mod_b = mod_b.attach_modifiers(
-                    b.get_runtime_specific_modifiers(runtime))
+                    b.get_runtime_specific_modifiers(runtime)
+                )
                 minheap = minheap_one_bm(
-                    suite, runtime, mod_b, maxheap, minheap_dir, attempts)
+                    suite, runtime, mod_b, maxheap, minheap_dir, attempts
+                )
                 print("minheap {}".format(minheap))
                 result[c_encoded][suite_name][b.name] = minheap
                 if result_file:
@@ -121,7 +142,7 @@ def run_with_persistence(result: Dict[str, Any], minheap_dir: Path, result_file:
 
 def print_best(result: Dict[str, Dict[str, Dict[str, float]]]):
     minheap: DefaultDict[str, DefaultDict[str, float]]
-    minheap = defaultdict(lambda: defaultdict(lambda: float('inf')))
+    minheap = defaultdict(lambda: defaultdict(lambda: float("inf")))
     minheap_config: DefaultDict[str, DefaultDict[str, str]]
     minheap_config = defaultdict(lambda: defaultdict(lambda: "ALL_FAILED"))
     for config, suites in result.items():
@@ -139,8 +160,11 @@ def print_best(result: Dict[str, Dict[str, Dict[str, float]]]):
 
     if config_best_count.items():
         config, count = max(config_best_count.items(), key=lambda x: x[1])
-        print("{} obtained the most number of smallest minheap sizes: {}".format(
-            config, count))
+        print(
+            "{} obtained the most number of smallest minheap sizes: {}".format(
+                config, count
+            )
+        )
         print("Minheap configuration to be copied to runbms config files")
         print(yaml.dump(result[config]))
 
@@ -149,8 +173,7 @@ def run(args):
     if args.get("which") != "minheap":
         return False
     global configuration
-    configuration = Configuration.from_file(
-        Path(os.getcwd()), args.get("CONFIG"))
+    configuration = Configuration.from_file(Path(os.getcwd()), args.get("CONFIG"))
     configuration.resolve_class()
     result_file = args.get("RESULT")
     if result_file.exists():
@@ -168,7 +191,6 @@ def run(args):
         if is_dry_run():
             run_with_persistence(result, Path(minheap_dir), None, attempts)
         else:
-            run_with_persistence(result, Path(
-                minheap_dir), result_file, attempts)
+            run_with_persistence(result, Path(minheap_dir), result_file, attempts)
     print_best(result)
     return True
