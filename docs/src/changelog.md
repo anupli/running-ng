@@ -2,7 +2,7 @@
 ## Unreleased
 ### Added
 #### Base Configurations
-- DaCapo 23.11-Chopin
+- DaCapo 23.11-Chopin. Please use `dacapochopin_jep261` modifier when running this release with `callback` set due to JEP 261.
 - Temurin 21
 
 ### Changed
