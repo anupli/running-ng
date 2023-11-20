@@ -1,8 +1,21 @@
 # Changelog
 ## Unreleased
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [`v0.4.3` (2023-11-20)](https://github.com/anupli/running-ng/releases/tag/v0.4.3)
+### Added
 #### Base Configurations
-- DaCapo 23.11-Chopin available as `dacapochopin`. Please use `dacapochopin_jdk9`, `dacapochopin_jdk11`, `dacapochopin_jdk17`, and `dacapochopin_jdk21` modifiers for JDK 9, 11, 17, and 21 respectively.
+- DaCapo 23.11-Chopin available as `dacapochopin`. Please use `dacapochopin_jdk9`, `dacapochopin_jdk11`, `dacapochopin_jdk17`, and `dacapochopin_jdk21` modifiers for JDK 9, 11, 17, and 21 respectively when you use this suite with these JDK versions.
 - Temurin 21
 
 ### Changed
@@ -14,14 +27,10 @@
 - `EnvVar` `val` is expanded using the outside environment prior to benchmark execution.
 
 ### Deprecated
-- Deprecating Python 3.7 support for users. Python 3.7 was last released on June 6, 2023 (3.7.17), which was recent.
+- Deprecating Python 3.7 support for users. Python 3.7 was last released on June 6, 2023 (3.7.17), and no new release has been made since.
 
 ### Removed
 - Dropping Python 3.7 support for developers (NOT users). pytest 7.4+ requires at least Python 3.8 (still supported by Ubuntu 20.04 LTS).
-
-### Fixed
-
-### Security
 
 ## [`v0.4.2` (2023-09-10)](https://github.com/anupli/running-ng/releases/tag/v0.4.2)
 ### Changed
