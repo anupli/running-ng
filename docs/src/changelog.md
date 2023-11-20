@@ -1,17 +1,20 @@
 # Changelog
 ## Unreleased
 ### Added
-#### Benchmark Suites
-- `DaCapo`: add 23.11-Chopin release and minheap values.
+#### Base Configurations
+- DaCapo 23.11-Chopin
+- Temurin 21
 
 ### Changed
+#### Base Configurations
+- Environment variables are expanded when resolving paths of runtimes and benchmark suites.
 
 ### Deprecated
 - Deprecating Python 3.7 support for users. Python 3.7 was last released on June 6, 2023 (3.7.17), which was recent.
 
 ### Removed
 - Dropping Python 3.6 support for users. Last Python 3.6 release was on Sept. 4, 2021 (3.6.15), which was long ago.
-- Dropping Python 3.7 support for developers (NOT users). pytest 7.4+ requires at least Python 3.8.
+- Dropping Python 3.7 support for developers (NOT users). pytest 7.4+ requires at least Python 3.8 (still supported by Ubuntu 20.04 LTS).
 
 ### Fixed
 
