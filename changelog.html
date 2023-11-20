@@ -184,6 +184,10 @@
 <ul>
 <li>Environment variables are expanded when resolving paths of runtimes and benchmark suites.</li>
 </ul>
+<h4 id="modifiers"><a class="header" href="#modifiers">Modifiers</a></h4>
+<ul>
+<li><code>EnvVar</code> <code>val</code> is expanded using the outside environment prior to benchmark execution.</li>
+</ul>
 <h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
 <ul>
 <li>Deprecating Python 3.7 support for users. Python 3.7 was last released on June 6, 2023 (3.7.17), which was recent.</li>
@@ -214,7 +218,7 @@
 </ul>
 <h2 id="v040-2023-08-17"><a class="header" href="#v040-2023-08-17"><a href="https://github.com/anupli/running-ng/releases/tag/v0.4.0"><code>v0.4.0</code> (2023-08-17)</a></a></h2>
 <h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
-<h4 id="modifiers"><a class="header" href="#modifiers">Modifiers</a></h4>
+<h4 id="modifiers-1"><a class="header" href="#modifiers-1">Modifiers</a></h4>
 <ul>
 <li><code>JuliaArg</code></li>
 </ul>
@@ -291,13 +295,13 @@
 <li><code>runbms</code> prints out the logged in users when emitting warnings when the machine has more than one logged in users.</li>
 </ul>
 <h3 id="fixed-8"><a class="header" href="#fixed-8">Fixed</a></h3>
-<h4 id="modifiers-1"><a class="header" href="#modifiers-1">Modifiers</a></h4>
+<h4 id="modifiers-2"><a class="header" href="#modifiers-2">Modifiers</a></h4>
 <ul>
 <li><code>Companion</code>: skip value options expansion if no value option is provided to avoid interpreting bpftrace syntax as replacement fields.</li>
 </ul>
 <h2 id="v032-2022-10-12"><a class="header" href="#v032-2022-10-12"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.2"><code>v0.3.2</code> (2022-10-12)</a></a></h2>
 <h3 id="added-3"><a class="header" href="#added-3">Added</a></h3>
-<h4 id="modifiers-2"><a class="header" href="#modifiers-2">Modifiers</a></h4>
+<h4 id="modifiers-3"><a class="header" href="#modifiers-3">Modifiers</a></h4>
 <ul>
 <li><code>Companion</code></li>
 </ul>
@@ -326,7 +330,7 @@
 </ul>
 <h2 id="v030-2022-03-19"><a class="header" href="#v030-2022-03-19"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.0"><code>v0.3.0</code> (2022-03-19)</a></a></h2>
 <h3 id="added-5"><a class="header" href="#added-5">Added</a></h3>
-<h4 id="modifiers-3"><a class="header" href="#modifiers-3">Modifiers</a></h4>
+<h4 id="modifiers-4"><a class="header" href="#modifiers-4">Modifiers</a></h4>
 <ul>
 <li><code>JVMClasspathAppend</code></li>
 <li><code>JVMClasspathPrepend</code></li>
@@ -336,7 +340,7 @@
 <li><code>SPECjvm98</code></li>
 </ul>
 <h3 id="changed-7"><a class="header" href="#changed-7">Changed</a></h3>
-<h4 id="modifiers-4"><a class="header" href="#modifiers-4">Modifiers</a></h4>
+<h4 id="modifiers-5"><a class="header" href="#modifiers-5">Modifiers</a></h4>
 <ul>
 <li><code>JVMClasspath</code> is now an alias of <code>JVMClasspathAppend</code>. This is backward compatible.</li>
 </ul>
@@ -392,7 +396,7 @@
 <li><code>runbms</code> outputs a warning message if more than one users are logged in.</li>
 <li><code>runbms</code> uses uppercase letters if there are more than 26 configs.</li>
 </ul>
-<h4 id="modifiers-5"><a class="header" href="#modifiers-5">Modifiers</a></h4>
+<h4 id="modifiers-6"><a class="header" href="#modifiers-6">Modifiers</a></h4>
 <ul>
 <li><code>ModifierSet</code></li>
 <li><code>Wrapper</code></li>
@@ -447,7 +451,7 @@
 <li><code>minheap</code></li>
 <li><code>runbms</code></li>
 </ul>
-<h4 id="modifiers-6"><a class="header" href="#modifiers-6">Modifiers</a></h4>
+<h4 id="modifiers-7"><a class="header" href="#modifiers-7">Modifiers</a></h4>
 <ul>
 <li><code>JVMArg</code></li>
 <li><code>JVMClasspath</code></li>
