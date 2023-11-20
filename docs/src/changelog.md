@@ -2,12 +2,13 @@
 ## Unreleased
 ### Added
 #### Base Configurations
-- DaCapo 23.11-Chopin. Please use `dacapochopin_jep261` modifier when running this release with `callback` set due to JEP 261.
+- DaCapo 23.11-Chopin available as `dacapochopin`. Please use `dacapochopin_jdk9`, `dacapochopin_jdk11`, `dacapochopin_jdk17`, and `dacapochopin_jdk21` modifiers for JDK 9, 11, 17, and 21 respectively.
 - Temurin 21
 
 ### Changed
 #### Base Configurations
 - Environment variables are expanded when resolving paths of runtimes and benchmark suites.
+- `--add-exports java.base/jdk.internal.ref=ALL-UNNAMED` is no longer automatically added when running DaCapo benchmarks on >= JDK 9. This approach doesn't scale now we have more workarounds specific to different JDK versions. This is also too opaque and not clear how it's implemented. New modifiers are introduced to address this issue.
 
 #### Modifiers
 - `EnvVar` `val` is expanded using the outside environment prior to benchmark execution.
