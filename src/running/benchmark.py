@@ -37,7 +37,7 @@ class Benchmark(object):
         runtime_specific_modifiers_strategy: Optional[
             Callable[[Runtime], Sequence[Modifier]]
         ] = None,
-        **kwargs
+        **kwargs,
     ):
         self.name = name
         self.suite_name = suite_name
