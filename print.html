@@ -1072,13 +1072,25 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
 <h2 id="unreleased"><a class="header" href="#unreleased">Unreleased</a></h2>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
-<h4 id="benchmark-suites"><a class="header" href="#benchmark-suites">Benchmark Suites</a></h4>
+<h4 id="base-configurations"><a class="header" href="#base-configurations">Base Configurations</a></h4>
 <ul>
-<li><code>DaCapo</code>: add 23.11-Chopin release and minheap values.</li>
+<li>DaCapo 23.11-Chopin</li>
+<li>Temurin 21</li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
+<h4 id="base-configurations-1"><a class="header" href="#base-configurations-1">Base Configurations</a></h4>
+<ul>
+<li>Environment variables are expanded when resolving paths of runtimes and benchmark suites.</li>
+</ul>
 <h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
+<ul>
+<li>Deprecating Python 3.7 support for users. Python 3.7 was last released on June 6, 2023 (3.7.17), which was recent.</li>
+</ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
+<ul>
+<li>Dropping Python 3.6 support for users. Last Python 3.6 release was on Sept. 4, 2021 (3.6.15), which was long ago.</li>
+<li>Dropping Python 3.7 support for developers (NOT users). pytest 7.4+ requires at least Python 3.8 (still supported by Ubuntu 20.04 LTS).</li>
+</ul>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <h3 id="security"><a class="header" href="#security">Security</a></h3>
 <h2 id="v042-2023-09-10"><a class="header" href="#v042-2023-09-10"><a href="https://github.com/anupli/running-ng/releases/tag/v0.4.2"><code>v0.4.2</code> (2023-09-10)</a></a></h2>
@@ -1110,7 +1122,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>JuliaMMTK</code></li>
 <li><code>JuliaStock</code></li>
 </ul>
-<h4 id="benchmark-suites-1"><a class="header" href="#benchmark-suites-1">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites"><a class="header" href="#benchmark-suites">Benchmark Suites</a></h4>
 <ul>
 <li><code>JuliaGCBenchmarks</code></li>
 </ul>
@@ -1119,7 +1131,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>runbms</code> gains an extra argument, <code>--skip-log-compression</code>, to skip compressing log files with <code>gzip</code>.</li>
 </ul>
 <h3 id="changed-2"><a class="header" href="#changed-2">Changed</a></h3>
-<h4 id="base-configurations"><a class="header" href="#base-configurations">Base Configurations</a></h4>
+<h4 id="base-configurations-2"><a class="header" href="#base-configurations-2">Base Configurations</a></h4>
 <ul>
 <li><code>runbms</code>: don't sync to <code>squirrel.moma</code> for the default <code>runbms.yml</code>. <strong>moma machine users should use <code>runbms-anu.yml</code> for the old behaviour.</strong></li>
 </ul>
@@ -1127,13 +1139,13 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li>Gracifully handle empty modifiers strings in configs, such as <code>openjdk7||foobar</code>.</li>
 </ul>
-<h4 id="benchmark-suites-2"><a class="header" href="#benchmark-suites-2">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-1"><a class="header" href="#benchmark-suites-1">Benchmark Suites</a></h4>
 <ul>
 <li>DaCapo specific workarounds are now handled by the <code>DaCapo</code> class rather than the <code>JavaBenchmark</code> class to avoid confusions.</li>
 </ul>
 <h2 id="v039-2023-08-02"><a class="header" href="#v039-2023-08-02"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.9"><code>v0.3.9</code> (2023-08-02)</a></a></h2>
 <h3 id="fixed-4"><a class="header" href="#fixed-4">Fixed</a></h3>
-<h4 id="benchmark-suites-3"><a class="header" href="#benchmark-suites-3">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-2"><a class="header" href="#benchmark-suites-2">Benchmark Suites</a></h4>
 <ul>
 <li><code>DaCapo</code>: don't explicitly pass <code>-s default</code> to DaCapo unless the user requests so by setting the <code>size</code> key of <code>DaCapo</code> or overriding the sizes for individual benchmarks using the <a href="./references/suite.html#benchmark-specification">benchmark specification syntax</a>. This is so that users can override the size via <code>ProgramArg</code>.</li>
 </ul>
@@ -1151,7 +1163,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v036-2023-01-16"><a class="header" href="#v036-2023-01-16"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.6"><code>v0.3.6</code> (2023-01-16)</a></a></h2>
 <h3 id="added-2"><a class="header" href="#added-2">Added</a></h3>
-<h4 id="base-configurations-1"><a class="header" href="#base-configurations-1">Base Configurations</a></h4>
+<h4 id="base-configurations-3"><a class="header" href="#base-configurations-3">Base Configurations</a></h4>
 <ul>
 <li>DaCapo Chopin Snapshot-6e411f33</li>
 </ul>
@@ -1194,7 +1206,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li>Use the <code>$RUNNING_NG_PACKAGE_DATA</code> environment variable to refer to base configurations shipped with running-ng, such as <code>$RUNNING_NG_PACKAGE_DATA/base/runbms.yml</code>, regardless how you installed runnin-ng.</li>
 </ul>
-<h4 id="benchmark-suites-4"><a class="header" href="#benchmark-suites-4">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-3"><a class="header" href="#benchmark-suites-3">Benchmark Suites</a></h4>
 <ul>
 <li><code>DaCapo</code> gains an extra key <code>companion</code> to facilitate eBPF tracing programs.</li>
 </ul>
@@ -1207,7 +1219,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li>Dropping Python 3.6 support for users.</li>
 </ul>
-<h4 id="base-configurations-2"><a class="header" href="#base-configurations-2">Base Configurations</a></h4>
+<h4 id="base-configurations-4"><a class="header" href="#base-configurations-4">Base Configurations</a></h4>
 <ul>
 <li>Removing AdoptOpenJDK from the base configuration files. AdoptOpenJDK is now replaced by Temurin.</li>
 </ul>
@@ -1218,7 +1230,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>JVMClasspathAppend</code></li>
 <li><code>JVMClasspathPrepend</code></li>
 </ul>
-<h4 id="benchmark-suites-5"><a class="header" href="#benchmark-suites-5">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-4"><a class="header" href="#benchmark-suites-4">Benchmark Suites</a></h4>
 <ul>
 <li><code>SPECjvm98</code></li>
 </ul>
@@ -1241,7 +1253,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v022-2022-03-07"><a class="header" href="#v022-2022-03-07"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.2"><code>v0.2.2</code> (2022-03-07)</a></a></h2>
 <h3 id="fixed-9"><a class="header" href="#fixed-9">Fixed</a></h3>
-<h4 id="benchmark-suites-6"><a class="header" href="#benchmark-suites-6">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-5"><a class="header" href="#benchmark-suites-5">Benchmark Suites</a></h4>
 <ul>
 <li><code>JavaBenchmarkSuite</code>: Some DaCapo benchmarks refers to internal classes (e.g., under <code>jdk.internal.ref</code>), and DaCapo implemented a workaround for this behaviour in the jar. However, since we are invoking DaCapo using <code>-cp</code> and the name of the main class, that workaround is bypassed. That workaround is now reimplemented in running-ng through an extra JVM argument <code>--add-exports</code>.</li>
 </ul>
@@ -1252,13 +1264,13 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
 </ul>
 <h3 id="fixed-10"><a class="header" href="#fixed-10">Fixed</a></h3>
-<h4 id="benchmark-suites-7"><a class="header" href="#benchmark-suites-7">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-6"><a class="header" href="#benchmark-suites-6">Benchmark Suites</a></h4>
 <ul>
 <li><code>BinaryBenchmarkSuite</code>: fixes missing parameter when constructing <code>BinaryBenchmark</code> due to a bug in previous refactoring</li>
 </ul>
 <h2 id="v020-2022-02-20"><a class="header" href="#v020-2022-02-20"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.0"><code>v0.2.0</code> (2022-02-20)</a></a></h2>
 <h3 id="added-6"><a class="header" href="#added-6">Added</a></h3>
-<h4 id="base-configurations-3"><a class="header" href="#base-configurations-3">Base Configurations</a></h4>
+<h4 id="base-configurations-5"><a class="header" href="#base-configurations-5">Base Configurations</a></h4>
 <ul>
 <li>AdoptOpenJDK 16</li>
 <li>DaCapo Chopin Snapshot-29a657f, Chopin Snapshot-f480064</li>
@@ -1292,7 +1304,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>JavaScriptCore</code></li>
 <li><code>JVM</code> now detects OOM generated in the form of Rust panic from <code>mmtk-core</code>.</li>
 </ul>
-<h4 id="benchmark-suites-8"><a class="header" href="#benchmark-suites-8">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-7"><a class="header" href="#benchmark-suites-7">Benchmark Suites</a></h4>
 <ul>
 <li><code>DaCapo</code> gains an extra key <code>size</code>, which is used to specify the size of the input.</li>
 <li><code>DaCapo</code> now allows individual benchmark to override the timing iteration, input size, and timeout of the suite.</li>
@@ -1300,7 +1312,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>Octane</code>: basic support for running Octane using Wenyu's wrapper script.</li>
 </ul>
 <h3 id="changed-9"><a class="header" href="#changed-9">Changed</a></h3>
-<h4 id="benchmark-suites-9"><a class="header" href="#benchmark-suites-9">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-8"><a class="header" href="#benchmark-suites-8">Benchmark Suites</a></h4>
 <ul>
 <li>The <code>minheap</code> key of <code>DaCapo</code> changes from a dictionary to a string. The string is used to look up <code>minheap_values</code>, which are collections of minheap values. This makes it easier to store multiple sets of minheap values for the same benchmark suite measured using different runtimes.</li>
 </ul>
@@ -1313,7 +1325,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>The <code>--slice</code> argument of <code>runbms</code> now accepts multiple comma-separated floating point numbers.</li>
 </ul>
 <h3 id="removed-3"><a class="header" href="#removed-3">Removed</a></h3>
-<h4 id="base-configurations-4"><a class="header" href="#base-configurations-4">Base Configurations</a></h4>
+<h4 id="base-configurations-6"><a class="header" href="#base-configurations-6">Base Configurations</a></h4>
 <ul>
 <li>DaCapo Chopin Snapshot-69a704e</li>
 </ul>
@@ -1347,12 +1359,12 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>OpenJDK</code></li>
 <li><code>JikesRVM</code></li>
 </ul>
-<h4 id="benchmark-suites-10"><a class="header" href="#benchmark-suites-10">Benchmark Suites</a></h4>
+<h4 id="benchmark-suites-9"><a class="header" href="#benchmark-suites-9">Benchmark Suites</a></h4>
 <ul>
 <li><code>BinaryBenchmarkSuite</code></li>
 <li><code>DaCapo</code></li>
 </ul>
-<h4 id="base-configurations-5"><a class="header" href="#base-configurations-5">Base Configurations</a></h4>
+<h4 id="base-configurations-7"><a class="header" href="#base-configurations-7">Base Configurations</a></h4>
 <ul>
 <li>AdoptOpenJDK 8, 11, 12, 13, 14, 15</li>
 <li>DaCapo 2006, 9.12 (Bach), 9.12 MR1, 9.12 MR1 for Java 6, Chopin Snapshot-69a704e</li>
