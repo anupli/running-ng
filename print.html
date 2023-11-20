@@ -547,7 +547,8 @@ output timing and other information in a tab-separated table.</p>
 <p><code>release</code>: one of the possible values <code>[&quot;2006&quot;, &quot;9.12&quot;, &quot;evaluation&quot;]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the DaCapo <code>jar</code>.
-The value is required.</p>
+The value is required.
+Environment variables will be expanded.</p>
 <p><code>minheap</code>: a string that selects one of the <code>minheap_values</code> sets to use.</p>
 <p><code>minheap_values</code>: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering <code>OutOfMemoryError</code>.
 Each size is measured in MiB.
@@ -622,7 +623,8 @@ Therefore, it is highly recommended that you give a <code>name</code> different 
 The value is required.</p>
 <p><code>path</code>: path to the <code>jar</code>.
 The value is required.
-Note that the property file should reside in <code>path/../config/specjbb2015.props</code> per the standard folder structure of the ISO image provided by SPEC.</p>
+Note that the property file should reside in <code>path/../config/specjbb2015.props</code> per the standard folder structure of the ISO image provided by SPEC.
+Environment variables will be expanded.</p>
 <h3 id="benchmark-specification-1"><a class="header" href="#benchmark-specification-1">Benchmark Specification</a></h3>
 <p>Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
 Right now, only <code>&quot;composite&quot;</code> is supported.</p>
@@ -649,7 +651,8 @@ configs:
 <p><code>release</code>: one of the possible values <code>[&quot;1.03_05&quot;]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the SPECjvm98 folder, where you can find <code>SpecApplication.class</code>.
-The value is required.</p>
+The value is required.
+Environment variables will be expanded.</p>
 <p><code>timing_iteration</code>: specifying the timing iteration.
 It can only be a number, which is passed to SpecApplication as <code>-i</code>.
 The value is required.</p>
@@ -669,7 +672,8 @@ The following are the benchmarks:</p>
 <h2 id="octane-preview-"><a class="header" href="#octane-preview-"><code>Octane</code> (preview ⚠️)</a></h2>
 <h3 id="keys-4"><a class="header" href="#keys-4">Keys</a></h3>
 <p><code>path</code>: path to the Octane benchmark folder.
-The value is required.</p>
+The value is required.
+Environment variables will be expanded.</p>
 <p><code>wrapper</code>: path to the Octane wrapper written by Wenyu Zhao.
 The value is required.</p>
 <p><code>timing_iteration</code>: specifying the timing iteration using an integer.
@@ -692,7 +696,8 @@ An example looks like this.</p>
 <p>GC benchmarks for Julia: https://github.com/JuliaCI/GCBenchmarks</p>
 <h3 id="keys-5"><a class="header" href="#keys-5">Keys</a></h3>
 <p><code>path</code>: path to the GCBenchmarks folder.
-The value is required.</p>
+The value is required.
+Environment variables will be expanded.</p>
 <p><code>minheap</code>:  a string that selects one of the <code>minheap_values</code> sets to use.</p>
 <p><code>minheap_values</code>: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering <code>Out of Memory!</code>.
 An example looks like this:</p>
@@ -720,61 +725,73 @@ tandem with
 <h2 id="openjdk"><a class="header" href="#openjdk"><code>OpenJDK</code></a></h2>
 <h2 id="d8-preview-"><a class="header" href="#d8-preview-"><code>D8</code> (preview ⚠️)</a></h2>
 <h3 id="keys-6"><a class="header" href="#keys-6">Keys</a></h3>
-<p><code>executable</code>: path to the <code>d8</code> executable.</p>
+<p><code>executable</code>: path to the <code>d8</code> executable.
+Environment variables will be expanded.</p>
 <h2 id="spidermonkey-preview-"><a class="header" href="#spidermonkey-preview-"><code>SpiderMonkey</code> (preview ⚠️)</a></h2>
 <h3 id="keys-7"><a class="header" href="#keys-7">Keys</a></h3>
-<p><code>executable</code>: path to the <code>js</code> executable.</p>
+<p><code>executable</code>: path to the <code>js</code> executable.
+Environment variables will be expanded.</p>
 <h2 id="javascriptcore-preview-"><a class="header" href="#javascriptcore-preview-"><code>JavaScriptCore</code> (preview ⚠️)</a></h2>
 <h3 id="keys-8"><a class="header" href="#keys-8">Keys</a></h3>
-<p><code>executable</code>: path to the <code>jsc</code> executable.</p>
+<p><code>executable</code>: path to the <code>jsc</code> executable.
+Environment variables will be expanded.</p>
 <h2 id="juliammtk-preview-"><a class="header" href="#juliammtk-preview-"><code>JuliaMMTK</code> (preview ⚠️)</a></h2>
 <h3 id="keys-9"><a class="header" href="#keys-9">Keys</a></h3>
-<p><code>executable</code>: path to the <code>julia</code> executable.</p>
+<p><code>executable</code>: path to the <code>julia</code> executable.
+Environment variables will be expanded.</p>
 <h2 id="juliastock-preview-"><a class="header" href="#juliastock-preview-"><code>JuliaStock</code> (preview ⚠️)</a></h2>
 <p>Julia with the stock GC. It does not allow setting a heap size, and will not throw OOM unless killed by the operating system.</p>
 <h3 id="keys-10"><a class="header" href="#keys-10">Keys</a></h3>
-<p><code>executable</code>: path to the <code>julia</code> executable.</p>
+<p><code>executable</code>: path to the <code>julia</code> executable.
+Environment variables will be expanded.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
 <h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
 <h3 id="keys-11"><a class="header" href="#keys-11">Keys</a></h3>
 <p><code>var</code>: name of the variable.</p>
-<p><code>val</code>: value of the variable.</p>
+<p><code>val</code>: value of the variable.
+Environment variables will be expanded.</p>
 <h3 id="description"><a class="header" href="#description">Description</a></h3>
 <p>Set an environment variable. Might override an environment variable inherited from the parent process.</p>
 <h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
 <p><code>JVM</code> specific.</p>
 <h3 id="keys-12"><a class="header" href="#keys-12">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
-Multiple arguments are space separated.</p>
+Multiple arguments are space separated.
+Environment variables will be expanded.</p>
 <h3 id="description-1"><a class="header" href="#description-1">Description</a></h3>
 <p>Specify arguments to a JVM, as opposed to the program.</p>
 <h2 id="jsarg-preview-"><a class="header" href="#jsarg-preview-"><code>JSArg</code> (preview ⚠️)</a></h2>
 <p><code>JavaScriptRuntime</code> specific.</p>
 <h3 id="keys-13"><a class="header" href="#keys-13">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
-Multiple arguments are space separated.</p>
+Multiple arguments are space separated.
+Environment variables will be expanded.</p>
 <h3 id="description-2"><a class="header" href="#description-2">Description</a></h3>
 <p>Specify arguments to a JavaScript runtime (e.g., <code>d8</code>), as opposed to the program.</p>
 <h2 id="jvmclasspathappend"><a class="header" href="#jvmclasspathappend"><code>JVMClasspathAppend</code></a></h2>
 <p><code>JVM</code> specific.</p>
 <h3 id="keys-14"><a class="header" href="#keys-14">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
-Multiple classpaths are space separated.</p>
+Multiple classpaths are space separated.
+Environment variables will be expanded.</p>
 <h3 id="description-3"><a class="header" href="#description-3">Description</a></h3>
 <p>Append a list of classpaths to the existing classpaths.</p>
 <h2 id="jvmclasspathprepend"><a class="header" href="#jvmclasspathprepend"><code>JVMClasspathPrepend</code></a></h2>
 <p><code>JVM</code> specific.</p>
 <h3 id="keys-15"><a class="header" href="#keys-15">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
-Multiple classpaths are space separated.</p>
+Multiple classpaths are space separated.
+Environment variables will be expanded.</p>
 <h3 id="description-4"><a class="header" href="#description-4">Description</a></h3>
 <p>Prepend a list of classpaths to the existing classpaths.</p>
 <h2 id="jvmclasspath"><a class="header" href="#jvmclasspath"><code>JVMClasspath</code></a></h2>
-<p>A backward-compatibility alias of <code>JVMClasspathAppend</code>.</p>
+<p>A backward-compatibility alias of <code>JVMClasspathAppend</code>.
+Environment variables will be expanded.</p>
 <h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
 <h3 id="keys-16"><a class="header" href="#keys-16">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
-Multiple arguments are space separated.</p>
+Multiple arguments are space separated.
+Environment variables will be expanded.</p>
 <h3 id="description-5"><a class="header" href="#description-5">Description</a></h3>
 <p>Specify arguments to a program, as opposed to the runtime.</p>
 <h2 id="modifierset-preview-"><a class="header" href="#modifierset-preview-"><code>ModifierSet</code> (preview ⚠️)</a></h2>
@@ -786,7 +803,8 @@ That is, you can use <code>ModifierSet</code> recursively.</p>
 <h2 id="wrapper-preview-"><a class="header" href="#wrapper-preview-"><code>Wrapper</code> (preview ⚠️)</a></h2>
 <h3 id="keys-18"><a class="header" href="#keys-18">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
-Multiple arguments are space separated.</p>
+Multiple arguments are space separated.
+Environment variables will be expanded.</p>
 <h3 id="description-7"><a class="header" href="#description-7">Description</a></h3>
 <p>Specify a wrapper.
 If a wrapper also exist for the benchmark suite you use, this wrapper will follow that.</p>
@@ -801,7 +819,8 @@ If a companion program also exist for the benchmark suite you use, this companio
 <p><code>JuliaMMTk</code> and <code>JuliaStock</code> specific.</p>
 <h3 id="keys-20"><a class="header" href="#keys-20">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
-Multiple arguments are space separated.</p>
+Multiple arguments are space separated.
+Environment variables will be expanded.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="command-references"><a class="header" href="#command-references">Command References</a></h1>
 <p>Please see the sections in this chapter for the references for each of the subcommands.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
@@ -1084,6 +1103,10 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>DaCapo 23.11-Chopin available as <code>dacapochopin</code>. Please use <code>dacapochopin_jdk9</code>, <code>dacapochopin_jdk11</code>, <code>dacapochopin_jdk17</code>, and <code>dacapochopin_jdk21</code> modifiers for JDK 9, 11, 17, and 21 respectively when you use this suite with these JDK versions.</li>
 <li>Temurin 21</li>
 </ul>
+<h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
+<ul>
+<li><code>runbms</code>: support skipping gzip compression of log files using <code>--skip-log-compression</code>.</li>
+</ul>
 <h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
 <h4 id="base-configurations-1"><a class="header" href="#base-configurations-1">Base Configurations</a></h4>
 <ul>
@@ -1115,7 +1138,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h3 id="security-1"><a class="header" href="#security-1">Security</a></h3>
 <h2 id="v041-2023-08-22"><a class="header" href="#v041-2023-08-22"><a href="https://github.com/anupli/running-ng/releases/tag/v0.4.1"><code>v0.4.1</code> (2023-08-22)</a></a></h2>
 <h3 id="fixed-2"><a class="header" href="#fixed-2">Fixed</a></h3>
-<h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
+<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: apply modifiers in the config file.</li>
 <li><code>minheap</code>: apply modifiers in the config file.</li>
@@ -1135,7 +1158,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li><code>JuliaGCBenchmarks</code></li>
 </ul>
-<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
+<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
 <ul>
 <li><code>runbms</code> gains an extra argument, <code>--skip-log-compression</code>, to skip compressing log files with <code>gzip</code>.</li>
 </ul>
@@ -1160,13 +1183,13 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v038-2023-02-21"><a class="header" href="#v038-2023-02-21"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.8"><code>v0.3.8</code> (2023-02-21)</a></a></h2>
 <h3 id="changed-4"><a class="header" href="#changed-4">Changed</a></h3>
-<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
+<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: companion programs are now expected to self-terminate.</li>
 </ul>
 <h2 id="v037-2023-02-14"><a class="header" href="#v037-2023-02-14"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.7"><code>v0.3.7</code> (2023-02-14)</a></a></h2>
 <h3 id="fixed-5"><a class="header" href="#fixed-5">Fixed</a></h3>
-<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
+<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: better heuristics to detect whether a host is in the moma subnet.</li>
 </ul>
@@ -1182,19 +1205,19 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v035-2022-10-13"><a class="header" href="#v035-2022-10-13"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.5"><code>v0.3.5</code> (2022-10-13)</a></a></h2>
 <h3 id="changed-5"><a class="header" href="#changed-5">Changed</a></h3>
-<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
+<h4 id="commands-5"><a class="header" href="#commands-5">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: when a companion program exits with a non-zero code, a warning is generated instead of an exception to prevent stopping the entire experiment.</li>
 </ul>
 <h2 id="v034-2022-10-13"><a class="header" href="#v034-2022-10-13"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.4"><code>v0.3.4</code> (2022-10-13)</a></a></h2>
 <h3 id="fixed-7"><a class="header" href="#fixed-7">Fixed</a></h3>
-<h4 id="commands-5"><a class="header" href="#commands-5">Commands</a></h4>
+<h4 id="commands-6"><a class="header" href="#commands-6">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: fix the file descriptor leak when running benchmarks with companion programs.</li>
 </ul>
 <h2 id="v033-2022-10-12"><a class="header" href="#v033-2022-10-12"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.3"><code>v0.3.3</code> (2022-10-12)</a></a></h2>
 <h3 id="changed-6"><a class="header" href="#changed-6">Changed</a></h3>
-<h4 id="commands-6"><a class="header" href="#commands-6">Commands</a></h4>
+<h4 id="commands-7"><a class="header" href="#commands-7">Commands</a></h4>
 <ul>
 <li><code>runbms</code> prints out the logged in users when emitting warnings when the machine has more than one logged in users.</li>
 </ul>
@@ -1248,7 +1271,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li><code>JVMClasspath</code> is now an alias of <code>JVMClasspathAppend</code>. This is backward compatible.</li>
 </ul>
-<h4 id="commands-7"><a class="header" href="#commands-7">Commands</a></h4>
+<h4 id="commands-8"><a class="header" href="#commands-8">Commands</a></h4>
 <ul>
 <li><code>runbms</code> prints out the version number of <code>running-ng</code> in log files.</li>
 </ul>
@@ -1268,7 +1291,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v021-2022-03-05"><a class="header" href="#v021-2022-03-05"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.1"><code>v0.2.1</code> (2022-03-05)</a></a></h2>
 <h3 id="changed-9"><a class="header" href="#changed-9">Changed</a></h3>
-<h4 id="commands-8"><a class="header" href="#commands-8">Commands</a></h4>
+<h4 id="commands-9"><a class="header" href="#commands-9">Commands</a></h4>
 <ul>
 <li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
 </ul>
@@ -1286,7 +1309,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>Temurin 8, 11, 17</li>
 <li>SPECjbb 2015, 1.03</li>
 </ul>
-<h4 id="commands-9"><a class="header" href="#commands-9">Commands</a></h4>
+<h4 id="commands-10"><a class="header" href="#commands-10">Commands</a></h4>
 <ul>
 <li><code>minheap</code> gains an extra key <code>attempts</code> (can be overridden by <code>--attempts</code>) so that crashes don't cause bogus minheap measurements.</li>
 <li><code>minheap</code> stores results in a YAML file, which is also used to resume an interrupted execution.</li>
@@ -1329,7 +1352,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li>Whitespaces can be used in config strings for visual alignment. They are ignored when parsed.</li>
 </ul>
-<h4 id="commands-10"><a class="header" href="#commands-10">Commands</a></h4>
+<h4 id="commands-11"><a class="header" href="#commands-11">Commands</a></h4>
 <ul>
 <li>The <code>--slice</code> argument of <code>runbms</code> now accepts multiple comma-separated floating point numbers.</li>
 </ul>
@@ -1339,7 +1362,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>DaCapo Chopin Snapshot-69a704e</li>
 </ul>
 <h3 id="fixed-11"><a class="header" href="#fixed-11">Fixed</a></h3>
-<h4 id="commands-11"><a class="header" href="#commands-11">Commands</a></h4>
+<h4 id="commands-12"><a class="header" href="#commands-12">Commands</a></h4>
 <ul>
 <li>Resolving relative paths of runtimes before running. Otherwise, they would be resolved relative to the <code>runbms</code> working directory.</li>
 <li>Use the <code>BinaryIO</code> interface of file IO and interprocess communication to avoid invalid UTF-8 characters from crashing the script.</li>
@@ -1349,7 +1372,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h2 id="v010-2021-08-09"><a class="header" href="#v010-2021-08-09"><a href="https://github.com/anupli/running-ng/releases/tag/v0.1.0"><code>v0.1.0</code> (2021-08-09)</a></a></h2>
 <p>Initial release.</p>
 <h3 id="added-8"><a class="header" href="#added-8">Added</a></h3>
-<h4 id="commands-12"><a class="header" href="#commands-12">Commands</a></h4>
+<h4 id="commands-13"><a class="header" href="#commands-13">Commands</a></h4>
 <ul>
 <li><code>fillin</code></li>
 <li><code>minheap</code></li>
