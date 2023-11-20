@@ -130,25 +130,77 @@ suites:
     timeout: 1800
 
 modifiers:
-  dacapochopin_jep261:
+  dacapochopin_jdk21:
     type: ModifierSet
-    val: dacapochopin_jep261_h2o21|dacapochopin_jep261_cassandra21|dacapochopin_jep261_trades21
-  dacapochopin_jep261_h2o21:
+    val: "dacapochopin_jdk17|dacapochopin_jdk21_h2o"
+  dacapochopin_jdk21_h2o:
     type: JVMArg
-    val: "-Dsys.ai.h2o.debug.allowJavaVersions=21 --add-opens java.base/java.lang=ALL-UNNAMED"
+    val: "-Dsys.ai.h2o.debug.allowJavaVersions=21"
     includes:
       dacapochopin:
         - h2o
-  dacapochopin_jep261_cassandra21:
+  dacapochopin_jdk17:
+    type: ModifierSet
+    val: "dacapochopin_jdk11|dacapochopin_jdk17_cassandra"
+  dacapochopin_jdk17_cassandra:
     type: JVMArg
-    val: "-Djava.security.manager=allow --add-exports java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED"
+    val: "-Djava.security.manager=allow"
     includes:
       dacapochopin:
         - cassandra
-  dacapochopin_jep261_trades21:
+  dacapochopin_jdk11:
+    type: ModifierSet
+    val: "dacapochopin_jdk9"
+  dacapochopin_jdk9:
+    type: ModifierSet
+    val: "dacapochopin_jdk9_backward_compatible|dacapochopin_jdk9_h2o|dacapochopin_jdk9_cassandra|dacapochopin_jdk9_trades"
+  dacapochopin_jdk9_h2o:
+    type: JVMArg
+    val: "--add-opens java.base/java.lang=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - h2o
+  dacapochopin_jdk9_cassandra:
+    type: JVMArg
+    val: "--add-exports java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - cassandra
+  dacapochopin_jdk9_trades:
     type: JVMArg
     val: "--add-opens java.base/java.util=ALL-UNNAMED"
     includes:
       dacapochopin:
         - tradebeans
         - tradesoap
+  # https://github.com/anupli/running-ng/issues/111
+  # https://github.com/anupli/running-ng/pull/114
+  # https://github.com/anupli/running-ng/issues/130
+  # https://mmtk.zulipchat.com/#narrow/stream/262677-ANU-Research/topic/Using.20new.20dacapo/near/270150954
+  dacapochopin_jdk9_backward_compatible:
+    type: JVMArg
+    val: "--add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - avrora
+        - batik
+        - biojava
+        - cassandra
+        - eclipse
+        - fop
+        - graphchi
+        - h2
+        - h2o
+        - jme
+        - jython
+        - kafka
+        - luindex
+        - lusearch
+        - pmd
+        - spring
+        - sunflow
+        - tomcat
+        - tradebeans
+        - tradesoap
+        - xalan
+        - zxing

@@ -5,14 +5,6 @@ modifiers:
   c2:
     type: JVMArg
     val: "-XX:-TieredCompilation -Xcomp"
-    excludes:
-      # These two benchmarks exit with code 1
-      dacapochopin-29a657f:
-        - tradebeans
-        - tradesoap
-      dacapochopin-f480064:
-        - tradebeans
-        - tradesoap
   ms:
     type: JVMArg
     val: "-XX:MetaspaceSize=500M -XX:+DisableExplicitGC"
