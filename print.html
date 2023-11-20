@@ -1103,10 +1103,6 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>DaCapo 23.11-Chopin available as <code>dacapochopin</code>. Please use <code>dacapochopin_jdk9</code>, <code>dacapochopin_jdk11</code>, <code>dacapochopin_jdk17</code>, and <code>dacapochopin_jdk21</code> modifiers for JDK 9, 11, 17, and 21 respectively when you use this suite with these JDK versions.</li>
 <li>Temurin 21</li>
 </ul>
-<h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
-<ul>
-<li><code>runbms</code>: support skipping gzip compression of log files using <code>--skip-log-compression</code>.</li>
-</ul>
 <h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
 <h4 id="base-configurations-1"><a class="header" href="#base-configurations-1">Base Configurations</a></h4>
 <ul>
@@ -1138,7 +1134,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h3 id="security-1"><a class="header" href="#security-1">Security</a></h3>
 <h2 id="v041-2023-08-22"><a class="header" href="#v041-2023-08-22"><a href="https://github.com/anupli/running-ng/releases/tag/v0.4.1"><code>v0.4.1</code> (2023-08-22)</a></a></h2>
 <h3 id="fixed-2"><a class="header" href="#fixed-2">Fixed</a></h3>
-<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
+<h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: apply modifiers in the config file.</li>
 <li><code>minheap</code>: apply modifiers in the config file.</li>
@@ -1158,7 +1154,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li><code>JuliaGCBenchmarks</code></li>
 </ul>
-<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
+<h4 id="commands-1"><a class="header" href="#commands-1">Commands</a></h4>
 <ul>
 <li><code>runbms</code> gains an extra argument, <code>--skip-log-compression</code>, to skip compressing log files with <code>gzip</code>.</li>
 </ul>
@@ -1183,13 +1179,13 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v038-2023-02-21"><a class="header" href="#v038-2023-02-21"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.8"><code>v0.3.8</code> (2023-02-21)</a></a></h2>
 <h3 id="changed-4"><a class="header" href="#changed-4">Changed</a></h3>
-<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
+<h4 id="commands-2"><a class="header" href="#commands-2">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: companion programs are now expected to self-terminate.</li>
 </ul>
 <h2 id="v037-2023-02-14"><a class="header" href="#v037-2023-02-14"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.7"><code>v0.3.7</code> (2023-02-14)</a></a></h2>
 <h3 id="fixed-5"><a class="header" href="#fixed-5">Fixed</a></h3>
-<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
+<h4 id="commands-3"><a class="header" href="#commands-3">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: better heuristics to detect whether a host is in the moma subnet.</li>
 </ul>
@@ -1205,19 +1201,19 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v035-2022-10-13"><a class="header" href="#v035-2022-10-13"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.5"><code>v0.3.5</code> (2022-10-13)</a></a></h2>
 <h3 id="changed-5"><a class="header" href="#changed-5">Changed</a></h3>
-<h4 id="commands-5"><a class="header" href="#commands-5">Commands</a></h4>
+<h4 id="commands-4"><a class="header" href="#commands-4">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: when a companion program exits with a non-zero code, a warning is generated instead of an exception to prevent stopping the entire experiment.</li>
 </ul>
 <h2 id="v034-2022-10-13"><a class="header" href="#v034-2022-10-13"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.4"><code>v0.3.4</code> (2022-10-13)</a></a></h2>
 <h3 id="fixed-7"><a class="header" href="#fixed-7">Fixed</a></h3>
-<h4 id="commands-6"><a class="header" href="#commands-6">Commands</a></h4>
+<h4 id="commands-5"><a class="header" href="#commands-5">Commands</a></h4>
 <ul>
 <li><code>runbms</code>: fix the file descriptor leak when running benchmarks with companion programs.</li>
 </ul>
 <h2 id="v033-2022-10-12"><a class="header" href="#v033-2022-10-12"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.3"><code>v0.3.3</code> (2022-10-12)</a></a></h2>
 <h3 id="changed-6"><a class="header" href="#changed-6">Changed</a></h3>
-<h4 id="commands-7"><a class="header" href="#commands-7">Commands</a></h4>
+<h4 id="commands-6"><a class="header" href="#commands-6">Commands</a></h4>
 <ul>
 <li><code>runbms</code> prints out the logged in users when emitting warnings when the machine has more than one logged in users.</li>
 </ul>
@@ -1271,7 +1267,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li><code>JVMClasspath</code> is now an alias of <code>JVMClasspathAppend</code>. This is backward compatible.</li>
 </ul>
-<h4 id="commands-8"><a class="header" href="#commands-8">Commands</a></h4>
+<h4 id="commands-7"><a class="header" href="#commands-7">Commands</a></h4>
 <ul>
 <li><code>runbms</code> prints out the version number of <code>running-ng</code> in log files.</li>
 </ul>
@@ -1291,7 +1287,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v021-2022-03-05"><a class="header" href="#v021-2022-03-05"><a href="https://github.com/anupli/running-ng/releases/tag/v0.2.1"><code>v0.2.1</code> (2022-03-05)</a></a></h2>
 <h3 id="changed-9"><a class="header" href="#changed-9">Changed</a></h3>
-<h4 id="commands-9"><a class="header" href="#commands-9">Commands</a></h4>
+<h4 id="commands-8"><a class="header" href="#commands-8">Commands</a></h4>
 <ul>
 <li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
 </ul>
@@ -1309,7 +1305,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>Temurin 8, 11, 17</li>
 <li>SPECjbb 2015, 1.03</li>
 </ul>
-<h4 id="commands-10"><a class="header" href="#commands-10">Commands</a></h4>
+<h4 id="commands-9"><a class="header" href="#commands-9">Commands</a></h4>
 <ul>
 <li><code>minheap</code> gains an extra key <code>attempts</code> (can be overridden by <code>--attempts</code>) so that crashes don't cause bogus minheap measurements.</li>
 <li><code>minheap</code> stores results in a YAML file, which is also used to resume an interrupted execution.</li>
@@ -1352,7 +1348,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <ul>
 <li>Whitespaces can be used in config strings for visual alignment. They are ignored when parsed.</li>
 </ul>
-<h4 id="commands-11"><a class="header" href="#commands-11">Commands</a></h4>
+<h4 id="commands-10"><a class="header" href="#commands-10">Commands</a></h4>
 <ul>
 <li>The <code>--slice</code> argument of <code>runbms</code> now accepts multiple comma-separated floating point numbers.</li>
 </ul>
@@ -1362,7 +1358,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li>DaCapo Chopin Snapshot-69a704e</li>
 </ul>
 <h3 id="fixed-11"><a class="header" href="#fixed-11">Fixed</a></h3>
-<h4 id="commands-12"><a class="header" href="#commands-12">Commands</a></h4>
+<h4 id="commands-11"><a class="header" href="#commands-11">Commands</a></h4>
 <ul>
 <li>Resolving relative paths of runtimes before running. Otherwise, they would be resolved relative to the <code>runbms</code> working directory.</li>
 <li>Use the <code>BinaryIO</code> interface of file IO and interprocess communication to avoid invalid UTF-8 characters from crashing the script.</li>
@@ -1372,7 +1368,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h2 id="v010-2021-08-09"><a class="header" href="#v010-2021-08-09"><a href="https://github.com/anupli/running-ng/releases/tag/v0.1.0"><code>v0.1.0</code> (2021-08-09)</a></a></h2>
 <p>Initial release.</p>
 <h3 id="added-8"><a class="header" href="#added-8">Added</a></h3>
-<h4 id="commands-13"><a class="header" href="#commands-13">Commands</a></h4>
+<h4 id="commands-12"><a class="header" href="#commands-12">Commands</a></h4>
 <ul>
 <li><code>fillin</code></li>
 <li><code>minheap</code></li>
