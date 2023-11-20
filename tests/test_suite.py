@@ -116,3 +116,33 @@ def test_dacapo_openjdk_9_workaround():
     print(fop_jdk11.to_string(jdk11))
     assert "add-exports" not in fop_jdk8.to_string(jdk8)
     assert "add-exports" in fop_jdk11.to_string(jdk11)
+
+
+def test_dacapo_path_ennvvar():
+    c = Configuration(
+        {
+            "suites": {
+                "dacapo2006_bogus": {
+                    "type": "DaCapo",
+                    "release": "2006",
+                    # some bogus environment variable that will not be expanded
+                    "path": "$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI/dacapo-2006-10-MR2.jar",
+                    "timing_iteration": 3,
+                },
+                "dacapo2006": {
+                    "type": "DaCapo",
+                    "release": "2006",
+                    "path": "$HOME/dacapo-2006-10-MR2.jar",
+                    "timing_iteration": 3,
+                },
+            }
+        }
+    )
+
+    c.resolve_class()
+    dacapo2006 = c.get("suites")["dacapo2006"]
+    dacapo2006_bogus = c.get("suites")["dacapo2006_bogus"]
+    assert "$HOME" not in str(dacapo2006.path)
+    assert "$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI" in str(
+        dacapo2006_bogus.path
+    )

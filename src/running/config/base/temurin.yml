@@ -11,3 +11,7 @@ runtimes:
     type: OpenJDK
     release: 17
     home: /usr/lib/jvm/temurin-17-jdk-amd64
+  temurin-21:
+    type: OpenJDK
+    release: 21
+    home: /usr/lib/jvm/temurin-21-jdk-amd64

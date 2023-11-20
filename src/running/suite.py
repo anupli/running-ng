@@ -11,6 +11,7 @@ from running.runtime import OpenJDK, Runtime
 from running.modifier import JVMArg, Modifier
 import logging
 from running.util import register, split_quoted
+import os.path
 
 __DRY_RUN = False
 __DEFAULT_MINHEAP = 4096
@@ -112,7 +113,7 @@ class DaCapo(JavaBenchmarkSuite):
         if self.release not in ["2006", "9.12", "evaluation"]:
             raise ValueError("DaCapo release {} not recongized".format(self.release))
         self.path: Path
-        self.path = Path(kwargs["path"])
+        self.path = Path(os.path.expandvars(kwargs["path"]))
         if not self.path.exists():
             logging.warning("DaCapo jar {} not found".format(self.path))
         self.minheap: Optional[str]
@@ -306,7 +307,7 @@ class SPECjbb2015(JavaBenchmarkSuite):
                 "SPECjbb2015 release {} not recongized".format(self.release)
             )
         self.path: Path
-        self.path = Path(kwargs["path"]).resolve()
+        self.path = Path(os.path.expandvars(kwargs["path"])).resolve()
         self.propsfile = (self.path / ".." / "config" / "specjbb2015.props").resolve()
         if not self.path.exists():
             logging.info("SPECjbb2015 jar {} not found".format(self.path))
@@ -349,7 +350,7 @@ class Octane(BenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.path: Path
-        self.path = Path(kwargs["path"]).resolve()
+        self.path = Path(os.path.expandvars(kwargs["path"])).resolve()
         if not self.path.exists():
             logging.info("Octane folder {} not found".format(self.path))
         self.wrapper: Path
@@ -431,7 +432,7 @@ class SPECjvm98(JavaBenchmarkSuite):
         if self.release not in ["1.03_05"]:
             raise ValueError("SPECjvm98 release {} not recongized".format(self.release))
         self.path: Path
-        self.path = Path(kwargs["path"]).resolve()
+        self.path = Path(os.path.expandvars(kwargs["path"])).resolve()
 
         if not self.path.exists():
             logging.info("SPECjvm98 {} not found".format(self.path))
@@ -481,7 +482,7 @@ class JuliaGCBenchmarks(BenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.path: Path
-        self.path = Path(kwargs["path"])
+        self.path = Path(os.path.expandvars(kwargs["path"]))
         if not self.path.exists():
             logging.warning("JuliaGCBenchmarks does not exist at {}".format(self.path))
         self.minheap: Optional[str]

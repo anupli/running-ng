@@ -65,7 +65,7 @@ def ratio_work_perf_event(event_name: str):
 
     def inner(stats: Dict[str, float]):
         new_stats = deepcopy(stats)
-        for (k, v) in stats.items():
+        for k, v in stats.items():
             if compiled.match(k):
                 new_column = k.replace(".total", ".ratio")
                 new_stats[new_column] = v / stats[aggregated_column]
@@ -107,7 +107,7 @@ def calc_work_ipc(stats: Dict[str, float]):
     pattern = "work\\.\\w+\\.PERF_COUNT_HW_INSTRUCTIONS\\.total"
     compiled = re.compile(pattern)
     new_stats = deepcopy(stats)
-    for (k, v) in stats.items():
+    for k, v in stats.items():
         if compiled.match(k):
             cycles = k.replace("PERF_COUNT_HW_INSTRUCTIONS", "PERF_COUNT_HW_CPU_CYCLES")
             ipc = k.replace(

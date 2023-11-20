@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Union
 from pathlib import Path
 import logging
 from running.util import register
+import os.path
 
 
 class Runtime(object):
@@ -90,7 +91,7 @@ class OpenJDK(JVM):
         except ValueError:
             raise TypeError("The release of an OpenJDK has to be int-like")
         self.home: Path
-        self.home = Path(kwargs["home"])
+        self.home = Path(os.path.expandvars(kwargs["home"]))
         if not self.home.exists():
             logging.warning("OpenJDK home {} doesn't exist".format(self.home))
         self.executable = self.home / "bin" / "java"
@@ -110,7 +111,7 @@ class JikesRVM(JVM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.home: Path
-        self.home = Path(kwargs["home"])
+        self.home = Path(os.path.expandvars(kwargs["home"]))
         if not self.home.exists():
             logging.warning("JikesRVM home {} doesn't exist".format(self.home))
         self.executable = self.home / "rvm"
@@ -129,7 +130,7 @@ class JavaScriptRuntime(Runtime):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.executable: Path
-        self.executable = Path(kwargs["executable"])
+        self.executable = Path(os.path.expandvars(kwargs["executable"]))
         if not self.executable.exists():
             logging.warning(
                 "JavaScriptRuntime executable {} doesn't exist".format(self.executable)
@@ -204,7 +205,7 @@ class Julia(Runtime):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.executable: Path
-        self.executable = Path(kwargs["executable"])
+        self.executable = Path(os.path.expandvars(kwargs["executable"]))
         if not self.executable.exists():
             logging.warning("Julia executable {} doesn't exist".format(self.executable))
         self.executable = self.executable.absolute()
