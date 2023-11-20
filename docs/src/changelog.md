@@ -1,6 +1,8 @@
 # Changelog
 ## Unreleased
 ### Added
+#### Benchmark Suites
+- `DaCapo`: add 23.11-Chopin release and minheap values.
 
 ### Changed
 
@@ -200,7 +202,7 @@
 - Whitespaces can be used in config strings for visual alignment. They are ignored when parsed.
 
 #### Commands
-- The `--slice` argument of `runbms` now accepts multiple comma-separated floating point numbers. 
+- The `--slice` argument of `runbms` now accepts multiple comma-separated floating point numbers.
 
 ### Removed
 #### Base Configurations
