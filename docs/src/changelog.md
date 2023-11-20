@@ -2,7 +2,7 @@
 ## Unreleased
 ### Added
 #### Base Configurations
-- DaCapo 23.11-Chopin
+- DaCapo 23.11-Chopin. Please use `dacapochopin_jep261` modifier when running this release with `callback` set due to JEP 261.
 - Temurin 21
 
 ### Changed
@@ -13,7 +13,6 @@
 - Deprecating Python 3.7 support for users. Python 3.7 was last released on June 6, 2023 (3.7.17), which was recent.
 
 ### Removed
-- Dropping Python 3.6 support for users. Last Python 3.6 release was on Sept. 4, 2021 (3.6.15), which was long ago.
 - Dropping Python 3.7 support for developers (NOT users). pytest 7.4+ requires at least Python 3.8 (still supported by Ubuntu 20.04 LTS).
 
 ### Fixed

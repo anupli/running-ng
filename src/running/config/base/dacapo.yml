@@ -128,3 +128,27 @@ suites:
         zxing: 215
     timing_iteration: 5
     timeout: 1800
+
+modifiers:
+  dacapochopin_jep261:
+    type: ModifierSet
+    val: dacapochopin_jep261_h2o21|dacapochopin_jep261_cassandra21|dacapochopin_jep261_trades21
+  dacapochopin_jep261_h2o21:
+    type: JVMArg
+    val: "-Dsys.ai.h2o.debug.allowJavaVersions=21 --add-opens java.base/java.lang=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - h2o
+  dacapochopin_jep261_cassandra21:
+    type: JVMArg
+    val: "-Djava.security.manager=allow --add-exports java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - cassandra
+  dacapochopin_jep261_trades21:
+    type: JVMArg
+    val: "--add-opens java.base/java.util=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - tradebeans
+        - tradesoap
