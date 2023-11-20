@@ -5,6 +5,7 @@
 `var`: name of the variable.
 
 `val`: value of the variable.
+Environment variables will be expanded.
 
 ### Description
 Set an environment variable. Might override an environment variable inherited from the parent process.
@@ -14,6 +15,7 @@ Set an environment variable. Might override an environment variable inherited fr
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple arguments are space separated.
+Environment variables will be expanded.
 
 ### Description
 Specify arguments to a JVM, as opposed to the program.
@@ -23,6 +25,7 @@ Specify arguments to a JVM, as opposed to the program.
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple arguments are space separated.
+Environment variables will be expanded.
 
 ### Description
 Specify arguments to a JavaScript runtime (e.g., `d8`), as opposed to the program.
@@ -32,6 +35,7 @@ Specify arguments to a JavaScript runtime (e.g., `d8`), as opposed to the progra
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple classpaths are space separated.
+Environment variables will be expanded.
 
 ### Description
 Append a list of classpaths to the existing classpaths.
@@ -41,17 +45,20 @@ Append a list of classpaths to the existing classpaths.
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple classpaths are space separated.
+Environment variables will be expanded.
 
 ### Description
 Prepend a list of classpaths to the existing classpaths.
 
 ## `JVMClasspath`
 A backward-compatibility alias of `JVMClasspathAppend`.
+Environment variables will be expanded.
 
 ## `ProgramArg`
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple arguments are space separated.
+Environment variables will be expanded.
 
 ### Description
 Specify arguments to a program, as opposed to the runtime.
@@ -68,6 +75,7 @@ That is, you can use `ModifierSet` recursively.
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple arguments are space separated.
+Environment variables will be expanded.
 
 ### Description
 Specify a wrapper.
@@ -87,3 +95,4 @@ If a companion program also exist for the benchmark suite you use, this companio
 ### Keys
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple arguments are space separated.
+Environment variables will be expanded.

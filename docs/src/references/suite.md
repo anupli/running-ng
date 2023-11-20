@@ -28,6 +28,7 @@ The value is required.
 
 `path`: path to the DaCapo `jar`.
 The value is required.
+Environment variables will be expanded.
 
 `minheap`: a string that selects one of the `minheap_values` sets to use.
 
@@ -120,6 +121,7 @@ The value is required.
 `path`: path to the `jar`.
 The value is required.
 Note that the property file should reside in `path/../config/specjbb2015.props` per the standard folder structure of the ISO image provided by SPEC.
+Environment variables will be expanded.
 
 ### Benchmark Specification
 Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
@@ -154,6 +156,7 @@ The value is required.
 
 `path`: path to the SPECjvm98 folder, where you can find `SpecApplication.class`.
 The value is required.
+Environment variables will be expanded.
 
 `timing_iteration`: specifying the timing iteration.
 It can only be a number, which is passed to SpecApplication as `-i`.
@@ -175,6 +178,7 @@ The following are the benchmarks:
 ### Keys
 `path`: path to the Octane benchmark folder.
 The value is required.
+Environment variables will be expanded.
 
 `wrapper`: path to the Octane wrapper written by Wenyu Zhao.
 The value is required.
@@ -206,6 +210,7 @@ GC benchmarks for Julia: https://github.com/JuliaCI/GCBenchmarks
 ### Keys
 `path`: path to the GCBenchmarks folder.
 The value is required.
+Environment variables will be expanded.
 
 `minheap`:  a string that selects one of the `minheap_values` sets to use.
 
