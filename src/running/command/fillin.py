@@ -2,7 +2,11 @@ from typing import Optional, Iterable, Callable
 import subprocess
 
 
-def fillin(callback: Callable[[int, Iterable[int]], None], levels: int, start: Optional[int] = None):
+def fillin(
+    callback: Callable[[int, Iterable[int]], None],
+    levels: int,
+    start: Optional[int] = None,
+):
     """Fill the parameter space
 
     The parameter space is from 0, 1, 2, ..., 2^levels (not right-inclusive).
@@ -23,7 +27,7 @@ def fillin(callback: Callable[[int, Iterable[int]], None], levels: int, start: O
     """
     commenced = False
     if start is None:
-        callback(2**levels, range(0, 2 ** levels + 1, 2**(levels-1)))
+        callback(2**levels, range(0, 2**levels + 1, 2 ** (levels - 1)))
         commenced = True
     i = 1
     while i < levels:
@@ -32,7 +36,7 @@ def fillin(callback: Callable[[int, Iterable[int]], None], levels: int, start: O
         if start is not None and base == start:
             commenced = True
         if commenced:
-            callback(2**levels, range(base, 2 ** levels, step))
+            callback(2**levels, range(base, 2**levels, step))
         i += 1
 
 
@@ -43,6 +47,7 @@ def cmd_program(prog) -> Callable[[int, Iterable[int]], None]:
         cmd.extend(map(str, ns))
         output = subprocess.check_output(cmd)
         print(output.decode("utf-8"), end="")
+
     return callback
 
 
@@ -51,7 +56,7 @@ def setup_parser(subparsers):
     f.set_defaults(which="fillin")
     f.add_argument("PROG")
     f.add_argument("LEVELS", type=int)
-    f.add_argument("START", type=int, nargs='?', default=None)
+    f.add_argument("START", type=int, nargs="?", default=None)
 
 
 def run(args):

@@ -1,10 +1,26 @@
 import logging
-from typing import DefaultDict, Dict, List, Any, Optional, Set, Tuple, BinaryIO, TYPE_CHECKING
+from typing import (
+    DefaultDict,
+    Dict,
+    List,
+    Any,
+    Optional,
+    Set,
+    Tuple,
+    BinaryIO,
+    TYPE_CHECKING,
+)
 from running.suite import BenchmarkSuite, is_dry_run
 from running.benchmark import Benchmark, SubprocessrExit
 from running.config import Configuration
 from pathlib import Path
-from running.util import parse_config_str, system, get_logged_in_users, config_index_to_chr, config_str_encode
+from running.util import (
+    parse_config_str,
+    system,
+    get_logged_in_users,
+    config_index_to_chr,
+    config_str_encode,
+)
 import socket
 from datetime import datetime
 from running.runtime import Runtime
@@ -14,6 +30,7 @@ import os
 from running.command.fillin import fillin
 import math
 import yaml
+
 if TYPE_CHECKING:
     from running.plugin.runbms import RunbmsPlugin
 from running.__version__ import __VERSION__
@@ -33,8 +50,8 @@ def setup_parser(subparsers):
     f.set_defaults(which="runbms")
     f.add_argument("LOG_DIR", type=Path)
     f.add_argument("CONFIG", type=Path)
-    f.add_argument("N", type=int, nargs='?')
-    f.add_argument("n", type=int, nargs='*')
+    f.add_argument("N", type=int, nargs="?")
+    f.add_argument("n", type=int, nargs="*")
     f.add_argument("-i", "--invocations", type=int)
     f.add_argument("-s", "--slice", type=str)
     f.add_argument("-p", "--id-prefix")
@@ -43,8 +60,9 @@ def setup_parser(subparsers):
     f.add_argument("--skip-timeout", type=int)
     f.add_argument("--resume", type=str)
     f.add_argument("--workdir", type=Path)
-    f.add_argument("--skip-log-compression", action="store_true",
-                   help="Skip compressing log files")
+    f.add_argument(
+        "--skip-log-compression", action="store_true", help="Skip compressing log files"
+    )
 
 
 def getid() -> str:
@@ -95,26 +113,30 @@ def spread(spread_factor: int, N: int, n: int) -> float:
     n: int
         Nominator
     """
-    sum_1_n_minus_1 = (n*n - n) / 2
+    sum_1_n_minus_1 = (n * n - n) / 2
     return n + spread_factor / (N - 1) * sum_1_n_minus_1
 
 
 def hfac_str(hfac: float) -> str:
-    return str(int(hfac*1000))
+    return str(int(hfac * 1000))
 
 
 def get_heapsize(hfac: float, minheap: int) -> int:
     return round(minheap * hfac * minheap_multiplier)
 
 
-def get_hfacs(heap_range: int, spread_factor: int, N: int, ns: List[int]) -> List[float]:
+def get_hfacs(
+    heap_range: int, spread_factor: int, N: int, ns: List[int]
+) -> List[float]:
     start = 1.0
     end = float(heap_range)
-    divisor = spread(spread_factor, N, N)/(end-start)
-    return [spread(spread_factor, N, n)/divisor + start for n in ns]
+    divisor = spread(spread_factor, N, N) / (end - start)
+    return [spread(spread_factor, N, n) / divisor + start for n in ns]
 
 
-def run_benchmark_with_config(c: str, b: Benchmark, runbms_dir: Path, size: Optional[int], fd: Optional[BinaryIO]) -> Tuple[bytes, SubprocessrExit]:
+def run_benchmark_with_config(
+    c: str, b: Benchmark, runbms_dir: Path, size: Optional[int], fd: Optional[BinaryIO]
+) -> Tuple[bytes, SubprocessrExit]:
     runtime, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     mod_b = mod_b.attach_modifiers(b.get_runtime_specific_modifiers(runtime))
@@ -135,7 +157,9 @@ def run_benchmark_with_config(c: str, b: Benchmark, runbms_dir: Path, size: Opti
     return output, exit_status
 
 
-def get_filename_no_ext(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
+def get_filename_no_ext(
+    bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str
+) -> str:
     # If we have / in benchmark names, replace with -.
     safe_bm_name = bm.name.replace("/", "-")
     return "{}.{}.{}.{}.{}".format(
@@ -149,11 +173,15 @@ def get_filename_no_ext(bm: Benchmark, hfac: Optional[float], size: Optional[int
     )
 
 
-def get_filename(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
+def get_filename(
+    bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str
+) -> str:
     return get_filename_no_ext(bm, hfac, size, config) + ".log"
 
 
-def get_filename_completed(bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str) -> str:
+def get_filename_completed(
+    bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str
+) -> str:
     return "{}.gz".format(get_filename(bm, hfac, size, config))
 
 
@@ -190,13 +218,25 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
         for i in range(0, int(cores)):
             output += "Frequency of cpu {}: ".format(i)
             output += hz_to_ghz(
-                system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_cur_freq".format(i)))
+                system(
+                    "cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_cur_freq".format(
+                        i
+                    )
+                )
+            )
             output += "\n"
             output += "Governor of cpu {}: ".format(i)
-            output += system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_governor".format(i))
+            output += system(
+                "cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_governor".format(i)
+            )
             output += "Scaling_min_freq of cpu {}: ".format(i)
             output += hz_to_ghz(
-                system("cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq".format(i)))
+                system(
+                    "cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq".format(
+                        i
+                    )
+                )
+            )
             output += "\n"
     return output
 
@@ -208,7 +248,7 @@ def run_one_benchmark(
     hfac: Optional[float],
     configs: List[str],
     runbms_dir: Path,
-    log_dir: Path
+    log_dir: Path,
 ):
     p: "RunbmsPlugin"
     bm_name = bm.name
@@ -229,8 +269,9 @@ def run_one_benchmark(
     logged_in_users: Set[str]
     logged_in_users = get_logged_in_users()
     if len(logged_in_users) > 1:
-        logging.warning("More than one user logged in: {}".format(
-            " ".join(logged_in_users)))
+        logging.warning(
+            "More than one user logged in: {}".format(" ".join(logged_in_users))
+        )
     ever_ran = [False] * len(configs)
     for i in range(0, invocations):
         for p in plugins.values():
@@ -247,8 +288,7 @@ def run_one_benchmark(
                 print(".", end="", flush=True)
                 continue
             if resume:
-                log_filename_completed = get_filename_completed(
-                    bm, hfac, size, c)
+                log_filename_completed = get_filename_completed(bm, hfac, size, c)
                 if (log_dir / log_filename_completed).exists():
                     print(config_index_to_chr(j), end="", flush=True)
                     continue
@@ -297,10 +337,7 @@ def run_one_benchmark(
         # config for a particular benchmark/hfac (method parameters)
         if not is_dry_run() and ever_ran[j]:
             if not skip_log_compression:
-                subprocess.check_call([
-                    "gzip",
-                    log_dir / log_filename
-                ])
+                subprocess.check_call(["gzip", log_dir / log_filename])
     print()
 
 
@@ -311,7 +348,7 @@ def run_one_hfac(
     benchmarks: Dict[str, List[Benchmark]],
     configs: List[str],
     runbms_dir: Path,
-    log_dir: Path
+    log_dir: Path,
 ):
     p: "RunbmsPlugin"
     for p in plugins.values():
@@ -319,8 +356,9 @@ def run_one_hfac(
     for suite_name, bms in benchmarks.items():
         suite = suites[suite_name]
         for bm in bms:
-            run_one_benchmark(invocations, suite, bm, hfac,
-                              configs, runbms_dir, log_dir)
+            run_one_benchmark(
+                invocations, suite, bm, hfac, configs, runbms_dir, log_dir
+            )
             rsync(log_dir)
     for p in plugins.values():
         p.end_hfac(hfac)
@@ -374,8 +412,7 @@ def run(args):
         skip_log_compression = args.get("skip_log_compression")
         # Load from configuration file
         global configuration
-        configuration = Configuration.from_file(
-            Path(os.getcwd()), args.get("CONFIG"))
+        configuration = Configuration.from_file(Path(os.getcwd()), args.get("CONFIG"))
         # Save metadata
         if not is_dry_run():
             with (log_dir / "runbms.yml").open("w") as fd:
@@ -407,25 +444,29 @@ def run(args):
             plugins = {}
         else:
             from running.plugin.runbms import RunbmsPlugin
+
             if type(plugins) is not dict:
                 raise TypeError("plugins must be a dictionary")
-            plugins = {k: RunbmsPlugin.from_config(
-                k, v) for k, v in plugins.items()}
+            plugins = {k: RunbmsPlugin.from_config(k, v) for k, v in plugins.items()}
             for p in plugins.values():
                 p.set_run_id(run_id)
                 p.set_runbms_dir(runbms_dir)
                 p.set_log_dir(log_dir)
 
         def run_hfacs(hfacs):
-            logging.info("hfacs: {}".format(
-                ", ".join([
-                    hfac_str(hfac)
-                    for hfac in hfacs
-                ])
-            ))
+            logging.info(
+                "hfacs: {}".format(", ".join([hfac_str(hfac) for hfac in hfacs]))
+            )
             for hfac in hfacs:
-                run_one_hfac(invocations, hfac, suites, benchmarks,
-                             configs, Path(runbms_dir), log_dir)
+                run_one_hfac(
+                    invocations,
+                    hfac,
+                    suites,
+                    benchmarks,
+                    configs,
+                    Path(runbms_dir),
+                    log_dir,
+                )
                 print()
 
         def run_N_ns(N, ns):
@@ -437,8 +478,15 @@ def run(args):
             return True
 
         if N is None:
-            run_one_hfac(invocations, None, suites, benchmarks,
-                         configs, Path(runbms_dir), log_dir)
+            run_one_hfac(
+                invocations,
+                None,
+                suites,
+                benchmarks,
+                configs,
+                Path(runbms_dir),
+                log_dir,
+            )
             return True
 
         if len(ns) == 0:

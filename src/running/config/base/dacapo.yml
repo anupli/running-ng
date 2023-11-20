@@ -51,184 +51,80 @@ suites:
     timing_iteration: 3
     timeout: 120
     minheap_values: {}
-  dacapochopin-29a657f:
+  dacapochopin:
     type: DaCapo
-    release: evaluation
-    path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-29a657f.jar
-    minheap: adoptopenjdk-15-G1
+    release: "23.11"
+    path: /usr/share/benchmarks/dacapo/dacapo-23.11-chopin.jar
+    minheap: temurin-21-G1-n-5
     minheap_values:
-      adoptopenjdk-15-G1:
-        avrora: 7
-        batik: 253
-        biojava: 191
-        cassandra: 89
-        eclipse: 437
-        fop: 19
-        graphchi: 255
-        h2: 1154
-        h2o: 73
-        jme: 55
-        jython: 37
-        # Java version '15.0.2' is incompatable with kafka: Kafka currently requires Java 8 due to 'java.lang.NoClassDefFoundError: javax/activation/DataSource' error for more recent Java releases.
-        # kafka: inf
-        luindex: 42
-        lusearch: 23
-        pmd: 243
-        sunflow: 33
-        tradebeans: 169
-        tradesoap: 133
-        tomcat: 25
-        xalan: 9
-        zxing: 96
-      temurin-17-G1:
-        avrora: 7
-        batik: 189
+      temurin-21-G1:
+        avrora: 5
+        batik: 175
         biojava: 95
-        eclipse: 411
-        fop: 15
-        graphchi: 255
-        h2: 773
+        cassandra: 120
+        eclipse: 133
+        fop: 13
+        graphchi: 173
+        h2: 679
+        h2o: 66
         jme: 29
         jython: 25
-        luindex: 42
+        kafka: 194
+        luindex: 29
         lusearch: 21
-        pmd: 156
+        pmd: 185
+        spring: 56
         sunflow: 29
-        tomcat: 21
-        tradebeans: 131
-        tradesoap: 103
-        xalan: 8
-        zxing: 97
-        lusearch_huge: 122 # {name: lusearch_large, bm_name: lusearch, size: large}
-        lusearch_large: 142 # {name: lusearch_huge, bm_name: lusearch, size: huge, timing_iteration: 2}
-      temurin-11-G1:
-        avrora: 5
-        batik: 185
-        biojava: 95
-        cassandra: 1026
-        eclipse: 423
-        fop: 13
-        graphchi: 255
-        h2: 771
-        h2o: 62
-        jme: 29
-        jython: 27
-        luindex: 40
-        lusearch: 25
-        pmd: 158
-        sunflow: 27
         tomcat: 19
-        tradebeans: 129
-        tradesoap: 101
-        xalan: 7
-        zxing: 96
-    timing_iteration: 3
-    timeout: 120
-  dacapochopin-f480064:
-    type: DaCapo
-    release: evaluation
-    path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-f480064.jar
-    minheap: temurin-11-G1
-    minheap_values:
-      temurin-11-G1:
+        tradebeans: 107
+        tradesoap: 87
+        xalan: 13
+        zxing: 108
+      temurin-21-G1-n-5:
         avrora: 5
-        batik: 186
-        biojava: 96
-        cassandra: 87
-        eclipse: 423
-        fop: 13
-        graphchi: 255
-        h2: 771
-        h2o: 83
-        jme: 29
-        jython: 27
-        kafka: 201
-        luindex: 41
-        lusearch: 26
-        pmd: 43
-        # spring: .inf
-        sunflow: 27
-        tomcat: 19
-        tradebeans: 129
-        tradesoap: 113
-        xalan: 7
-        zxing: 98
-      temurin-17-G1:
-        avrora: 7
-        batik: 190
+        batik: 175
         biojava: 95
-        # cassandra: .inf
-        eclipse: 411
-        fop: 15
-        graphchi: 255
-        h2: 773
-        # h2o: .inf
+        cassandra: 128
+        eclipse: 135
+        fop: 13
+        graphchi: 175
+        h2: 681
+        h2o: 71
         jme: 29
         jython: 25
-        kafka: 197
-        luindex: 42
-        lusearch: 25
-        pmd: 45
-        # spring: .inf
-        sunflow: 27
-        tomcat: 21
-        tradebeans: 131
-        tradesoap: 103
-        xalan: 7
-        zxing: 101
-    timing_iteration: 3
-    timeout: 120
-  dacapochopin-6e411f33:
-    type: DaCapo
-    release: evaluation
-    path: /usr/share/benchmarks/dacapo/dacapo-evaluation-git-6e411f33.jar
-    minheap: mmtk-openjdk-11-MarkCompact
-    minheap_values:
-      mmtk-openjdk-11-MarkCompact:
-        avrora: 8
-        batik: 426
-        biojava: 197
-        cassandra: 117
-        eclipse: 439
-        fop: 24
-        graphchi: 187
-        h2: 1122
-        h2o: 893
-        jme: 236
-        jython: 48
-        kafka: 233
-        luindex: 25
-        lusearch: 36
-        pmd: 291
-        spring: 110
-        sunflow: 37
-        tradebeans: .inf
-        tradesoap: .inf
-        tomcat: 55
-        xalan: 22
-        zxing: 427
-      mmtk-openjdk-11-G1:
-        avrora: 7
-        batik: 1068
-        biojava: 189
-        cassandra: 119
-        eclipse: 427
-        fop: 73
-        graphchi: 258
-        h2: 908
-        h2o: 175
-        jme: 235
-        jython: 309
-        kafka: 219
-        luindex: 39
-        lusearch: 29
-        pmd: 262
-        spring: 78
+        kafka: 194
+        luindex: 29
+        lusearch: 21
+        pmd: 189
+        spring: 58
+        sunflow: 29
+        tomcat: 19
+        tradebeans: 135
+        tradesoap: 91
+        xalan: 13
+        zxing: 195
+      temurin-21-G1-n-10:
+        avrora: 5
+        batik: 175
+        biojava: 97
+        cassandra: 130
+        eclipse: 135
+        fop: 13
+        graphchi: 175
+        h2: 681
+        h2o: 77
+        jme: 29
+        jython: 27
+        kafka: 194
+        luindex: 29
+        lusearch: 21
+        pmd: 193
+        spring: 59
         sunflow: 33
-        tomcat: 47
-        tradebeans: .inf
-        tradesoap: .inf
-        xalan: 19
-        zxing: 95
-    timing_iteration: 3
-    timeout: 120
+        tomcat: 19
+        tradebeans: 135
+        tradesoap: 93
+        xalan: 13
+        zxing: 215
+    timing_iteration: 5
+    timeout: 1800

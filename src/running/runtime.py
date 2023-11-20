@@ -64,12 +64,17 @@ class JVM(Runtime):
         size_str = "{}M".format(size)
         heapsize = JVMArg(
             name="heap{}".format(size_str),
-            val="-Xms{} -Xmx{}".format(size_str, size_str)
+            val="-Xms{} -Xmx{}".format(size_str, size_str),
         )
         return [heapsize]
 
     def is_oom(self, output: bytes) -> bool:
-        for pattern in [b"Allocation Failed", b"OutOfMemoryError", b"ran out of memory", b"panicked at 'Out of memory!'"]:
+        for pattern in [
+            b"Allocation Failed",
+            b"OutOfMemoryError",
+            b"ran out of memory",
+            b"panicked at 'Out of memory!'",
+        ]:
             if pattern in output:
                 return True
         return False
@@ -90,8 +95,7 @@ class OpenJDK(JVM):
             logging.warning("OpenJDK home {} doesn't exist".format(self.home))
         self.executable = self.home / "bin" / "java"
         if not self.executable.exists():
-            logging.warning(
-                "{} not found in OpenJDK home".format(self.executable))
+            logging.warning("{} not found in OpenJDK home".format(self.executable))
         self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
@@ -111,8 +115,7 @@ class JikesRVM(JVM):
             logging.warning("JikesRVM home {} doesn't exist".format(self.home))
         self.executable = self.home / "rvm"
         if not self.home.exists():
-            logging.warning(
-                "{} not found in JikesRVM home".format(self.executable))
+            logging.warning("{} not found in JikesRVM home".format(self.executable))
         self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
@@ -129,7 +132,8 @@ class JavaScriptRuntime(Runtime):
         self.executable = Path(kwargs["executable"])
         if not self.executable.exists():
             logging.warning(
-                "JavaScriptRuntime executable {} doesn't exist".format(self.executable))
+                "JavaScriptRuntime executable {} doesn't exist".format(self.executable)
+            )
         self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
@@ -145,8 +149,7 @@ class D8(JavaScriptRuntime):
         size_str = "{}".format(size)
         heapsize = JSArg(
             name="heap{}".format(size_str),
-            val="--initial-heap-size={} --max-heap-size={}".format(
-                size_str, size_str)
+            val="--initial-heap-size={} --max-heap-size={}".format(size_str, size_str),
         )
         return [heapsize]
 
@@ -170,8 +173,7 @@ class SpiderMonkey(JavaScriptRuntime):
         size_str = "{}".format(size)
         # FIXME doesn't seem to be working
         heapsize = JSArg(
-            name="heap{}".format(size_str),
-            val="--available-memory={}".format(size_str)
+            name="heap{}".format(size_str), val="--available-memory={}".format(size_str)
         )
         return [heapsize]
 
@@ -189,8 +191,7 @@ class JavaScriptCore(JavaScriptRuntime):
         size_str = "{}".format(size)
         # FIXME doesn't seem to be working
         heapsize = JSArg(
-            name="heap{}".format(size_str),
-            val="--gcMaxHeapSize={}".format(size_str)
+            name="heap{}".format(size_str), val="--gcMaxHeapSize={}".format(size_str)
         )
         return [heapsize]
 
@@ -205,8 +206,7 @@ class Julia(Runtime):
         self.executable: Path
         self.executable = Path(kwargs["executable"])
         if not self.executable.exists():
-            logging.warning(
-                "Julia executable {} doesn't exist".format(self.executable))
+            logging.warning("Julia executable {} doesn't exist".format(self.executable))
         self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
@@ -221,10 +221,12 @@ class JuliaMMTK(Julia):
     def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
         # size in MB
         size_str = "{}".format(size)
-        min = EnvVar(name="minheap{}".format(size_str),
-                     var="MMTK_MIN_HSIZE", val=size_str)
-        max = EnvVar(name="maxheap{}".format(size_str),
-                     var="MMTK_MAX_HSIZE", val=size_str)
+        min = EnvVar(
+            name="minheap{}".format(size_str), var="MMTK_MIN_HSIZE", val=size_str
+        )
+        max = EnvVar(
+            name="maxheap{}".format(size_str), var="MMTK_MAX_HSIZE", val=size_str
+        )
         return [min, max]
 
     def __str__(self):
