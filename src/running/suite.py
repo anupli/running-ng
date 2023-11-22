@@ -110,8 +110,8 @@ class DaCapo(JavaBenchmarkSuite):
         super().__init__(**kwargs)
         self.release: str
         self.release = kwargs["release"]
-        if self.release not in ["2006", "9.12", "evaluation"]:
-            raise ValueError("DaCapo release {} not recongized".format(self.release))
+        if self.release not in ["2006", "9.12", "evaluation", "23.11"]:
+            raise ValueError("DaCapo release {} not recognized".format(self.release))
         self.path: Path
         self.path = Path(os.path.expandvars(kwargs["path"]))
         if not self.path.exists():
@@ -289,7 +289,7 @@ class SPECjbb2015(JavaBenchmarkSuite):
         self.release = kwargs["release"]
         if self.release not in ["1.03"]:
             raise ValueError(
-                "SPECjbb2015 release {} not recongized".format(self.release)
+                "SPECjbb2015 release {} not recognized".format(self.release)
             )
         self.path: Path
         self.path = Path(os.path.expandvars(kwargs["path"])).resolve()
@@ -415,7 +415,7 @@ class SPECjvm98(JavaBenchmarkSuite):
         self.release: str
         self.release = kwargs["release"]
         if self.release not in ["1.03_05"]:
-            raise ValueError("SPECjvm98 release {} not recongized".format(self.release))
+            raise ValueError("SPECjvm98 release {} not recognized".format(self.release))
         self.path: Path
         self.path = Path(os.path.expandvars(kwargs["path"])).resolve()
 
