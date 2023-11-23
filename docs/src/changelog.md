@@ -12,6 +12,11 @@
 
 ### Security
 
+## [`v0.4.4` (2023-11-23)](https://github.com/anupli/running-ng/releases/tag/v0.4.4)
+### Fixed
+#### Benchmark Suites
+- `DaCapo` correctly accepts the `23.11` `release` specified in `dacapo.yml`.
+
 ## [`v0.4.3` (2023-11-20)](https://github.com/anupli/running-ng/releases/tag/v0.4.3)
 ### Added
 #### Base Configurations
