@@ -35,7 +35,7 @@ zulip = [
 tests = [
     "pytest~=7.4.3",
     "types-PyYAML~=6.0.12",
-    "mypy~=1.7.0"
+    "mypy>=1.7,<1.9"
 ]
 
 [project.scripts]
