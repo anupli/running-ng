@@ -21,7 +21,7 @@ jobs:
           pip install .[tests]
       - name: Test with pytest
         run: |
-          pytest
+          for f in tests/test_*.py; do pytest "$f"; done
   mypy:
     runs-on: ubuntu-latest
     strategy:
