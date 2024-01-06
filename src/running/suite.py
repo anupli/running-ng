@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union, List, Sequence
+from typing import Any, Dict, Optional, Union
 from running.benchmark import (
     JavaBenchmark,
     BinaryBenchmark,
@@ -7,8 +7,6 @@ from running.benchmark import (
     JavaScriptBenchmark,
     JuliaBenchmark,
 )
-from running.runtime import OpenJDK, Runtime
-from running.modifier import JVMArg, Modifier
 import logging
 from running.util import register, split_quoted
 import os.path

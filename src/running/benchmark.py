@@ -8,7 +8,6 @@ from running.modifier import *
 from running.util import smart_quote, split_quoted
 from pathlib import Path
 from copy import deepcopy
-from running import suite
 import os
 from enum import Enum
 
@@ -111,6 +110,8 @@ class Benchmark(object):
     def run(
         self, runtime: Runtime, cwd: Optional[Path] = None
     ) -> Tuple[bytes, bytes, SubprocessrExit]:
+        from running import suite
+
         if suite.is_dry_run():
             print(self.to_string(runtime), file=sys.stderr)
             return b"", b"", SubprocessrExit.Dryrun
