@@ -206,11 +206,11 @@ For example, for the DaCapo benchmark suite, the following two snippets are equi
 <h2 id="configs"><a class="header" href="#configs"><code>configs</code></a></h2>
 <p>A YAML list of configuration strings to be used to run the benchmarks. These are
 specified as a <a href="#runtimes"><code>runtime</code></a> followed by a <code>'|'</code> separated list of
-<a href="./modifier.html">modifiers</a>, i.e. <code>&quot;&lt;runtime&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;&quot;</code>.</p>
+<a href="./modifier.html">modifiers</a>, i.e. <code>"&lt;runtime&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;"</code>.</p>
 <p>For example:</p>
 <pre><code class="language-yaml">configs:
-  - &quot;openjdk11|ms|s|c2&quot;
-  - &quot;openjdk15|ms|s&quot;
+  - "openjdk11|ms|s|c2"
+  - "openjdk15|ms|s"
 </code></pre>
 <p>specifies <code>running</code> to use the <code>openjdk11</code> <code>runtime</code> with <code>ms</code>, <code>s</code>, and <code>c2</code>
 modifiers; and the <code>openjdk15</code> <code>runtime</code> with the <code>ms</code>, and <code>s</code> modifiers. In
@@ -221,8 +221,8 @@ file</a>).</p>
 so that it's easier for multi-line editing.</p>
 <p>For example:</p>
 <pre><code class="language-yaml">configs:
-  - &quot;openjdk8 |foo-1 |bar|buzz&quot;
-  - &quot;openjdk15|foo-16|   |buzz&quot;
+  - "openjdk8 |foo-1 |bar|buzz"
+  - "openjdk15|foo-16|   |buzz"
 </code></pre>
 <h2 id="includes"><a class="header" href="#includes"><code>includes</code></a></h2>
 <p>A YAML list of paths to YAML files that are to be included into the current
@@ -237,8 +237,8 @@ For example, if <code>$HOME/configs/foo.yml</code> has an <code>include</code> l
 line is interpreted as <code>$HOME/bar.yml</code>.
 Similarly,</p>
 <pre><code class="language-yaml">includes:
- - &quot;./base/suites.yml&quot;
- - &quot;./base/modifiers.yml&quot;
+ - "./base/suites.yml"
+ - "./base/modifiers.yml"
 </code></pre>
 <p>includes the <code>suites.yml</code> and <code>modifiers.yml</code> files located at <code>./base</code>
 respectively.</p>
@@ -261,10 +261,10 @@ to be excluded from each benchmark suite.</p>
 <pre><code class="language-yaml">modifiers:
   s:
     type: JVMArg
-    val: &quot;-server&quot;
+    val: "-server"
   c2:
     type: JVMArg
-    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    val: "-XX:-TieredCompilation -Xcomp"
     excludes:
       dacapo2006:
         - eclipse
@@ -279,7 +279,7 @@ specific benchmarks by using an <code>includes</code> key.</p>
 <pre><code class="language-yaml">modifiers:
   c2:
     type: JVMArg
-    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    val: "-XX:-TieredCompilation -Xcomp"
     includes:
       dacapo2006:
         - eclipse
@@ -291,7 +291,7 @@ from the <code>dacapo2006</code> benchmark suite.</p>
 <pre><code class="language-yaml">modifiers:
   c2:
     type: JVMArg
-    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    val: "-XX:-TieredCompilation -Xcomp"
     includes:
       dacapo2006:
         - eclipse
@@ -312,13 +312,13 @@ indexed by the modifier through syntax similar to Python format strings.</p>
 <pre><code class="language-yaml">modifiers:
   env_var:
     type: EnvVar
-    var: &quot;FOO{0}&quot;
-    val: &quot;{1}&quot;
+    var: "FOO{0}"
+    val: "{1}"
 
 [...]
 
 configs:
-  - &quot;openjdk11|env_var-42-43&quot;
+  - "openjdk11|env_var-42-43"
 </code></pre>
 <p>specifies to run the <code>openjdk11</code> <a href="#runtimes"><code>runtime</code></a> with the environment
 variable <code>FOO42</code> set to <code>43</code>. Note that value options are not limited only to

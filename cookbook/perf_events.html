@@ -185,15 +185,15 @@ This ensures that the <code>inherit</code> flag of <code>perf_event_attr</code> 
 <pre><code class="language-yaml">modifiers:
   jvmti_env:
     type: EnvVar
-    var: &quot;LD_PRELOAD&quot;
-    val: &quot;/path/to/distillation/libperf_statistics.so&quot;
+    var: "LD_PRELOAD"
+    val: "/path/to/distillation/libperf_statistics.so"
 </code></pre>
 <p>Second, you need to specify a list of events you want to measure.</p>
 <pre><code class="language-yaml">modifiers:
   perf:
     type: EnvVar
-    var: &quot;PERF_EVENTS&quot;
-    val: &quot;PERF_COUNT_HW_CPU_CYCLES,PERF_COUNT_HW_INSTRUCTIONS,PERF_COUNT_HW_CACHE_LL:MISS,PERF_COUNT_HW_CACHE_L1D:MISS,PERF_COUNT_HW_CACHE_DTLB:MISS&quot;
+    var: "PERF_EVENTS"
+    val: "PERF_COUNT_HW_CPU_CYCLES,PERF_COUNT_HW_INSTRUCTIONS,PERF_COUNT_HW_CACHE_LL:MISS,PERF_COUNT_HW_CACHE_L1D:MISS,PERF_COUNT_HW_CACHE_DTLB:MISS"
 </code></pre>
 <p>If you want to get a full list of events you can use on a particular machine, you can clone and build <a href="https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/"><code>libpfm4</code></a> and run the <code>showevtinfo</code> <a href="https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/examples/showevtinfo.c">program</a>.</p>
 <p>Third, you need to tell the JVM to load the agent.
@@ -201,23 +201,23 @@ Note that you need to specify the absolute path.</p>
 <pre><code class="language-yaml">modifiers:
   jvmti:
     type: JVMArg
-    val: &quot;-agentpath:/path/to/distillation/libperf_statistics.so&quot;
+    val: "-agentpath:/path/to/distillation/libperf_statistics.so"
 </code></pre>
 <p>Finally, you need to let the DaCapo benchmark inform the start and the end of a benchmark iteration.
 We will reuse the <code>RustMMTk</code> probe here, as the callback functions in the JVMTI agent are also called <code>harness_begin</code> and <code>harness_end</code>.</p>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 </code></pre>
 <p>Now, putting it all together, you can define a set of modifiers, and use that set in your config strings.</p>
 <pre><code class="language-yaml">modifiers:
   jvmti_common:
     type: ModifierSet
-    val: &quot;probes|probes_cp|jvmti|jvmti_env|perf&quot;
+    val: "probes|probes_cp|jvmti|jvmti_env|perf"
 </code></pre>
 <h2 id="mmtk"><a class="header" href="#mmtk">MMTk</a></h2>
 <p>Please clone and build <a href="../quickstart.html#prepare-probes"><code>probes</code></a>.
@@ -226,17 +226,17 @@ You will need to build <code>mmtk-core</code> with the <code>perf_counter</code>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 </code></pre>
 <p>Then, you can specify a list of events you want to measure.</p>
 <pre><code class="language-yaml">modifiers:
   mmtk_perf:
     type: EnvVar
-    var: &quot;MMTK_PHASE_PERF_EVENTS&quot;
-    val: &quot;PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1&quot;
+    var: "MMTK_PHASE_PERF_EVENTS"
+    val: "PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1"
 </code></pre>
 <p>Note that the list is semicolon-separated.
 Each entry consists of three parts, separated by commas.

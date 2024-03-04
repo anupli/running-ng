@@ -182,10 +182,10 @@ benchmarks such as for C/C++ benchmarking.</p>
 <pre><code class="language-yaml">programs:
   &lt;BM_NAME_1&gt;:
     path: /full/path/to/benchmark/binary_1
-    args: &quot;Any arguments to binary_1&quot;
+    args: "Any arguments to binary_1"
   &lt;BM_NAME_2&gt;:
     path: /full/path/to/benchmark/binary_2
-    args: &quot;Any arguments to binary_2&quot;
+    args: "Any arguments to binary_2"
   [...]
 </code></pre>
 <p>A possible use-case could use wrapper shell scripts around the benchmark to
@@ -193,7 +193,7 @@ output timing and other information in a tab-separated table.</p>
 <h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
 <p><a href="https://www.dacapobench.org/">DaCapo benchmark suite</a>.</p>
 <h3 id="keys-1"><a class="header" href="#keys-1">Keys</a></h3>
-<p><code>release</code>: one of the possible values <code>[&quot;2006&quot;, &quot;9.12&quot;, &quot;evaluation&quot;]</code>.
+<p><code>release</code>: one of the possible values <code>["2006", "9.12", "evaluation"]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the DaCapo <code>jar</code>.
 The value is required.
@@ -235,19 +235,19 @@ Once the main program finishes, we will wait for the companion program to finish
 Therefore, companion programs should have appropriate timeouts or detect when main program finishes.
 Here is an example of using <code>companion</code> to launch <code>bpftrace</code> in the background to count the system calls.</p>
 <pre><code class="language-yaml">includes:
-  - &quot;$RUNNING_NG_PACKAGE_DATA/base/runbms.yml&quot;
+  - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
 
 overrides:
-  &quot;suites.dacapo2006.timing_iteration&quot;: 1
-  &quot;suites.dacapo2006.companion&quot;: &quot;sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @syscall[args-&gt;id] = count(); @process[comm] = count();} interval:s:10 { printf(\&quot;Goodbye world!\\n\&quot;); exit(); }'&quot;
-  &quot;invocations&quot;: 1
+  "suites.dacapo2006.timing_iteration": 1
+  "suites.dacapo2006.companion": "sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @syscall[args-&gt;id] = count(); @process[comm] = count();} interval:s:10 { printf(\"Goodbye world!\\n\"); exit(); }'"
+  "invocations": 1
 
 benchmarks:
   dacapo2006:
     - fop
 
 configs:
-  - &quot;temurin-17&quot;
+  - "temurin-17"
 </code></pre>
 <p>In the log file, the output from the main program and the output from the companion program is separated by <code>*****</code>.</p>
 <p><code>size</code>: specifying the size of input data.
@@ -268,7 +268,7 @@ Therefore, it is highly recommended that you give a <code>name</code> different 
 <h2 id="specjbb2015-preview-"><a class="header" href="#specjbb2015-preview-"><code>SPECjbb2015</code> (preview ⚠️)</a></h2>
 <p><a href="https://www.spec.org/jbb2015/">SPECjbb2015</a>.</p>
 <h3 id="keys-2"><a class="header" href="#keys-2">Keys</a></h3>
-<p><code>release</code>: one of the possible values <code>[&quot;1.03&quot;]</code>.
+<p><code>release</code>: one of the possible values <code>["1.03"]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the <code>jar</code>.
 The value is required.
@@ -276,28 +276,28 @@ Note that the property file should reside in <code>path/../config/specjbb2015.pr
 Environment variables will be expanded.</p>
 <h3 id="benchmark-specification-1"><a class="header" href="#benchmark-specification-1">Benchmark Specification</a></h3>
 <p>Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
-Right now, only <code>&quot;composite&quot;</code> is supported.</p>
+Right now, only <code>"composite"</code> is supported.</p>
 <h2 id="specjvm98-preview-"><a class="header" href="#specjvm98-preview-"><code>SPECjvm98</code> (preview ⚠️)</a></h2>
 <p><a href="https://www.spec.org/jvm98/">SPECjvm98</a>.</p>
 <p>Note that you will need to prepend probes to the classpaths, so that the <a href="https://github.com/anupli/probes/blob/master/SpecApplication.java">modified</a> <code>SpecApplication</code> can be used.</p>
 <p>Here is an example configuration file.</p>
 <pre><code class="language-yaml">includes:
-  - &quot;/home/zixianc/running-ng/src/running/config/base/runbms.yml&quot;
+  - "/home/zixianc/running-ng/src/running/config/base/runbms.yml"
 
 modifiers:
   probes_cp:
     type: JVMClasspathPrepend
-    val: &quot;/home/zixianc/MMTk-Dev/evaluation/probes /home/zixianc/MMTk-Dev/evaluation/probes/probes.jar&quot;
+    val: "/home/zixianc/MMTk-Dev/evaluation/probes /home/zixianc/MMTk-Dev/evaluation/probes/probes.jar"
 
 benchmarks:
   specjvm98:
     - _213_javac
 
 configs:
-  - &quot;adoptopenjdk-8|probes_cp&quot;
+  - "adoptopenjdk-8|probes_cp"
 </code></pre>
 <h3 id="keys-3"><a class="header" href="#keys-3">Keys</a></h3>
-<p><code>release</code>: one of the possible values <code>[&quot;1.03_05&quot;]</code>.
+<p><code>release</code>: one of the possible values <code>["1.03_05"]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the SPECjvm98 folder, where you can find <code>SpecApplication.class</code>.
 The value is required.

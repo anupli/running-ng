@@ -179,7 +179,7 @@
 <h2 id="disclaimer"><a class="header" href="#disclaimer">Disclaimer</a></h2>
 <p>At this stage, the focus of this project is driven by the internal use of members from <a href="https://users.cecs.anu.edu.au/~steveb/">Steve Blackburn</a>'s lab.
 If you are a member of the lab, you know what to do if you encounter any issue, and you can ignore the below.</p>
-<p>If you are a member of the public, please kindly note that the project is open-source and documented on a &quot;good-faith&quot; basis.
+<p>If you are a member of the public, please kindly note that the project is open-source and documented on a "good-faith" basis.
 We might not have the time to consider your features requests.
 Please don't be offended if we ignore these.
 Having said that, you are very welcomed to use it, and we will be very pleased if this helps anyone.
@@ -240,7 +240,7 @@ Please check <a href="https://squirrel.anu.edu.au/#customization">here</a> for h
 You will need Python 3.6+.</p>
 <p>Then, create a file <code>two_builds.yml</code> with the following content.</p>
 <pre><code class="language-yaml">includes:
-  - &quot;$RUNNING_NG_PACKAGE_DATA/base/runbms.yml&quot;
+  - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
 </code></pre>
 <p>The <a href="./references/index.html">YAML file</a> represents a dictionary (key-value pairs) that defines the experiments you are running.
 The <code>includes</code> directive here will populate the dictionary with some default values shipped with <code>running-ng</code>.</p>
@@ -274,11 +274,11 @@ The <code>includes</code> directive here will populate the dictionary with some 
 The benchmark suite is defined in <code>$RUNNING_NG_PACKAGE_DATA/base/dacapo.yml</code>.
 By default, the minimum heap sizes of <code>dacapochopin-29a657f</code> benchmarks are measured with AdoptOpenJDK 15 using G1 GC.
 If you are using OpenJDK 11 or 17, you can override the value of <code>suites.dacapochopin-29a657f.minheap</code> to <code>temurin-17-G1</code> or <code>temurin-11-G1</code>.
-That is, you can, for example, add <code>&quot;suites.dacapochopin-29a657f.minheap&quot;: &quot;temurin-17-G1&quot;</code> to <code>overrides</code>.</p>
+That is, you can, for example, add <code>"suites.dacapochopin-29a657f.minheap": "temurin-17-G1"</code> to <code>overrides</code>.</p>
 <p>Then, add the following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">overrides:
-  &quot;suites.dacapochopin-29a657f.timing_iteration&quot;: 5
-  &quot;suites.dacapochopin-29a657f.callback&quot;: &quot;probe.DacapoChopinCallback&quot;
+  "suites.dacapochopin-29a657f.timing_iteration": 5
+  "suites.dacapochopin-29a657f.callback": "probe.DacapoChopinCallback"
 </code></pre>
 <p>That is, we want to run five iterations for each invocation, and use <code>DacapoChopinCallback</code> because it is the appropriate callback for this release of DaCapo.</p>
 <h2 id="prepare-your-builds"><a class="header" href="#prepare-your-builds">Prepare Your Builds</a></h2>
@@ -290,11 +290,11 @@ Add the following to <code>two_builds.yml</code>.</p>
   build1:
     type: OpenJDK
     release: 11
-    home: &quot;/path/to/build1/jdk&quot; # make sure /path/to/build1/jdk/bin/java exists
+    home: "/path/to/build1/jdk" # make sure /path/to/build1/jdk/bin/java exists
   build2:
     type: OpenJDK
     release: 11
-    home: &quot;/path/to/build2/jdk&quot; # make sure /path/to/build2/jdk/bin/java exists
+    home: "/path/to/build2/jdk" # make sure /path/to/build2/jdk/bin/java exists
 </code></pre>
 <p>This defines two builds of <a href="./references/runtime.html">runtimes</a>.</p>
 <p>I recommend that you use absolute paths for the builds, although relative paths will work, and will be relative to where you run <code>running</code>.</p>
@@ -305,18 +305,18 @@ Add the following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 </code></pre>
 <p>This defines two <a href="./references/modifier.html">modifiers</a>, which will be used later to modify the JVM command line arguments.</p>
 <p>Please only use absolute paths for all the above.</p>
 <h2 id="prepare-configs"><a class="header" href="#prepare-configs">Prepare Configs</a></h2>
 <p>Finally, add he following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">configs:
-  - &quot;build1|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes&quot;
-  - &quot;build2|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes&quot;
+  - "build1|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes"
+  - "build2|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes"
 </code></pre>
 <p>The syntax is described <a href="./references/index.html#configs">here</a>.</p>
 <h2 id="sanity-checks"><a class="header" href="#sanity-checks">Sanity Checks</a></h2>
@@ -337,7 +337,7 @@ Add the following to <code>two_builds.yml</code>.</p>
 <p>This allows you to see any issue before wasting several days only realizing that something didn't work.</p>
 <h2 id="run-it"><a class="header" href="#run-it">Run It</a></h2>
 <p>Once you are happy with everything, run the experiments.</p>
-<pre><code class="language-console">running runbms /path/to/log two_builds.yml 8 -p &quot;two_builds&quot;
+<pre><code class="language-console">running runbms /path/to/log two_builds.yml 8 -p "two_builds"
 </code></pre>
 <p>Don't forget to give the results folder a prefix so that you can later tell what the experiment was for.</p>
 <h3 id="analysing-results"><a class="header" href="#analysing-results">Analysing Results</a></h3>
@@ -399,11 +399,11 @@ For example, for the DaCapo benchmark suite, the following two snippets are equi
 <h2 id="configs"><a class="header" href="#configs"><code>configs</code></a></h2>
 <p>A YAML list of configuration strings to be used to run the benchmarks. These are
 specified as a <a href="references/index.html#runtimes"><code>runtime</code></a> followed by a <code>'|'</code> separated list of
-<a href="references/./modifier.html">modifiers</a>, i.e. <code>&quot;&lt;runtime&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;&quot;</code>.</p>
+<a href="references/./modifier.html">modifiers</a>, i.e. <code>"&lt;runtime&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;"</code>.</p>
 <p>For example:</p>
 <pre><code class="language-yaml">configs:
-  - &quot;openjdk11|ms|s|c2&quot;
-  - &quot;openjdk15|ms|s&quot;
+  - "openjdk11|ms|s|c2"
+  - "openjdk15|ms|s"
 </code></pre>
 <p>specifies <code>running</code> to use the <code>openjdk11</code> <code>runtime</code> with <code>ms</code>, <code>s</code>, and <code>c2</code>
 modifiers; and the <code>openjdk15</code> <code>runtime</code> with the <code>ms</code>, and <code>s</code> modifiers. In
@@ -414,8 +414,8 @@ file</a>).</p>
 so that it's easier for multi-line editing.</p>
 <p>For example:</p>
 <pre><code class="language-yaml">configs:
-  - &quot;openjdk8 |foo-1 |bar|buzz&quot;
-  - &quot;openjdk15|foo-16|   |buzz&quot;
+  - "openjdk8 |foo-1 |bar|buzz"
+  - "openjdk15|foo-16|   |buzz"
 </code></pre>
 <h2 id="includes"><a class="header" href="#includes"><code>includes</code></a></h2>
 <p>A YAML list of paths to YAML files that are to be included into the current
@@ -430,8 +430,8 @@ For example, if <code>$HOME/configs/foo.yml</code> has an <code>include</code> l
 line is interpreted as <code>$HOME/bar.yml</code>.
 Similarly,</p>
 <pre><code class="language-yaml">includes:
- - &quot;./base/suites.yml&quot;
- - &quot;./base/modifiers.yml&quot;
+ - "./base/suites.yml"
+ - "./base/modifiers.yml"
 </code></pre>
 <p>includes the <code>suites.yml</code> and <code>modifiers.yml</code> files located at <code>./base</code>
 respectively.</p>
@@ -454,10 +454,10 @@ to be excluded from each benchmark suite.</p>
 <pre><code class="language-yaml">modifiers:
   s:
     type: JVMArg
-    val: &quot;-server&quot;
+    val: "-server"
   c2:
     type: JVMArg
-    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    val: "-XX:-TieredCompilation -Xcomp"
     excludes:
       dacapo2006:
         - eclipse
@@ -472,7 +472,7 @@ specific benchmarks by using an <code>includes</code> key.</p>
 <pre><code class="language-yaml">modifiers:
   c2:
     type: JVMArg
-    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    val: "-XX:-TieredCompilation -Xcomp"
     includes:
       dacapo2006:
         - eclipse
@@ -484,7 +484,7 @@ from the <code>dacapo2006</code> benchmark suite.</p>
 <pre><code class="language-yaml">modifiers:
   c2:
     type: JVMArg
-    val: &quot;-XX:-TieredCompilation -Xcomp&quot;
+    val: "-XX:-TieredCompilation -Xcomp"
     includes:
       dacapo2006:
         - eclipse
@@ -505,13 +505,13 @@ indexed by the modifier through syntax similar to Python format strings.</p>
 <pre><code class="language-yaml">modifiers:
   env_var:
     type: EnvVar
-    var: &quot;FOO{0}&quot;
-    val: &quot;{1}&quot;
+    var: "FOO{0}"
+    val: "{1}"
 
 [...]
 
 configs:
-  - &quot;openjdk11|env_var-42-43&quot;
+  - "openjdk11|env_var-42-43"
 </code></pre>
 <p>specifies to run the <code>openjdk11</code> <a href="references/index.html#runtimes"><code>runtime</code></a> with the environment
 variable <code>FOO42</code> set to <code>43</code>. Note that value options are not limited only to
@@ -535,10 +535,10 @@ benchmarks such as for C/C++ benchmarking.</p>
 <pre><code class="language-yaml">programs:
   &lt;BM_NAME_1&gt;:
     path: /full/path/to/benchmark/binary_1
-    args: &quot;Any arguments to binary_1&quot;
+    args: "Any arguments to binary_1"
   &lt;BM_NAME_2&gt;:
     path: /full/path/to/benchmark/binary_2
-    args: &quot;Any arguments to binary_2&quot;
+    args: "Any arguments to binary_2"
   [...]
 </code></pre>
 <p>A possible use-case could use wrapper shell scripts around the benchmark to
@@ -546,7 +546,7 @@ output timing and other information in a tab-separated table.</p>
 <h2 id="dacapo"><a class="header" href="#dacapo"><code>DaCapo</code></a></h2>
 <p><a href="https://www.dacapobench.org/">DaCapo benchmark suite</a>.</p>
 <h3 id="keys-1"><a class="header" href="#keys-1">Keys</a></h3>
-<p><code>release</code>: one of the possible values <code>[&quot;2006&quot;, &quot;9.12&quot;, &quot;evaluation&quot;]</code>.
+<p><code>release</code>: one of the possible values <code>["2006", "9.12", "evaluation"]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the DaCapo <code>jar</code>.
 The value is required.
@@ -588,19 +588,19 @@ Once the main program finishes, we will wait for the companion program to finish
 Therefore, companion programs should have appropriate timeouts or detect when main program finishes.
 Here is an example of using <code>companion</code> to launch <code>bpftrace</code> in the background to count the system calls.</p>
 <pre><code class="language-yaml">includes:
-  - &quot;$RUNNING_NG_PACKAGE_DATA/base/runbms.yml&quot;
+  - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
 
 overrides:
-  &quot;suites.dacapo2006.timing_iteration&quot;: 1
-  &quot;suites.dacapo2006.companion&quot;: &quot;sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @syscall[args-&gt;id] = count(); @process[comm] = count();} interval:s:10 { printf(\&quot;Goodbye world!\\n\&quot;); exit(); }'&quot;
-  &quot;invocations&quot;: 1
+  "suites.dacapo2006.timing_iteration": 1
+  "suites.dacapo2006.companion": "sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @syscall[args-&gt;id] = count(); @process[comm] = count();} interval:s:10 { printf(\"Goodbye world!\\n\"); exit(); }'"
+  "invocations": 1
 
 benchmarks:
   dacapo2006:
     - fop
 
 configs:
-  - &quot;temurin-17&quot;
+  - "temurin-17"
 </code></pre>
 <p>In the log file, the output from the main program and the output from the companion program is separated by <code>*****</code>.</p>
 <p><code>size</code>: specifying the size of input data.
@@ -621,7 +621,7 @@ Therefore, it is highly recommended that you give a <code>name</code> different 
 <h2 id="specjbb2015-preview-"><a class="header" href="#specjbb2015-preview-"><code>SPECjbb2015</code> (preview ⚠️)</a></h2>
 <p><a href="https://www.spec.org/jbb2015/">SPECjbb2015</a>.</p>
 <h3 id="keys-2"><a class="header" href="#keys-2">Keys</a></h3>
-<p><code>release</code>: one of the possible values <code>[&quot;1.03&quot;]</code>.
+<p><code>release</code>: one of the possible values <code>["1.03"]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the <code>jar</code>.
 The value is required.
@@ -629,28 +629,28 @@ Note that the property file should reside in <code>path/../config/specjbb2015.pr
 Environment variables will be expanded.</p>
 <h3 id="benchmark-specification-1"><a class="header" href="#benchmark-specification-1">Benchmark Specification</a></h3>
 <p>Only strings are allowed, which should correspond to the the mode of the SPECjbb2015 controller.
-Right now, only <code>&quot;composite&quot;</code> is supported.</p>
+Right now, only <code>"composite"</code> is supported.</p>
 <h2 id="specjvm98-preview-"><a class="header" href="#specjvm98-preview-"><code>SPECjvm98</code> (preview ⚠️)</a></h2>
 <p><a href="https://www.spec.org/jvm98/">SPECjvm98</a>.</p>
 <p>Note that you will need to prepend probes to the classpaths, so that the <a href="https://github.com/anupli/probes/blob/master/SpecApplication.java">modified</a> <code>SpecApplication</code> can be used.</p>
 <p>Here is an example configuration file.</p>
 <pre><code class="language-yaml">includes:
-  - &quot;/home/zixianc/running-ng/src/running/config/base/runbms.yml&quot;
+  - "/home/zixianc/running-ng/src/running/config/base/runbms.yml"
 
 modifiers:
   probes_cp:
     type: JVMClasspathPrepend
-    val: &quot;/home/zixianc/MMTk-Dev/evaluation/probes /home/zixianc/MMTk-Dev/evaluation/probes/probes.jar&quot;
+    val: "/home/zixianc/MMTk-Dev/evaluation/probes /home/zixianc/MMTk-Dev/evaluation/probes/probes.jar"
 
 benchmarks:
   specjvm98:
     - _213_javac
 
 configs:
-  - &quot;adoptopenjdk-8|probes_cp&quot;
+  - "adoptopenjdk-8|probes_cp"
 </code></pre>
 <h3 id="keys-3"><a class="header" href="#keys-3">Keys</a></h3>
-<p><code>release</code>: one of the possible values <code>[&quot;1.03_05&quot;]</code>.
+<p><code>release</code>: one of the possible values <code>["1.03_05"]</code>.
 The value is required.</p>
 <p><code>path</code>: path to the SPECjvm98 folder, where you can find <code>SpecApplication.class</code>.
 The value is required.
@@ -848,7 +848,7 @@ Overrides <code>invocations</code> in the config file.</p>
 <p><code>-s</code>: only use the specified heap sizes.
 This is a comma-separated string of integers or floating point numbers.
 For each slice <code>s</code> in <code>SLICE</code>, we run benchmarks at <code>s * minheap</code>.
-<code>N</code> and <code>n</code>s are ignored. </p>
+<code>N</code> and <code>n</code>s are ignored.</p>
 <p><code>-p</code>: add a prefix to the folder names where the results are stored.
 By default, the folder that stores the result is named using the host name and the timestamp.
 However, you can add a prefix to the folder name to signify which experiments the results belong to.</p>
@@ -894,7 +894,7 @@ No message will be sent if it'a dry run.</p>
     type: Zulip
     request:
       type: private
-      to: [&quot;your user id here&quot;]
+      to: ["your user id here"]
 </code></pre>
 <h4 id="keys-22"><a class="header" href="#keys-22">Keys</a></h4>
 <p><code>request</code>: please follow the <a href="https://zulip.com/api/send-message">Zulip API documentation</a>.
@@ -914,7 +914,7 @@ If you can't create a new bot, please contact the administrators of your organiz
   dacapo_latency:
     type: CopyFile
     patterns:
-      - &quot;scratch/dacapo-latency-*.csv&quot;
+      - "scratch/dacapo-latency-*.csv"
 </code></pre>
 <h4 id="keys-23"><a class="header" href="#keys-23">Keys</a></h4>
 <p><code>patterns</code>: a list of patterns following the Python 3 <code>pathlib.Path.glob</code> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">syntax</a>.
@@ -1009,15 +1009,15 @@ This ensures that the <code>inherit</code> flag of <code>perf_event_attr</code> 
 <pre><code class="language-yaml">modifiers:
   jvmti_env:
     type: EnvVar
-    var: &quot;LD_PRELOAD&quot;
-    val: &quot;/path/to/distillation/libperf_statistics.so&quot;
+    var: "LD_PRELOAD"
+    val: "/path/to/distillation/libperf_statistics.so"
 </code></pre>
 <p>Second, you need to specify a list of events you want to measure.</p>
 <pre><code class="language-yaml">modifiers:
   perf:
     type: EnvVar
-    var: &quot;PERF_EVENTS&quot;
-    val: &quot;PERF_COUNT_HW_CPU_CYCLES,PERF_COUNT_HW_INSTRUCTIONS,PERF_COUNT_HW_CACHE_LL:MISS,PERF_COUNT_HW_CACHE_L1D:MISS,PERF_COUNT_HW_CACHE_DTLB:MISS&quot;
+    var: "PERF_EVENTS"
+    val: "PERF_COUNT_HW_CPU_CYCLES,PERF_COUNT_HW_INSTRUCTIONS,PERF_COUNT_HW_CACHE_LL:MISS,PERF_COUNT_HW_CACHE_L1D:MISS,PERF_COUNT_HW_CACHE_DTLB:MISS"
 </code></pre>
 <p>If you want to get a full list of events you can use on a particular machine, you can clone and build <a href="https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/"><code>libpfm4</code></a> and run the <code>showevtinfo</code> <a href="https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/examples/showevtinfo.c">program</a>.</p>
 <p>Third, you need to tell the JVM to load the agent.
@@ -1025,23 +1025,23 @@ Note that you need to specify the absolute path.</p>
 <pre><code class="language-yaml">modifiers:
   jvmti:
     type: JVMArg
-    val: &quot;-agentpath:/path/to/distillation/libperf_statistics.so&quot;
+    val: "-agentpath:/path/to/distillation/libperf_statistics.so"
 </code></pre>
 <p>Finally, you need to let the DaCapo benchmark inform the start and the end of a benchmark iteration.
 We will reuse the <code>RustMMTk</code> probe here, as the callback functions in the JVMTI agent are also called <code>harness_begin</code> and <code>harness_end</code>.</p>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 </code></pre>
 <p>Now, putting it all together, you can define a set of modifiers, and use that set in your config strings.</p>
 <pre><code class="language-yaml">modifiers:
   jvmti_common:
     type: ModifierSet
-    val: &quot;probes|probes_cp|jvmti|jvmti_env|perf&quot;
+    val: "probes|probes_cp|jvmti|jvmti_env|perf"
 </code></pre>
 <h2 id="mmtk"><a class="header" href="#mmtk">MMTk</a></h2>
 <p>Please clone and build <a href="cookbook/../quickstart.html#prepare-probes"><code>probes</code></a>.
@@ -1050,17 +1050,17 @@ You will need to build <code>mmtk-core</code> with the <code>perf_counter</code>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 </code></pre>
 <p>Then, you can specify a list of events you want to measure.</p>
 <pre><code class="language-yaml">modifiers:
   mmtk_perf:
     type: EnvVar
-    var: &quot;MMTK_PHASE_PERF_EVENTS&quot;
-    val: &quot;PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1&quot;
+    var: "MMTK_PHASE_PERF_EVENTS"
+    val: "PERF_COUNT_HW_CPU_CYCLES,0,-1;PERF_COUNT_HW_INSTRUCTIONS,0,-1;PERF_COUNT_HW_CACHE_LL:MISS,0,-1;PERF_COUNT_HW_CACHE_L1D:MISS,0,-1;PERF_COUNT_HW_CACHE_DTLB:MISS,0,-1"
 </code></pre>
 <p>Note that the list is semicolon-separated.
 Each entry consists of three parts, separated by commas.

@@ -181,7 +181,7 @@
 You will need Python 3.6+.</p>
 <p>Then, create a file <code>two_builds.yml</code> with the following content.</p>
 <pre><code class="language-yaml">includes:
-  - &quot;$RUNNING_NG_PACKAGE_DATA/base/runbms.yml&quot;
+  - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
 </code></pre>
 <p>The <a href="./references/index.html">YAML file</a> represents a dictionary (key-value pairs) that defines the experiments you are running.
 The <code>includes</code> directive here will populate the dictionary with some default values shipped with <code>running-ng</code>.</p>
@@ -215,11 +215,11 @@ The <code>includes</code> directive here will populate the dictionary with some 
 The benchmark suite is defined in <code>$RUNNING_NG_PACKAGE_DATA/base/dacapo.yml</code>.
 By default, the minimum heap sizes of <code>dacapochopin-29a657f</code> benchmarks are measured with AdoptOpenJDK 15 using G1 GC.
 If you are using OpenJDK 11 or 17, you can override the value of <code>suites.dacapochopin-29a657f.minheap</code> to <code>temurin-17-G1</code> or <code>temurin-11-G1</code>.
-That is, you can, for example, add <code>&quot;suites.dacapochopin-29a657f.minheap&quot;: &quot;temurin-17-G1&quot;</code> to <code>overrides</code>.</p>
+That is, you can, for example, add <code>"suites.dacapochopin-29a657f.minheap": "temurin-17-G1"</code> to <code>overrides</code>.</p>
 <p>Then, add the following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">overrides:
-  &quot;suites.dacapochopin-29a657f.timing_iteration&quot;: 5
-  &quot;suites.dacapochopin-29a657f.callback&quot;: &quot;probe.DacapoChopinCallback&quot;
+  "suites.dacapochopin-29a657f.timing_iteration": 5
+  "suites.dacapochopin-29a657f.callback": "probe.DacapoChopinCallback"
 </code></pre>
 <p>That is, we want to run five iterations for each invocation, and use <code>DacapoChopinCallback</code> because it is the appropriate callback for this release of DaCapo.</p>
 <h2 id="prepare-your-builds"><a class="header" href="#prepare-your-builds">Prepare Your Builds</a></h2>
@@ -231,11 +231,11 @@ Add the following to <code>two_builds.yml</code>.</p>
   build1:
     type: OpenJDK
     release: 11
-    home: &quot;/path/to/build1/jdk&quot; # make sure /path/to/build1/jdk/bin/java exists
+    home: "/path/to/build1/jdk" # make sure /path/to/build1/jdk/bin/java exists
   build2:
     type: OpenJDK
     release: 11
-    home: &quot;/path/to/build2/jdk&quot; # make sure /path/to/build2/jdk/bin/java exists
+    home: "/path/to/build2/jdk" # make sure /path/to/build2/jdk/bin/java exists
 </code></pre>
 <p>This defines two builds of <a href="./references/runtime.html">runtimes</a>.</p>
 <p>I recommend that you use absolute paths for the builds, although relative paths will work, and will be relative to where you run <code>running</code>.</p>
@@ -246,18 +246,18 @@ Add the following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">modifiers:
   probes_cp:
     type: JVMClasspath
-    val: &quot;/path/to/probes/out /path/to/probes/out/probes.jar&quot;
+    val: "/path/to/probes/out /path/to/probes/out/probes.jar"
   probes:
     type: JVMArg
-    val: &quot;-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk&quot;
+    val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 </code></pre>
 <p>This defines two <a href="./references/modifier.html">modifiers</a>, which will be used later to modify the JVM command line arguments.</p>
 <p>Please only use absolute paths for all the above.</p>
 <h2 id="prepare-configs"><a class="header" href="#prepare-configs">Prepare Configs</a></h2>
 <p>Finally, add he following to <code>two_builds.yml</code>.</p>
 <pre><code class="language-yaml">configs:
-  - &quot;build1|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes&quot;
-  - &quot;build2|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes&quot;
+  - "build1|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes"
+  - "build2|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes"
 </code></pre>
 <p>The syntax is described <a href="./references/index.html#configs">here</a>.</p>
 <h2 id="sanity-checks"><a class="header" href="#sanity-checks">Sanity Checks</a></h2>
@@ -278,7 +278,7 @@ Add the following to <code>two_builds.yml</code>.</p>
 <p>This allows you to see any issue before wasting several days only realizing that something didn't work.</p>
 <h2 id="run-it"><a class="header" href="#run-it">Run It</a></h2>
 <p>Once you are happy with everything, run the experiments.</p>
-<pre><code class="language-console">running runbms /path/to/log two_builds.yml 8 -p &quot;two_builds&quot;
+<pre><code class="language-console">running runbms /path/to/log two_builds.yml 8 -p "two_builds"
 </code></pre>
 <p>Don't forget to give the results folder a prefix so that you can later tell what the experiment was for.</p>
 <h3 id="analysing-results"><a class="header" href="#analysing-results">Analysing Results</a></h3>

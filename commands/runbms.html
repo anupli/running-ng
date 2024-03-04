@@ -184,7 +184,7 @@ Overrides <code>invocations</code> in the config file.</p>
 <p><code>-s</code>: only use the specified heap sizes.
 This is a comma-separated string of integers or floating point numbers.
 For each slice <code>s</code> in <code>SLICE</code>, we run benchmarks at <code>s * minheap</code>.
-<code>N</code> and <code>n</code>s are ignored. </p>
+<code>N</code> and <code>n</code>s are ignored.</p>
 <p><code>-p</code>: add a prefix to the folder names where the results are stored.
 By default, the folder that stores the result is named using the host name and the timestamp.
 However, you can add a prefix to the folder name to signify which experiments the results belong to.</p>
@@ -230,7 +230,7 @@ No message will be sent if it'a dry run.</p>
     type: Zulip
     request:
       type: private
-      to: [&quot;your user id here&quot;]
+      to: ["your user id here"]
 </code></pre>
 <h4 id="keys-1"><a class="header" href="#keys-1">Keys</a></h4>
 <p><code>request</code>: please follow the <a href="https://zulip.com/api/send-message">Zulip API documentation</a>.
@@ -250,7 +250,7 @@ If you can't create a new bot, please contact the administrators of your organiz
   dacapo_latency:
     type: CopyFile
     patterns:
-      - &quot;scratch/dacapo-latency-*.csv&quot;
+      - "scratch/dacapo-latency-*.csv"
 </code></pre>
 <h4 id="keys-2"><a class="header" href="#keys-2">Keys</a></h4>
 <p><code>patterns</code>: a list of patterns following the Python 3 <code>pathlib.Path.glob</code> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">syntax</a>.
