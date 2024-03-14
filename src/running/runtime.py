@@ -164,6 +164,25 @@ class D8(JavaScriptRuntime):
                 return True
         return False
 
+@register(Runtime)
+class Chrome(JavaScriptRuntime):
+    def __str__(self):
+        return "{} chrome {}".format(super().__str__(), self.executable)
+
+    def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
+        size_str = "{}".format(size)
+        heapsize = JSArg(
+            name="heap{}".format(size_str),
+            val="--initial-heap-size={} --max-heap-size={}".format(
+                size_str, size_str)
+        )
+        return [heapsize]
+
+    def is_oom(self, output: bytes) -> bool:
+        for pattern in [b"Fatal javascript OOM in", b"Fatal JavaScript out of memory", b"V8 javascript OOM", b"<--- Last few GCs --->"]:
+            if pattern in output:
+                return True
+        return False
 
 @register(Runtime)
 class SpiderMonkey(JavaScriptRuntime):

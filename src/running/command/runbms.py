@@ -196,6 +196,8 @@ def hz_to_ghz(hzstr: str) -> str:
 def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output = "\n-----\n"
     output += "mkdir -p PLOTTY_WORKAROUND; timedrun; "
+    # Chrome workaround to remove the cache directory between iterations.
+    output += "rm -rf /tmp/chrome-expr-cache; "
     output += bm.to_string(runtime)
     output += "\n"
     output += "running-ng v{}\n".format(__VERSION__)
@@ -310,8 +312,15 @@ def run_one_benchmark(
             if runtime.is_oom(output):
                 oomed_count[c] += 1
             if exit_status is SubprocessrExit.Timeout:
-                timeout_count[c] += 1
-                print(".", end="", flush=True)
+                if suite.is_passed(output):
+                    # A hack for Chrome benchmarks so that a run is considered successful
+                    # when Chrome remains active after all iterations complete then killed due to
+                    # a timeout error.
+                    config_passed = True
+                    print(config_index_to_chr(j), end="", flush=True)
+                else:
+                    timeout_count[c] += 1
+                    print(".", end="", flush=True)
             elif exit_status is SubprocessrExit.Error:
                 print(".", end="", flush=True)
             elif exit_status is SubprocessrExit.Normal:

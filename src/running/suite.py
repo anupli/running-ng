@@ -6,6 +6,7 @@ from running.benchmark import (
     Benchmark,
     JavaScriptBenchmark,
     JuliaBenchmark,
+    ChromeBenchmark,
 )
 import logging
 from running.util import register, split_quoted
@@ -517,3 +518,73 @@ class JuliaGCBenchmarks(BenchmarkSuite):
     def is_passed(self, output: bytes) -> bool:
         # FIXME
         return True
+
+@register(BenchmarkSuite)
+class Speedometer(BenchmarkSuite):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.timing_iteration = parse_timing_iteration(
+            kwargs.get("timing_iteration"), "Speedometer")
+        self.benchmark_url = kwargs.get("benchmark_url")
+        self.minheap: Optional[str]
+        self.minheap = kwargs.get("minheap")
+        self.minheap_values: Dict[str, Dict[str, int]]
+        self.minheap_values = kwargs.get("minheap_values", {})
+        if not isinstance(self.minheap_values, dict):
+            raise TypeError(
+                "The minheap_values of {} should be a dictionary".format(self.name)
+            )
+        if self.minheap:
+            if not isinstance(self.minheap, str):
+                raise TypeError(
+                    "The minheap of {} should be a string that selects from a minheap_values".format(
+                        self.name
+                    )
+                )
+            if self.minheap not in self.minheap_values:
+                raise KeyError(
+                    "{} is not a valid entry of {}.minheap_values".format(
+                        self.name, self.name
+                    )
+                )
+        self.timeout: Optional[int]
+        self.timeout = kwargs.get("timeout")
+
+    def __str__(self) -> str:
+        return "{} Speedometer {}".format(super().__str__(), self.benchmark_url)
+
+    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> 'ChromeBenchmark':
+        assert type(bm_spec) is str
+
+        return ChromeBenchmark(
+            suite_name=self.name,
+            name=bm_spec,
+            chrome_args=[],
+            js_args=[],
+            timing_iteration=self.timing_iteration,
+            benchmark_url=self.benchmark_url,
+            timeout=self.timeout,
+        )
+
+    def get_minheap(self, bm: Benchmark) -> int:
+        assert isinstance(bm, ChromeBenchmark)
+        name = bm.name
+        if not self.minheap:
+            logging.warning(
+                "No minheap_value of {} is selected".format(self))
+            return __DEFAULT_MINHEAP
+        minheap = self.minheap_values[self.minheap]
+        if name not in minheap:
+            logging.warning(
+                "Minheap for {} of {} not set".format(name, self))
+            return __DEFAULT_MINHEAP
+        return minheap[name]
+    
+    def is_passed(self, output: bytes) -> bool:
+        # A hack for Chrome benchmarks so that a run is considered successful
+        # when Chrome remains active after all iterations complete then killed due to
+        # a timeout error.
+        iter_compelted = output.decode("utf-8").count("End MMTk Statistics")
+        if iter_compelted == self.timing_iteration:
+            return True
+        return False

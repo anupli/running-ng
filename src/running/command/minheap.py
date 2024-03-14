@@ -54,9 +54,16 @@ def run_bm_with_retry(
                 log("o ")
                 return ContinueSearch.HeapTooBig
         elif subprocess_exit is SubprocessrExit.Timeout:
-            # A timeout is likely due to heap being too small and many GCs scheduled back to back
-            log("t ")
-            return ContinueSearch.HeapTooSmall
+            if suite.is_passed(output):
+                # A hack for Chrome benchmarks so that a run is considered successful
+                # when Chrome remains active after all iterations complete then killed due to
+                # a timeout error.
+                log("o ")
+                return ContinueSearch.HeapTooBig
+            else:
+                # A timeout is likely due to heap being too small and many GCs scheduled back to back
+                log("t ")
+                return ContinueSearch.HeapTooSmall
         # If not the above scenario, we treat this invocation as a crash or some kind of erroneous state
         log(".")
         continue
