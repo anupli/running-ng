@@ -318,3 +318,40 @@ class JuliaBenchmark(Benchmark):
         cmd.extend(["-n", "1"])  # one run
         cmd.extend(self.program_args)
         return cmd
+
+class ChromeBenchmark(Benchmark):
+    def __init__(self, chrome_args: List[str], js_args: List[str],
+        timing_iteration: int, benchmark_url: str, **kwargs):
+        super().__init__(**kwargs)
+        self.chrome_args = chrome_args
+        self.js_args = js_args
+        self.benchmark_url = benchmark_url
+        self.timing_iteration = timing_iteration
+
+    def __str__(self) -> str:
+        return self.to_string(DummyRuntime("chrome"))
+
+    def attach_modifiers(self, modifiers: Sequence[Modifier]) -> 'ChromeBenchmark':
+        jb = super().attach_modifiers(modifiers)
+        for m in modifiers:
+            if type(m) == JSArg:
+                jb.js_args.extend(m.val)
+            elif type(m) == ChromeArg:
+                jb.chrome_args.extend(m.val)
+            elif type(m) == ProgramArg:
+                jb.program_args.extend(m.val)
+        return jb
+
+    def get_full_args(self, runtime: Runtime) -> List[Union[str, Path]]:
+        cmd = super().get_full_args(runtime)
+        cmd.append(runtime.get_executable())
+        cmd.extend(self.chrome_args)
+         # Chrome workaround to remove the cache directory between iterations.
+        cmd.append(" --user-data-dir=/tmp/chrome-expr-cache")
+        s = ''
+        for j in self.js_args:
+            s += j + " "
+        cmd.append("--js-flags={}".format(s))
+        full_url = "{}?startAutomatically&iterationCount={}&suite={}".format(self.benchmark_url, self.timing_iteration, self.timing_iteration, self.name)
+        cmd.append(full_url)
+        return cmd
