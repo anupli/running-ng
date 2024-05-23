@@ -2,6 +2,7 @@ from running.benchmark import JavaBenchmark
 from running.modifier import *
 from running.config import Configuration
 from running.runtime import OpenJDK
+from running.util import dont_emit_heapsize_modifier
 
 
 def test_jvm_arg():
@@ -163,3 +164,23 @@ def test_envvar():
     )
     assert "$HOME" not in jb.to_string(openjdk)
     assert "$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI" in jb.to_string(openjdk)
+
+
+def test_no_implicit_heapsize_modifier():
+    c = Configuration(
+        {
+            "modifiers": {
+                "no_hfac": {"type": "NoImplicitHeapsizeModifier"},
+            },
+            "runtimes": {
+                "jdk8": {
+                    "type": "OpenJDK",
+                    "release": 8,
+                    "home": "/usr/lib/jvm/temurin-8-jdk-amd64",
+                }
+            },
+        }
+    )
+    c.resolve_class()
+    assert not dont_emit_heapsize_modifier(c, "jdk8|")
+    assert dont_emit_heapsize_modifier(c, "jdk8|no_hfac")

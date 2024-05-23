@@ -1,0 +1,38 @@
+includes:
+  - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
+
+overrides:
+  "suites.dacapo2006.timing_iteration": 5
+  "suites.dacapobach.timing_iteration": 5
+  "suites.dacapo2006.callback": "probe.Dacapo2006Callback"
+  "suites.dacapobach.callback": "probe.DacapoBachCallback"
+
+modifiers:
+  probes_cp:
+    type: JVMClasspath
+    val: "/home/zixianc/MMTk-Dev/evaluation/probes /home/zixianc/MMTk-Dev/evaluation/probes/probes.jar"
+  probes_native:
+    type: JVMArg
+    val: "-Djava.library.path=/home/zixianc/MMTk-Dev/evaluation/probes"
+  probes_rustmmtk:
+    type: JVMArg
+    val: "-Dprobes=RustMMTk"
+  value_opts_example:
+    type: EnvVar
+    var: "FOOBAR{0}"
+    val: "BUZZ{1}"
+
+runtimes:
+  jdk-mmtk:
+    type: OpenJDK
+    release: 11
+    home: "/home/zixianc/MMTk-Dev/evaluation/build/jdk-mmtk/jdk"
+
+benchmarks:
+  dacapo2006:
+    - eclipse
+  dacapobach:
+    - fop
+
+configs:
+  - "jdk-mmtk|ms|s|c2|ss|tph|probes_cp|probes_rustmmtk|probes_native|value_opts_example-42-43"
