@@ -514,9 +514,10 @@ def run(args):
         if slice:  # specified -s, we respect that first
             if N is not None:
                 logging.warning(
-                    "You specified both N={} and -s {}, N is ignored.",
-                    N,
-                    ",".join([str(s) for s in slice]),
+                    "You specified both N={} and -s {}, N is ignored.".format(
+                        N,
+                        ",".join([str(s) for s in slice]),
+                    )
                 )
             run_hfacs(slice)
         else:
