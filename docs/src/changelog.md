@@ -12,6 +12,11 @@
 
 ### Security
 
+## [`v0.4.6` (2024-05-23)](https://github.com/anupli/running-ng/releases/tag/v0.4.6)
+### Fixed
+#### Commands
+- `runbms`: remove superfluous log messages when no `configs` has a `NoImplicitHeapsizeModifier`.
+
 ## [`v0.4.5` (2024-05-23)](https://github.com/anupli/running-ng/releases/tag/v0.4.5)
 ### Added
 #### Modifiers

@@ -478,16 +478,17 @@ def run(args):
 
         # In all other cases, we will first run configs that don't want
         # implicit heapsize modifiers
-        logging.info("Running all configs with NoImplicitHeapSizeModifier set")
-        run_one_hfac(
-            invocations,
-            None,  # not specifying heap size
-            suites,
-            benchmarks,
-            configs_no_heapsize,
-            Path(runbms_dir),
-            log_dir,
-        )
+        if configs_no_heapsize:
+            logging.info("Running all configs with NoImplicitHeapSizeModifier set")
+            run_one_hfac(
+                invocations,
+                None,  # not specifying heap size
+                suites,
+                benchmarks,
+                configs_no_heapsize,
+                Path(runbms_dir),
+                log_dir,
+            )
 
         # Helper function for running benchmarks using multiple heap factors
         def run_hfacs(hfacs):
