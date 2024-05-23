@@ -1,8 +1,6 @@
 # Changelog
 ## Unreleased
 ### Added
-#### Modifiers
-- `NoImplicitHeapsizeModifier`
 
 ### Changed
 
@@ -13,6 +11,11 @@
 ### Fixed
 
 ### Security
+
+## [`v0.4.5` (2024-05-23)](https://github.com/anupli/running-ng/releases/tag/v0.4.5)
+### Added
+#### Modifiers
+- `NoImplicitHeapsizeModifier`
 
 ## [`v0.4.4` (2023-11-23)](https://github.com/anupli/running-ng/releases/tag/v0.4.4)
 ### Fixed
