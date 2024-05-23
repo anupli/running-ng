@@ -477,7 +477,7 @@ def run(args):
             return True
 
         # In all other cases, we will first run configs that don't want
-        # implicit
+        # implicit heapsize modifiers
         logging.info("Running all configs with NoImplicitHeapSizeModifier set")
         run_one_hfac(
             invocations,
