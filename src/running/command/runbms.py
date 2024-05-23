@@ -20,6 +20,7 @@ from running.util import (
     get_logged_in_users,
     config_index_to_chr,
     config_str_encode,
+    dont_emit_heapsize_modifier,
 )
 import socket
 from datetime import datetime
@@ -453,6 +454,42 @@ def run(args):
                 p.set_runbms_dir(runbms_dir)
                 p.set_log_dir(log_dir)
 
+        configs_no_heapsize = [
+            c for c in configs if dont_emit_heapsize_modifier(configuration, c)
+        ]
+        configs_with_heapsize = [
+            c for c in configs if not dont_emit_heapsize_modifier(configuration, c)
+        ]
+
+        # Simple case
+        if not slice and N is None:
+            # run all configs without specifying heap size
+            run_one_hfac(
+                invocations,
+                None,  # not specifying heap size
+                suites,
+                benchmarks,
+                configs,
+                Path(runbms_dir),
+                log_dir,
+            )
+            # early return
+            return True
+
+        # In all other cases, we will first run configs that don't want
+        # implicit
+        logging.info("Running all configs with NoImplicitHeapSizeModifier set")
+        run_one_hfac(
+            invocations,
+            None,  # not specifying heap size
+            suites,
+            benchmarks,
+            configs_no_heapsize,
+            Path(runbms_dir),
+            log_dir,
+        )
+
+        # Helper function for running benchmarks using multiple heap factors
         def run_hfacs(hfacs):
             logging.info(
                 "hfacs: {}".format(", ".join([hfac_str(hfac) for hfac in hfacs]))
@@ -463,35 +500,30 @@ def run(args):
                     hfac,
                     suites,
                     benchmarks,
-                    configs,
+                    configs_with_heapsize,
                     Path(runbms_dir),
                     log_dir,
                 )
                 print()
 
+        # Helper function for using the heap factor spreading algorithm
         def run_N_ns(N, ns):
             hfacs = get_hfacs(heap_range, spread_factor, N, ns)
             run_hfacs(hfacs)
 
-        if slice:
+        if slice:  # specified -s, we respect that first
+            if N is not None:
+                logging.warning(
+                    "You specified both N={} and -s {}, N is ignored.",
+                    N,
+                    ",".join([str(s) for s in slice]),
+                )
             run_hfacs(slice)
-            return True
-
-        if N is None:
-            run_one_hfac(
-                invocations,
-                None,
-                suites,
-                benchmarks,
-                configs,
-                Path(runbms_dir),
-                log_dir,
-            )
-            return True
-
-        if len(ns) == 0:
-            fillin(run_N_ns, round(math.log2(N)))
         else:
-            run_N_ns(N, ns)
+            assert N is not None
+            if len(ns) == 0:
+                fillin(run_N_ns, round(math.log2(N)))
+            else:
+                run_N_ns(N, ns)
 
         return True

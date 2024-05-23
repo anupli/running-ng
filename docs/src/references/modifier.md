@@ -96,3 +96,14 @@ If a companion program also exist for the benchmark suite you use, this companio
 `val`: a single string with [shell-like syntax](https://docs.python.org/3/library/shlex.html#shlex.split).
 Multiple arguments are space separated.
 Environment variables will be expanded.
+
+## `NoImplicitHeapsizeModifier` (preview ⚠️)
+`runbms` specific.
+
+### Description
+Normally `runbms` will iterate through a set of heap sizes, either specific multiples of the minheap of each benchmark via `-s`, or spreading the multiples across 1~`heap_range` (using `N` and optionally `ns`).
+
+This modifier prevents `runbms` from applying the heap sizes for certain configs, which is useful, for example, for running `NoGC` or `EpsilonGC`.
+
+### Keys
+No argument is allowed.

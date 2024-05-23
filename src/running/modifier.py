@@ -180,3 +180,12 @@ class JuliaArg(Modifier):
 
     def __str__(self) -> str:
         return "{} JuliaArg {}".format(super().__str__(), self.val)
+
+
+@register(Modifier)
+class NoImplicitHeapsizeModifier(Modifier):
+    def __init__(self, value_opts=None, **kwargs):
+        super().__init__(value_opts, **kwargs)
+
+    def __str__(self) -> str:
+        return "{} NoImplicitHeapsizeModifier".format(super().__str__())

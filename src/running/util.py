@@ -70,6 +70,16 @@ def parse_config_str(
     return runtime, mods
 
 
+def dont_emit_heapsize_modifier(configuration: "Configuration", c: str) -> bool:
+    mods = parse_modifier_strs(configuration, c.split("|")[1:])
+    from running.modifier import NoImplicitHeapsizeModifier
+
+    for mod in mods:
+        if isinstance(mod, NoImplicitHeapsizeModifier):
+            return True
+    return False
+
+
 def config_str_encode(c: str) -> str:
     return ".".join([x.strip() for x in c.split("|")])
 

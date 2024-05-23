@@ -1,6 +1,8 @@
 # Changelog
 ## Unreleased
 ### Added
+#### Modifiers
+- `NoImplicitHeapsizeModifier`
 
 ### Changed
 
