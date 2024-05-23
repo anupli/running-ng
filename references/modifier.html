@@ -250,6 +250,13 @@ If a companion program also exist for the benchmark suite you use, this companio
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.
 Environment variables will be expanded.</p>
+<h2 id="noimplicitheapsizemodifier-preview-"><a class="header" href="#noimplicitheapsizemodifier-preview-"><code>NoImplicitHeapsizeModifier</code> (preview ⚠️)</a></h2>
+<p><code>runbms</code> specific.</p>
+<h3 id="description-9"><a class="header" href="#description-9">Description</a></h3>
+<p>Normally <code>runbms</code> will iterate through a set of heap sizes, either specific multiples of the minheap of each benchmark via <code>-s</code>, or spreading the multiples across 1~<code>heap_range</code> (using <code>N</code> and optionally <code>ns</code>).</p>
+<p>This modifier prevents <code>runbms</code> from applying the heap sizes for certain configs, which is useful, for example, for running <code>NoGC</code> or <code>EpsilonGC</code>.</p>
+<h3 id="keys-10"><a class="header" href="#keys-10">Keys</a></h3>
+<p>No argument is allowed.</p>
 
                     </main>
 
