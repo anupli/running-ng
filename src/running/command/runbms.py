@@ -31,6 +31,7 @@ import os
 from running.command.fillin import fillin
 import math
 import yaml
+from collections import defaultdict
 
 if TYPE_CHECKING:
     from running.plugin.runbms import RunbmsPlugin
@@ -264,9 +265,9 @@ def run_one_benchmark(
     for p in plugins.values():
         p.start_benchmark(hfac, size, bm)
     oomed_count: DefaultDict[str, int]
-    oomed_count = DefaultDict(int)
+    oomed_count = defaultdict(int)
     timeout_count: DefaultDict[str, int]
-    timeout_count = DefaultDict(int)
+    timeout_count = defaultdict(int)
     logged_in_users: Set[str]
     logged_in_users = get_logged_in_users()
     if len(logged_in_users) > 1:
