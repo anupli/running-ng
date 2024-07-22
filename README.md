@@ -4,21 +4,21 @@
 ## Installation
 `pip3 install running-ng`
 
+There are two [extras](https://peps.python.org/pep-0508/#extras) available.
+- `zulip`: dependencies for the `Zulip` `runbms` plugin, useful for users.
+- `tests`: dependencies for running tests, useful for package developers.
+
 ## Development setup
-```console
+```bash
 virtualenv env
 source env/bin/activate
-pip install -U pip setuptools build[virtualenv] twine
+pip install -e .[zulip,tests]
+pip install -U pip setuptools build[virtualenv] twine # extra packages for building releases
 ```
 
 - To make a distribution archives, run `python -m build` within the virtual environment.
-- To run an editable build in the virtual environment, run `pip install -e .`.
 - To install to user `site-packages`, run `pip install dist/running_ng-<VERSION>-py3-none-any.whl` outside the virtual environment.
 - To update to PyPI, run `twine upload --repository running-ng dist/*<VERSION>*`.
-
-There are two [extras](https://peps.python.org/pep-0508/#extras) available.
-- `zulip`: dependencies for the `Zulip` `runbms` plugin.
-- `tests`: dependencies for running tests.
 
 ## Documentation
 Please refer to [this site](https://anupli.github.io/running-ng/) for up-to-date documentations.
