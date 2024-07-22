@@ -12,7 +12,7 @@ from running.util import register, split_quoted
 import os.path
 
 __DRY_RUN = False
-__DEFAULT_MINHEAP = 4096
+DEFAULT_MINHEAP = 4096
 
 
 def is_dry_run():
@@ -238,11 +238,11 @@ class DaCapo(JavaBenchmarkSuite):
         name = bm.name
         if not self.minheap:
             logging.warning("No minheap_value of {} is selected".format(self))
-            return __DEFAULT_MINHEAP
+            return DEFAULT_MINHEAP
         minheap = self.minheap_values[self.minheap]
         if name not in minheap:
             logging.warning("Minheap for {} of {} not set".format(name, self))
-            return __DEFAULT_MINHEAP
+            return DEFAULT_MINHEAP
         return minheap[name]
 
     def is_passed(self, output: bytes) -> bool:
@@ -395,11 +395,11 @@ class Octane(BenchmarkSuite):
         name = bm.name
         if not self.minheap:
             logging.warning("No minheap_value of {} is selected".format(self))
-            return __DEFAULT_MINHEAP
+            return DEFAULT_MINHEAP
         minheap = self.minheap_values[self.minheap]
         if name not in minheap:
             logging.warning("Minheap for {} of {} not set".format(name, self))
-            return __DEFAULT_MINHEAP
+            return DEFAULT_MINHEAP
         return minheap[name]
 
     def is_passed(self, output: bytes) -> bool:
@@ -497,11 +497,11 @@ class JuliaGCBenchmarks(BenchmarkSuite):
         name = bm.name
         if not self.minheap:
             logging.warning("No minheap_value of {} is selected".format(self))
-            return __DEFAULT_MINHEAP
+            return DEFAULT_MINHEAP
         minheap = self.minheap_values[self.minheap]
         if name not in minheap:
             logging.warning("Minheap for {} of {} not set".format(name, self))
-            return __DEFAULT_MINHEAP
+            return DEFAULT_MINHEAP
         return minheap[name]
 
     def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> "JuliaBenchmark":
