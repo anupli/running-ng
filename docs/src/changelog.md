@@ -12,6 +12,11 @@
 
 ### Security
 
+## [`v0.4.7` (2024-08-30)](https://github.com/anupli/running-ng/releases/tag/v0.4.7)
+### Fixed
+#### Commands
+- `runbms`: correctly apply a default minheap value for a benchmark without a defined minheap value in the config file.
+
 ## [`v0.4.6` (2024-05-23)](https://github.com/anupli/running-ng/releases/tag/v0.4.6)
 ### Fixed
 #### Commands
