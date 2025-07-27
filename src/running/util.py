@@ -180,3 +180,53 @@ class Moma(object):
     def get_reservation(self) -> Optional[MomaReservaton]:
         self.update_reservation()
         return self.reservation
+
+
+def detect_rogue_processes(top_output: str, cpu_threshold: float = 50.0) -> List[Tuple[str, str, float, str]]:
+    """
+    Parse top output and detect processes with high CPU usage.
+    
+    Args:
+        top_output: Raw output from top command
+        cpu_threshold: CPU percentage threshold for considering a process "rogue"
+    
+    Returns:
+        List of tuples: (pid, user, cpu_percent, command)
+    """
+    rogue_processes: List[Tuple[str, str, float, str]] = []
+    lines = top_output.splitlines()
+    
+    # Find the start of the process list (after the header line with PID USER PR NI...)
+    process_start_idx = -1
+    for i, line in enumerate(lines):
+        if line.strip().startswith("PID") and "USER" in line and "%CPU" in line:
+            process_start_idx = i + 1
+            break
+    
+    if process_start_idx == -1:
+        return rogue_processes
+    
+    # Parse each process line
+    for line in lines[process_start_idx:]:
+        if not line.strip():
+            continue
+        
+        # Split the line and extract relevant fields
+        # Format: PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
+        parts = line.split()
+        if len(parts) < 12:
+            continue
+        
+        try:
+            pid = parts[0]
+            user = parts[1]
+            cpu_percent = float(parts[8])  # %CPU column
+            command = " ".join(parts[11:])  # COMMAND column (may contain spaces)
+            
+            if cpu_percent >= cpu_threshold:
+                rogue_processes.append((pid, user, cpu_percent, command))
+        except (ValueError, IndexError):
+            # Skip lines that don't match expected format
+            continue
+    
+    return rogue_processes

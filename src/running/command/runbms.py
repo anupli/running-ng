@@ -21,6 +21,7 @@ from running.util import (
     config_index_to_chr,
     config_str_encode,
     dont_emit_heapsize_modifier,
+    detect_rogue_processes,
 )
 import socket
 from datetime import datetime
@@ -204,7 +205,20 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output += system("date") + "\n"
     output += system("w") + "\n"
     output += system("vmstat 1 2") + "\n"
-    output += system("top -bcn 1 -w512 |head -n 12") + "\n"
+    
+    # Get top output and check for rogue processes
+    top_output = system("top -bcn 1 -w512 |head -n 12")
+    output += top_output + "\n"
+    
+    # Check for rogue processes with high CPU usage
+    rogue_processes = detect_rogue_processes(top_output)
+    if rogue_processes:
+        output += "# ** Warning: High CPU usage processes detected: **\n"
+        for pid, user, cpu_percent, command in rogue_processes:
+            output += "# Process {} (PID: {}, User: {}) using {:.1f}% CPU: {}\n".format(
+                command, pid, user, cpu_percent, command
+            )
+        output += "\n"
     output += "Environment variables: \n"
     for k, v in sorted(os.environ.items()):
         output += "\t{}={}\n".format(k, v)
