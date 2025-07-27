@@ -32,6 +32,7 @@ from running.command.fillin import fillin
 import math
 import yaml
 from collections import defaultdict
+import sys
 
 if TYPE_CHECKING:
     from running.plugin.runbms import RunbmsPlugin
@@ -45,6 +46,8 @@ skip_timeout: Optional[int]
 skip_log_compression: bool = False
 plugins: Dict[str, Any]
 resume: Optional[str]
+exit_on_failure: bool = False
+any_config_failed: bool = False
 
 
 def setup_parser(subparsers):
@@ -64,6 +67,9 @@ def setup_parser(subparsers):
     f.add_argument("--workdir", type=Path)
     f.add_argument(
         "--skip-log-compression", action="store_true", help="Skip compressing log files"
+    )
+    f.add_argument(
+        "--exit-on-failure", action="store_true", help="Exit with code 1 if any configuration fails"
     )
 
 
@@ -285,9 +291,12 @@ def run_one_benchmark(
                 p.start_config(hfac, size, bm, i, c, j)
             if skip_oom is not None and oomed_count[c] >= skip_oom:
                 print(".", end="", flush=True)
+                global any_config_failed
+                any_config_failed = True
                 continue
             if skip_timeout is not None and timeout_count[c] >= skip_timeout:
                 print(".", end="", flush=True)
+                any_config_failed = True
                 continue
             if resume:
                 log_filename_completed = get_filename_completed(bm, hfac, size, c)
@@ -314,16 +323,21 @@ def run_one_benchmark(
             if exit_status is SubprocessrExit.Timeout:
                 timeout_count[c] += 1
                 print(".", end="", flush=True)
+                any_config_failed = True
             elif exit_status is SubprocessrExit.Error:
                 print(".", end="", flush=True)
+                any_config_failed = True
             elif exit_status is SubprocessrExit.Normal:
                 if suite.is_passed(output):
                     config_passed = True
                     print(config_index_to_chr(j), end="", flush=True)
                 else:
                     print(".", end="", flush=True)
+                    any_config_failed = True
             elif exit_status is SubprocessrExit.Dryrun:
                 print(".", end="", flush=True)
+                # In dry-run mode, treat as failure for exit-on-failure purposes
+                any_config_failed = True
             else:
                 raise ValueError("Not a valid SubprocessrExit value")
             for p in plugins.values():
@@ -412,6 +426,8 @@ def run(args):
         skip_timeout = args.get("skip_timeout")
         global skip_log_compression
         skip_log_compression = args.get("skip_log_compression")
+        global exit_on_failure
+        exit_on_failure = args.get("exit_on_failure", False)
         # Load from configuration file
         global configuration
         configuration = Configuration.from_file(Path(os.getcwd()), args.get("CONFIG"))
@@ -474,6 +490,9 @@ def run(args):
                 Path(runbms_dir),
                 log_dir,
             )
+            # Check if we need to exit with failure code
+            if exit_on_failure and any_config_failed:
+                sys.exit(1)
             # early return
             return True
 
@@ -528,5 +547,9 @@ def run(args):
                 fillin(run_N_ns, round(math.log2(N)))
             else:
                 run_N_ns(N, ns)
+
+        # Check if we need to exit with failure code
+        if exit_on_failure and any_config_failed:
+            sys.exit(1)
 
         return True
