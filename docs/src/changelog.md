@@ -1,6 +1,8 @@
 # Changelog
 ## Unreleased
 ### Added
+#### Commands
+- `runbms`: automatic detection and warning for rogue processes that consume high CPU resources (>50% configurable threshold). Warnings appear in both log prologue output and Zulip notifications when enabled.
 
 ### Changed
 

@@ -7,6 +7,8 @@ from running.util import (
     MomaReservationStatus,
     config_index_to_chr,
     get_logged_in_users,
+    system,
+    detect_rogue_processes,
 )
 import logging
 import copy
@@ -43,10 +45,11 @@ class Zulip(RunbmsPlugin):
 
     def send_message(self, content):
         message_data = copy.deepcopy(self.request)
-        message_data["content"] = "{}\n{}{}{}\n".format(
+        message_data["content"] = "{}\n{}{}{}{}\n".format(
             self.run_id,
             self.get_reservation_message(),
             self.get_user_warnings(),
+            self.get_rogue_process_warnings(),
             content,
         )
         try:
@@ -189,3 +192,19 @@ class Zulip(RunbmsPlugin):
                 " ".join(sorted(logged_in_users))
             )
         return ""
+
+    def get_rogue_process_warnings(self) -> str:
+        """Check for rogue processes with high CPU usage and generate warnings."""
+        top_output = system("top -bcn 1 -w512 |head -n 12")
+        rogue_processes = detect_rogue_processes(top_output)
+
+        if not rogue_processes:
+            return ""
+
+        warning = "# ** Warning: High CPU usage processes detected: **\n"
+        for pid, user, cpu_percent, command in rogue_processes:
+            warning += "- Process {} (PID: {}, User: {}) using {:.1f}% CPU\n".format(
+                command, pid, user, cpu_percent
+            )
+
+        return warning
