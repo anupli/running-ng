@@ -203,7 +203,7 @@ class Zulip(RunbmsPlugin):
         
         warning = "# ** Warning: High CPU usage processes detected: **\n"
         for pid, user, cpu_percent, command in rogue_processes:
-            warning += "# Process {} (PID: {}, User: {}) using {:.1f}% CPU\n".format(
+            warning += "- Process {} (PID: {}, User: {}) using {:.1f}% CPU\n".format(
                 command, pid, user, cpu_percent
             )
         
