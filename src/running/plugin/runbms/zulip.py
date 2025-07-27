@@ -1,7 +1,13 @@
 from typing import Optional, TYPE_CHECKING
 import zulip
 from running.plugin.runbms import RunbmsPlugin
-from running.util import Moma, register, MomaReservationStatus, config_index_to_chr, get_logged_in_users
+from running.util import (
+    Moma,
+    register,
+    MomaReservationStatus,
+    config_index_to_chr,
+    get_logged_in_users,
+)
 import logging
 import copy
 from running.suite import is_dry_run
@@ -38,7 +44,10 @@ class Zulip(RunbmsPlugin):
     def send_message(self, content):
         message_data = copy.deepcopy(self.request)
         message_data["content"] = "{}\n{}{}{}\n".format(
-            self.run_id, self.get_reservation_message(), self.get_user_warnings(), content
+            self.run_id,
+            self.get_reservation_message(),
+            self.get_user_warnings(),
+            content,
         )
         try:
             result = self.client.send_message(message_data=message_data)
