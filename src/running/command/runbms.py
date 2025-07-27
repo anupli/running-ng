@@ -205,20 +205,7 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output += system("date") + "\n"
     output += system("w") + "\n"
     output += system("vmstat 1 2") + "\n"
-    
-    # Get top output and check for rogue processes
-    top_output = system("top -bcn 1 -w512 |head -n 12")
-    output += top_output + "\n"
-    
-    # Check for rogue processes with high CPU usage
-    rogue_processes = detect_rogue_processes(top_output)
-    if rogue_processes:
-        output += "# ** Warning: High CPU usage processes detected: **\n"
-        for pid, user, cpu_percent, command in rogue_processes:
-            output += "# Process {} (PID: {}, User: {}) using {:.1f}% CPU: {}\n".format(
-                command, pid, user, cpu_percent, command
-            )
-        output += "\n"
+    output += system("top -bcn 1 -w512 |head -n 12") + "\n"
     output += "Environment variables: \n"
     for k, v in sorted(os.environ.items()):
         output += "\t{}={}\n".format(k, v)
@@ -287,6 +274,16 @@ def run_one_benchmark(
     if len(logged_in_users) > 1:
         logging.warning(
             "More than one user logged in: {}".format(" ".join(logged_in_users))
+        )
+    
+    # Check for rogue processes with high CPU usage
+    top_output = system("top -bcn 1 -w512 |head -n 12")
+    rogue_processes = detect_rogue_processes(top_output)
+    for pid, user, cpu_percent, command in rogue_processes:
+        logging.warning(
+            "High CPU usage process detected: {} (PID: {}, User: {}) using {:.1f}% CPU".format(
+                command, pid, user, cpu_percent
+            )
         )
     ever_ran = [False] * len(configs)
     for i in range(0, invocations):
