@@ -51,31 +51,3 @@ def test_global_variables_initialization():
     # Test default values (these are module-level globals)
     # Note: These might be modified by other tests, so we just check they exist
     assert isinstance(runbms.exit_on_failure, bool)
-
-
-def test_exit_on_failure_immediate_exit():
-    """Test that sys.exit(1) is called immediately when exit_on_failure is True and a failure occurs."""
-    from running.command import runbms
-    import sys
-    from unittest.mock import patch
-
-    # Save original values
-    original_exit_on_failure = runbms.exit_on_failure
-
-    try:
-        # Set up the condition for immediate exit
-        runbms.exit_on_failure = True
-
-        # Mock sys.exit to verify it's called
-        with patch.object(sys, "exit") as mock_exit:
-            # Simulate the code path where immediate exit should occur
-            # This simulates what happens in run_one_benchmark when a failure is detected
-            if runbms.exit_on_failure:
-                sys.exit(1)
-
-            # Verify that sys.exit(1) was called
-            mock_exit.assert_called_once_with(1)
-
-    finally:
-        # Restore original values
-        runbms.exit_on_failure = original_exit_on_failure
