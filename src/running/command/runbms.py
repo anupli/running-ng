@@ -293,10 +293,14 @@ def run_one_benchmark(
                 print(".", end="", flush=True)
                 global any_config_failed
                 any_config_failed = True
+                if exit_on_failure:
+                    sys.exit(1)
                 continue
             if skip_timeout is not None and timeout_count[c] >= skip_timeout:
                 print(".", end="", flush=True)
                 any_config_failed = True
+                if exit_on_failure:
+                    sys.exit(1)
                 continue
             if resume:
                 log_filename_completed = get_filename_completed(bm, hfac, size, c)
@@ -324,9 +328,13 @@ def run_one_benchmark(
                 timeout_count[c] += 1
                 print(".", end="", flush=True)
                 any_config_failed = True
+                if exit_on_failure:
+                    sys.exit(1)
             elif exit_status is SubprocessrExit.Error:
                 print(".", end="", flush=True)
                 any_config_failed = True
+                if exit_on_failure:
+                    sys.exit(1)
             elif exit_status is SubprocessrExit.Normal:
                 if suite.is_passed(output):
                     config_passed = True
@@ -334,10 +342,14 @@ def run_one_benchmark(
                 else:
                     print(".", end="", flush=True)
                     any_config_failed = True
+                    if exit_on_failure:
+                        sys.exit(1)
             elif exit_status is SubprocessrExit.Dryrun:
                 print(".", end="", flush=True)
                 # In dry-run mode, treat as failure for exit-on-failure purposes
                 any_config_failed = True
+                if exit_on_failure:
+                    sys.exit(1)
             else:
                 raise ValueError("Not a valid SubprocessrExit value")
             for p in plugins.values():
