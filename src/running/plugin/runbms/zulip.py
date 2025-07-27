@@ -1,7 +1,13 @@
 from typing import Optional, TYPE_CHECKING
 import zulip
 from running.plugin.runbms import RunbmsPlugin
-from running.util import Moma, register, MomaReservationStatus, config_index_to_chr
+from running.util import (
+    Moma,
+    register,
+    MomaReservationStatus,
+    config_index_to_chr,
+    get_logged_in_users,
+)
 import logging
 import copy
 from running.suite import is_dry_run
@@ -37,8 +43,11 @@ class Zulip(RunbmsPlugin):
 
     def send_message(self, content):
         message_data = copy.deepcopy(self.request)
-        message_data["content"] = "{}\n{}{}\n".format(
-            self.run_id, self.get_reservation_message(), content
+        message_data["content"] = "{}\n{}{}{}\n".format(
+            self.run_id,
+            self.get_reservation_message(),
+            self.get_user_warnings(),
+            content,
         )
         try:
             result = self.client.send_message(message_data=message_data)
@@ -154,7 +163,7 @@ class Zulip(RunbmsPlugin):
         if reservation is None:
             return ""
         if reservation.status is MomaReservationStatus.NOT_MOMA:
-            return "# ** Warning: not running on a moma machine. **\n"
+            return ""
         elif reservation.status is MomaReservationStatus.NOT_RESERVED:
             return "# ** Warning: machine not reserved. **\n"
         elif reservation.status is MomaReservationStatus.RESERVED_BY_OTHERS:
@@ -172,3 +181,11 @@ class Zulip(RunbmsPlugin):
                 return ""
         else:
             raise ValueError("Unhandled reservation status value")
+
+    def get_user_warnings(self) -> str:
+        logged_in_users = get_logged_in_users()
+        if len(logged_in_users) > 1:
+            return "# ** Warning: more than one user logged in: {}. **\n".format(
+                " ".join(sorted(logged_in_users))
+            )
+        return ""
