@@ -341,9 +341,6 @@ def run_one_benchmark(
                         sys.exit(1)
             elif exit_status is SubprocessrExit.Dryrun:
                 print(".", end="", flush=True)
-                # In dry-run mode, treat as failure for exit-on-failure purposes
-                if exit_on_failure:
-                    sys.exit(1)
             else:
                 raise ValueError("Not a valid SubprocessrExit value")
             for p in plugins.values():
