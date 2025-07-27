@@ -3,7 +3,7 @@ This subcommand runs benchmarks with different configs, possibly with varying he
 
 ## Usage
 ```console
-runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-prefix ID_PREFIX] [-m|--minheap-multiplier MINHEAP_MULTIPLIER] [--skip-oom SKIP_OOM] [--skip-timeout SKIP_TIMEOUT] [--resume RESUME] [--workdir WORKDIR] [--skip-log-compression] [--exit-on-failure] LOG_DIR CONFIG [N] [n ...]
+runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-prefix ID_PREFIX] [-m|--minheap-multiplier MINHEAP_MULTIPLIER] [--skip-oom SKIP_OOM] [--skip-timeout SKIP_TIMEOUT] [--resume RESUME] [--workdir WORKDIR] [--skip-log-compression] [--exit-on-failure [CODE]] LOG_DIR CONFIG [N] [n ...]
 ```
 
 `-h`: print help message.
@@ -35,9 +35,10 @@ If not specified, a temporary directory will be created under an OS-dependent lo
 
 `--skip-log-compression`: skip compressing log file as gzip.
 
-`--exit-on-failure`: exit with code 1 if any configuration fails.
+`--exit-on-failure [CODE]`: exit with the specified code (default: 1) if any configuration fails.
 This is useful for CI environments where you need to detect failed runs without parsing the output.
 By default, `runbms` exits with code 0 even when some configurations fail.
+If the flag is provided without a code, it defaults to exit code 1.
 
 `LOG_DIR`: where to store the results.
 This is required.

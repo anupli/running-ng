@@ -32,13 +32,19 @@ def test_exit_on_failure_flag_available():
     # Test that the flag is recognized and sets the correct default value
     args = parser.parse_args(["runbms", "/tmp/logs", "/tmp/config.yml"])
     assert hasattr(args, "exit_on_failure")
-    assert args.exit_on_failure is False
+    assert args.exit_on_failure is None
 
-    # Test that the flag can be set
+    # Test that the flag can be set without argument (defaults to 1)
     args = parser.parse_args(
-        ["runbms", "--exit-on-failure", "/tmp/logs", "/tmp/config.yml"]
+        ["runbms", "/tmp/logs", "/tmp/config.yml", "--exit-on-failure"]
     )
-    assert args.exit_on_failure is True
+    assert args.exit_on_failure == 1
+
+    # Test that the flag can be set with custom argument
+    args = parser.parse_args(
+        ["runbms", "/tmp/logs", "/tmp/config.yml", "--exit-on-failure", "42"]
+    )
+    assert args.exit_on_failure == 42
 
 
 def test_global_variables_initialization():
@@ -46,8 +52,10 @@ def test_global_variables_initialization():
     from running.command import runbms
 
     # Test that the new global variables exist
-    assert hasattr(runbms, "exit_on_failure")
+    assert hasattr(runbms, "exit_on_failure_code")
 
     # Test default values (these are module-level globals)
     # Note: These might be modified by other tests, so we just check they exist
-    assert isinstance(runbms.exit_on_failure, bool)
+    assert runbms.exit_on_failure_code is None or isinstance(
+        runbms.exit_on_failure_code, int
+    )

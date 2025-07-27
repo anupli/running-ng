@@ -2,7 +2,7 @@
 ## Unreleased
 ### Added
 #### Commands
-- `runbms`: new `--exit-on-failure` flag to exit with code 1 when any benchmark configuration fails, making it suitable for CI environments.
+- `runbms`: new `--exit-on-failure [CODE]` flag to exit with a specified code (default: 1) when any benchmark configuration fails, making it suitable for CI environments.
 
 ### Changed
 
