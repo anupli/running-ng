@@ -24,33 +24,33 @@ def test_exit_on_failure_flag_available():
     """Test that the --exit-on-failure flag is available in the argument parser."""
     from running.command.runbms import setup_parser
     import argparse
-    
+
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
     setup_parser(subparsers)
-    
+
     # Test that the flag is recognized and sets the correct default value
-    args = parser.parse_args(['runbms', '/tmp/logs', '/tmp/config.yml'])
-    assert hasattr(args, 'exit_on_failure')
+    args = parser.parse_args(["runbms", "/tmp/logs", "/tmp/config.yml"])
+    assert hasattr(args, "exit_on_failure")
     assert args.exit_on_failure is False
-    
+
     # Test that the flag can be set
-    args = parser.parse_args(['runbms', '--exit-on-failure', '/tmp/logs', '/tmp/config.yml'])
+    args = parser.parse_args(
+        ["runbms", "--exit-on-failure", "/tmp/logs", "/tmp/config.yml"]
+    )
     assert args.exit_on_failure is True
 
 
 def test_global_variables_initialization():
     """Test that the new global variables are properly initialized."""
     from running.command import runbms
-    
+
     # Test that the new global variables exist
-    assert hasattr(runbms, 'exit_on_failure')
-    assert hasattr(runbms, 'any_config_failed')
-    
+    assert hasattr(runbms, "exit_on_failure")
+
     # Test default values (these are module-level globals)
     # Note: These might be modified by other tests, so we just check they exist
     assert isinstance(runbms.exit_on_failure, bool)
-    assert isinstance(runbms.any_config_failed, bool)
 
 
 def test_exit_on_failure_immediate_exit():
@@ -58,28 +58,24 @@ def test_exit_on_failure_immediate_exit():
     from running.command import runbms
     import sys
     from unittest.mock import patch
-    
+
     # Save original values
     original_exit_on_failure = runbms.exit_on_failure
-    original_any_config_failed = runbms.any_config_failed
-    
+
     try:
         # Set up the condition for immediate exit
         runbms.exit_on_failure = True
-        runbms.any_config_failed = False
-        
+
         # Mock sys.exit to verify it's called
-        with patch.object(sys, 'exit') as mock_exit:
-            # Simulate the code path where any_config_failed is set and immediate exit should occur
+        with patch.object(sys, "exit") as mock_exit:
+            # Simulate the code path where immediate exit should occur
             # This simulates what happens in run_one_benchmark when a failure is detected
-            runbms.any_config_failed = True
             if runbms.exit_on_failure:
                 sys.exit(1)
-            
+
             # Verify that sys.exit(1) was called
             mock_exit.assert_called_once_with(1)
-    
+
     finally:
         # Restore original values
         runbms.exit_on_failure = original_exit_on_failure
-        runbms.any_config_failed = original_any_config_failed
