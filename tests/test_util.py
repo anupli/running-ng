@@ -1,6 +1,11 @@
 from pathlib import Path
 from running.config import Configuration
-from running.util import parse_config_str, smart_quote, split_quoted, detect_rogue_processes
+from running.util import (
+    parse_config_str,
+    smart_quote,
+    split_quoted,
+    detect_rogue_processes,
+)
 
 
 def test_split_quoted():
@@ -49,10 +54,10 @@ MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  14599.5 avail Mem
     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
    3524 runner    20   0   12340   5384   3336 R  10.0   0.0   0:00.01 top -bcn 1 -w512
       1 root      20   0   22876  13828   9476 S   0.0   0.1   0:03.23 /sbin/init"""
-    
+
     rogue_processes = detect_rogue_processes(top_output_normal)
     assert len(rogue_processes) == 0
-    
+
     # Test with one rogue process
     top_output_rogue = """top - 03:18:43 up 4 min,  1 user,  load average: 0.55, 0.35, 0.15
 Tasks: 181 total,   1 running, 180 sleeping,   0 stopped,   0 zombie
@@ -64,7 +69,7 @@ MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  14599.5 avail Mem
    1234 user      20   0  123456   7890   4567 S  85.3   0.1   0:12.34 rust-analyzer
    3524 runner    20   0   12340   5384   3336 R  10.0   0.0   0:00.01 top -bcn 1 -w512
       1 root      20   0   22876  13828   9476 S   0.0   0.1   0:03.23 /sbin/init"""
-    
+
     rogue_processes = detect_rogue_processes(top_output_rogue)
     assert len(rogue_processes) == 1
     pid, user, cpu_percent, command = rogue_processes[0]
@@ -72,13 +77,19 @@ MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  14599.5 avail Mem
     assert user == "user"
     assert cpu_percent == 85.3
     assert command == "rust-analyzer"
-    
+
     # Test with custom threshold
-    rogue_processes_low_threshold = detect_rogue_processes(top_output_rogue, cpu_threshold=5.0)
-    assert len(rogue_processes_low_threshold) == 2  # Both rust-analyzer (85.3%) and top (10.0%)
-    
+    rogue_processes_low_threshold = detect_rogue_processes(
+        top_output_rogue, cpu_threshold=5.0
+    )
+    assert (
+        len(rogue_processes_low_threshold) == 2
+    )  # Both rust-analyzer (85.3%) and top (10.0%)
+
     # Test with high threshold
-    rogue_processes_high_threshold = detect_rogue_processes(top_output_rogue, cpu_threshold=90.0)
+    rogue_processes_high_threshold = detect_rogue_processes(
+        top_output_rogue, cpu_threshold=90.0
+    )
     assert len(rogue_processes_high_threshold) == 0  # No processes above 90%
 
 
@@ -87,10 +98,10 @@ def test_detect_rogue_processes_malformed():
     malformed_output = """some random text
 not a top output
 no PID header"""
-    
+
     rogue_processes = detect_rogue_processes(malformed_output)
     assert len(rogue_processes) == 0
-    
+
     # Test with empty output
     rogue_processes = detect_rogue_processes("")
     assert len(rogue_processes) == 0

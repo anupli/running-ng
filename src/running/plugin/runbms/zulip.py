@@ -197,14 +197,14 @@ class Zulip(RunbmsPlugin):
         """Check for rogue processes with high CPU usage and generate warnings."""
         top_output = system("top -bcn 1 -w512 |head -n 12")
         rogue_processes = detect_rogue_processes(top_output)
-        
+
         if not rogue_processes:
             return ""
-        
+
         warning = "# ** Warning: High CPU usage processes detected: **\n"
         for pid, user, cpu_percent, command in rogue_processes:
             warning += "- Process {} (PID: {}, User: {}) using {:.1f}% CPU\n".format(
                 command, pid, user, cpu_percent
             )
-        
+
         return warning

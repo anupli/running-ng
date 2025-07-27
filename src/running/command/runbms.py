@@ -275,7 +275,7 @@ def run_one_benchmark(
         logging.warning(
             "More than one user logged in: {}".format(" ".join(logged_in_users))
         )
-    
+
     # Check for rogue processes with high CPU usage
     top_output = system("top -bcn 1 -w512 |head -n 12")
     rogue_processes = detect_rogue_processes(top_output)
