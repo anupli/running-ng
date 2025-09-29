@@ -68,8 +68,9 @@ def setup_parser(subparsers):
         "--skip-log-compression", action="store_true", help="Skip compressing log files"
     )
     f.add_argument(
-        "--randomize-configs", action="store_true", 
-        help="Randomize the order of configs for each benchmark run"
+        "--randomize-configs",
+        action="store_true",
+        help="Randomize the order of configs for each benchmark run",
     )
 
 
@@ -285,12 +286,12 @@ def run_one_benchmark(
         for p in plugins.values():
             p.start_invocation(hfac, size, bm, i)
         print(i, end="", flush=True)
-        
+
         # Create order for configs - randomized if flag is set, otherwise sequential
         config_indices = list(range(len(configs)))
         if randomize_configs:
             random.shuffle(config_indices)
-            
+
         for j in config_indices:
             c = configs[j]
             config_passed = False
