@@ -3,7 +3,7 @@ This subcommand runs benchmarks with different configs, possibly with varying he
 
 ## Usage
 ```console
-runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-prefix ID_PREFIX] [-m|--minheap-multiplier MINHEAP_MULTIPLIER] [--skip-oom SKIP_OOM] [--skip-timeout SKIP_TIMEOUT] [--resume RESUME] [--workdir WORKDIR] [--skip-log-compression] [--randomize-configs] LOG_DIR CONFIG [N] [n ...]
+runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-prefix ID_PREFIX] [-m|--minheap-multiplier MINHEAP_MULTIPLIER] [--skip-oom SKIP_OOM] [--skip-timeout SKIP_TIMEOUT] [--resume RESUME] [--workdir WORKDIR] [--skip-log-compression] [--exit-on-failure CODE] [--randomize-configs] LOG_DIR CONFIG [N] [n ...]
 ```
 
 `-h`: print help message.
@@ -14,7 +14,7 @@ Overrides `invocations` in the config file.
 `-s`: only use the specified heap sizes.
 This is a comma-separated string of integers or floating point numbers.
 For each slice `s` in `SLICE`, we run benchmarks at `s * minheap`.
-`N` and `n`s are ignored. 
+`N` and `n`s are ignored.
 
 `-p`: add a prefix to the folder names where the results are stored.
 By default, the folder that stores the result is named using the host name and the timestamp.
@@ -34,6 +34,11 @@ Override `minheap_multiplier` in the config file.
 If not specified, a temporary directory will be created under an OS-dependent location with a `runbms-` prefix.
 
 `--skip-log-compression`: skip compressing log file as gzip.
+
+`--exit-on-failure` (preview ⚠️): exit with the specified code (default: 1) if any configuration fails.
+This is useful for CI environments where you need to detect failed runs without parsing the output.
+By default, `runbms` exits with code 0 even when some configurations fail.
+If the flag is provided without a code, it defaults to exit code 1.
 
 `--randomize-configs` (preview ⚠️): randomize the order of configs for each invocation to help distinguish between system-related noise and configuration-specific issues.
 
