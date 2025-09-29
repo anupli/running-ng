@@ -178,7 +178,7 @@
                         <h1 id="runbms"><a class="header" href="#runbms"><code>runbms</code></a></h1>
 <p>This subcommand runs benchmarks with different configs, possibly with varying heap sizes.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
-<pre><code class="language-console">runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-prefix ID_PREFIX] [-m|--minheap-multiplier MINHEAP_MULTIPLIER] [--skip-oom SKIP_OOM] [--skip-timeout SKIP_TIMEOUT] [--resume RESUME] [--workdir WORKDIR] [--skip-log-compression] [--randomize-configs] LOG_DIR CONFIG [N] [n ...]
+<pre><code class="language-console">runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-prefix ID_PREFIX] [-m|--minheap-multiplier MINHEAP_MULTIPLIER] [--skip-oom SKIP_OOM] [--skip-timeout SKIP_TIMEOUT] [--resume RESUME] [--workdir WORKDIR] [--skip-log-compression] [--exit-on-failure CODE] [--randomize-configs] LOG_DIR CONFIG [N] [n ...]
 </code></pre>
 <p><code>-h</code>: print help message.</p>
 <p><code>-i</code>: set the number of invocations.
@@ -199,6 +199,10 @@ Override <code>minheap_multiplier</code> in the config file.</p>
 <p><code>--workdir</code> (preview ⚠️): use the specified directory as the working directory for benchmarks.
 If not specified, a temporary directory will be created under an OS-dependent location with a <code>runbms-</code> prefix.</p>
 <p><code>--skip-log-compression</code>: skip compressing log file as gzip.</p>
+<p><code>--exit-on-failure</code> (preview ⚠️): exit with the specified code (default: 1) if any configuration fails.
+This is useful for CI environments where you need to detect failed runs without parsing the output.
+By default, <code>runbms</code> exits with code 0 even when some configurations fail.
+If the flag is provided without a code, it defaults to exit code 1.</p>
 <p><code>--randomize-configs</code> (preview ⚠️): randomize the order of configs for each invocation to help distinguish between system-related noise and configuration-specific issues.</p>
 <p><code>LOG_DIR</code>: where to store the results.
 This is required.</p>
