@@ -1,5 +1,6 @@
-from running.command.runbms import spread
+from running.command.runbms import spread, setup_parser
 import pytest
+import argparse
 
 
 def test_spread_0():
@@ -18,3 +19,18 @@ def test_spread_1():
         )
         right = pytest.approx(1 + (i - 1) / 7)
         assert left == right
+
+
+def test_randomize_configs_arg_parsing():
+    """Test that --randomize-configs argument is parsed correctly"""
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers()
+    setup_parser(subparsers)
+    
+    # Test without the flag
+    args = parser.parse_args(['runbms', '/tmp/log', '/tmp/config.yml'])
+    assert args.randomize_configs == False
+    
+    # Test with the flag
+    args = parser.parse_args(['runbms', '--randomize-configs', '/tmp/log', '/tmp/config.yml'])
+    assert args.randomize_configs == True

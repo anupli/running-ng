@@ -32,6 +32,7 @@ from running.command.fillin import fillin
 import math
 import yaml
 from collections import defaultdict
+import random
 
 if TYPE_CHECKING:
     from running.plugin.runbms import RunbmsPlugin
@@ -43,6 +44,7 @@ remote_host: Optional[str]
 skip_oom: Optional[int]
 skip_timeout: Optional[int]
 skip_log_compression: bool = False
+randomize_configs: bool = False
 plugins: Dict[str, Any]
 resume: Optional[str]
 
@@ -64,6 +66,10 @@ def setup_parser(subparsers):
     f.add_argument("--workdir", type=Path)
     f.add_argument(
         "--skip-log-compression", action="store_true", help="Skip compressing log files"
+    )
+    f.add_argument(
+        "--randomize-configs", action="store_true", 
+        help="Randomize the order of configs for each benchmark run"
     )
 
 
@@ -279,7 +285,14 @@ def run_one_benchmark(
         for p in plugins.values():
             p.start_invocation(hfac, size, bm, i)
         print(i, end="", flush=True)
-        for j, c in enumerate(configs):
+        
+        # Create order for configs - randomized if flag is set, otherwise sequential
+        config_indices = list(range(len(configs)))
+        if randomize_configs:
+            random.shuffle(config_indices)
+            
+        for j in config_indices:
+            c = configs[j]
             config_passed = False
             for p in plugins.values():
                 p.start_config(hfac, size, bm, i, c, j)
@@ -412,6 +425,8 @@ def run(args):
         skip_timeout = args.get("skip_timeout")
         global skip_log_compression
         skip_log_compression = args.get("skip_log_compression")
+        global randomize_configs
+        randomize_configs = args.get("randomize_configs")
         # Load from configuration file
         global configuration
         configuration = Configuration.from_file(Path(os.getcwd()), args.get("CONFIG"))
