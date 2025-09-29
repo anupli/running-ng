@@ -1,6 +1,8 @@
 # Changelog
 ## Unreleased
 ### Added
+#### Commands
+- `runbms` gains an extra argument, `--randomize-configs`, to randomize the order of configs for each invocation to help distinguish between system-related noise and configuration-specific issues.
 
 ### Changed
 
