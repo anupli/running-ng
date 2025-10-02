@@ -21,6 +21,7 @@ from running.util import (
     config_index_to_chr,
     config_str_encode,
     dont_emit_heapsize_modifier,
+    detect_rogue_processes,
 )
 import socket
 from datetime import datetime
@@ -290,6 +291,16 @@ def run_one_benchmark(
     if len(logged_in_users) > 1:
         logging.warning(
             "More than one user logged in: {}".format(" ".join(logged_in_users))
+        )
+
+    # Check for rogue processes with high CPU usage
+    top_output = system("top -bcn 1 -w512 |head -n 12")
+    rogue_processes = detect_rogue_processes(top_output)
+    for pid, user, cpu_percent, command in rogue_processes:
+        logging.warning(
+            "High CPU usage process detected: {} (PID: {}, User: {}) using {:.1f}% CPU".format(
+                command, pid, user, cpu_percent
+            )
         )
     ever_ran = [False] * len(configs)
     for i in range(0, invocations):

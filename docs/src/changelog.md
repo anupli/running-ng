@@ -2,6 +2,7 @@
 ## Unreleased
 ### Added
 #### Commands
+- `runbms`: automatic detection and warning for rogue processes that consume high CPU resources (>50% configurable threshold). Warnings appear in both log prologue output and Zulip notifications when enabled.
 - `runbms`: new `--exit-on-failure [CODE]` flag to exit with a specified code (default: 1) when any benchmark configuration fails, making it suitable for CI environments.
 - `runbms` gains an extra argument, `--randomize-configs`, to randomize the order of configs for each invocation to help distinguish between system-related noise and configuration-specific issues.
 
