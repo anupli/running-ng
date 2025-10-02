@@ -33,6 +33,8 @@ from running.command.fillin import fillin
 import math
 import yaml
 from collections import defaultdict
+import sys
+import random
 
 if TYPE_CHECKING:
     from running.plugin.runbms import RunbmsPlugin
@@ -44,8 +46,10 @@ remote_host: Optional[str]
 skip_oom: Optional[int]
 skip_timeout: Optional[int]
 skip_log_compression: bool = False
+randomize_configs: bool = False
 plugins: Dict[str, Any]
 resume: Optional[str]
+exit_on_failure_code: Optional[int] = None
 
 
 def setup_parser(subparsers):
@@ -65,6 +69,19 @@ def setup_parser(subparsers):
     f.add_argument("--workdir", type=Path)
     f.add_argument(
         "--skip-log-compression", action="store_true", help="Skip compressing log files"
+    )
+    f.add_argument(
+        "--exit-on-failure",
+        nargs="?",
+        const=1,
+        type=int,
+        metavar="CODE",
+        help="Exit with specified code (default: 1) if any configuration fails",
+    )
+    f.add_argument(
+        "--randomize-configs",
+        action="store_true",
+        help="Randomize the order of configs for each benchmark run",
     )
 
 
@@ -290,15 +307,26 @@ def run_one_benchmark(
         for p in plugins.values():
             p.start_invocation(hfac, size, bm, i)
         print(i, end="", flush=True)
-        for j, c in enumerate(configs):
+
+        # Create order for configs - randomized if flag is set, otherwise sequential
+        config_indices = list(range(len(configs)))
+        if randomize_configs:
+            random.shuffle(config_indices)
+
+        for j in config_indices:
+            c = configs[j]
             config_passed = False
             for p in plugins.values():
                 p.start_config(hfac, size, bm, i, c, j)
             if skip_oom is not None and oomed_count[c] >= skip_oom:
                 print(".", end="", flush=True)
+                if exit_on_failure_code is not None:
+                    sys.exit(exit_on_failure_code)
                 continue
             if skip_timeout is not None and timeout_count[c] >= skip_timeout:
                 print(".", end="", flush=True)
+                if exit_on_failure_code is not None:
+                    sys.exit(exit_on_failure_code)
                 continue
             if resume:
                 log_filename_completed = get_filename_completed(bm, hfac, size, c)
@@ -325,14 +353,20 @@ def run_one_benchmark(
             if exit_status is SubprocessrExit.Timeout:
                 timeout_count[c] += 1
                 print(".", end="", flush=True)
+                if exit_on_failure_code is not None:
+                    sys.exit(exit_on_failure_code)
             elif exit_status is SubprocessrExit.Error:
                 print(".", end="", flush=True)
+                if exit_on_failure_code is not None:
+                    sys.exit(exit_on_failure_code)
             elif exit_status is SubprocessrExit.Normal:
                 if suite.is_passed(output):
                     config_passed = True
                     print(config_index_to_chr(j), end="", flush=True)
                 else:
                     print(".", end="", flush=True)
+                    if exit_on_failure_code is not None:
+                        sys.exit(exit_on_failure_code)
             elif exit_status is SubprocessrExit.Dryrun:
                 print(".", end="", flush=True)
             else:
@@ -423,6 +457,10 @@ def run(args):
         skip_timeout = args.get("skip_timeout")
         global skip_log_compression
         skip_log_compression = args.get("skip_log_compression")
+        global exit_on_failure_code
+        exit_on_failure_code = args.get("exit_on_failure")
+        global randomize_configs
+        randomize_configs = args.get("randomize_configs")
         # Load from configuration file
         global configuration
         configuration = Configuration.from_file(Path(os.getcwd()), args.get("CONFIG"))
