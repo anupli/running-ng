@@ -114,7 +114,14 @@ def minheap_one_bm(
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers(heapsize)
         result = run_bm_with_retry(
-            suite, config, runtime, bm_with_heapsize, mid, minheap_dir, log_dir, attempts
+            suite,
+            config,
+            runtime,
+            bm_with_heapsize,
+            mid,
+            minheap_dir,
+            log_dir,
+            attempts,
         )
         if result is ContinueSearch.Abort:
             return float("inf")
@@ -225,12 +232,13 @@ def run(args):
         if prefix:
             run_id = "{}-{}".format(prefix, run_id)
         print("Run id: {}".format(run_id))
-        log_dir = log_dir_base / run_id
+        run_log_dir = log_dir_base / run_id
+        log_dir = run_log_dir
         if not is_dry_run():
-            log_dir.mkdir(parents=True, exist_ok=True)
-            with (log_dir / "minheap_args.yml").open("w") as fd:
+            run_log_dir.mkdir(parents=True, exist_ok=True)
+            with (run_log_dir / "minheap_args.yml").open("w") as fd:
                 yaml.dump(args, fd)
-            with (log_dir / "minheap.yml").open("w") as fd:
+            with (run_log_dir / "minheap.yml").open("w") as fd:
                 configuration.save_to_file(fd)
     with tempfile.TemporaryDirectory(prefix="minheap-") as minheap_dir:
         logging.info("Temporary directory: {}".format(minheap_dir))
