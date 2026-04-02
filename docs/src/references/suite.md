@@ -212,6 +212,9 @@ GC benchmarks for Julia: https://github.com/JuliaCI/GCBenchmarks
 The value is required.
 Environment variables will be expanded.
 
+`timeout`: timeout for one invocation of a benchmark in seconds.
+The default value is `null`.
+
 `minheap`:  a string that selects one of the `minheap_values` sets to use.
 
 `minheap_values`: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering `Out of Memory!`.
@@ -230,4 +233,17 @@ An example looks like this:
         serial/strings/strings: 2510
         slow/bigint/pidigits: 198
         slow/rb_tree/rb_tree: 8640
+```
+
+### Benchmark Specification
+Benchmarks can be specified either as strings or as dictionaries.
+
+The keys currently supported in the dictionary form are `name` and `timeout`.
+
+Example:
+```yaml
+benchmarks:
+  gcbenchmarks:
+    - name: serial/gcbench/gcbench
+      timeout: 30
 ```

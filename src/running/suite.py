@@ -489,6 +489,8 @@ class JuliaGCBenchmarks(BenchmarkSuite):
                         self.name, self.name
                     )
                 )
+        self.timeout: Optional[int]
+        self.timeout = kwargs.get("timeout")
 
     def __str__(self) -> str:
         return "{} JuliaGCBenchmarks {}".format(super().__str__(), self.path)
@@ -505,13 +507,25 @@ class JuliaGCBenchmarks(BenchmarkSuite):
         return minheap[name]
 
     def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> "JuliaBenchmark":
-        assert type(bm_spec) is str
+        timeout = self.timeout
+        if type(bm_spec) is str:
+            name = bm_spec
+        else:
+            assert type(bm_spec) is dict
+            if "name" not in bm_spec:
+                raise KeyError(
+                    "When a dictionary is used to specify a benchmark, you need to provide `name`"
+                )
+            name = bm_spec["name"]
+            if "timeout" in bm_spec:
+                timeout = bm_spec["timeout"]
         return JuliaBenchmark(
             julia_args=[],
             suite_name=self.name,
-            name=bm_spec,
+            name=name,
             suite_path=self.path,
             program_args=[],
+            timeout=timeout,
         )
 
     def is_passed(self, output: bytes) -> bool:
