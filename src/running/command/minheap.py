@@ -1,10 +1,16 @@
-from typing import Any, Dict, Optional, DefaultDict
+from typing import Any, Dict, Optional, DefaultDict, BinaryIO
 from running.config import Configuration
 from pathlib import Path
 from running.runtime import NativeExecutable, Runtime
 from running.benchmark import Benchmark, SubprocessrExit
 from running.suite import BenchmarkSuite
 from running.util import parse_config_str, config_str_encode
+from running.command.runbms import (
+    get_filename,
+    get_log_epilogue,
+    get_log_prologue,
+    getid,
+)
 import logging
 import tempfile
 import yaml
@@ -22,6 +28,8 @@ def setup_parser(subparsers):
     f.add_argument("CONFIG", type=Path)
     f.add_argument("RESULT", type=Path)
     f.add_argument("-a", "--attempts", type=int)
+    f.add_argument("--log-dir", type=Path)
+    f.add_argument("-p", "--id-prefix")
 
 
 class ContinueSearch(Enum):
@@ -32,9 +40,12 @@ class ContinueSearch(Enum):
 
 def run_bm_with_retry(
     suite: BenchmarkSuite,
+    config: str,
     runtime: Runtime,
     bm_with_heapsize: Benchmark,
+    heapsize: int,
     minheap_dir: Path,
+    log_dir: Optional[Path],
     attempts: int,
 ) -> ContinueSearch:
     def log(s):
@@ -42,9 +53,26 @@ def run_bm_with_retry(
 
     log(" ")
     for _ in range(attempts):
-        output, _companion_output, subprocess_exit = bm_with_heapsize.run(
-            runtime, cwd=minheap_dir
-        )
+        fd: Optional[BinaryIO] = None
+        if log_dir is not None and not is_dry_run():
+            log_path = log_dir / get_filename(bm_with_heapsize, None, heapsize, config)
+            fd = log_path.open("ab")
+            prologue = get_log_prologue(runtime, bm_with_heapsize)
+            fd.write(prologue.encode("ascii"))
+        try:
+            output, companion_output, subprocess_exit = bm_with_heapsize.run(
+                runtime, cwd=minheap_dir
+            )
+            if fd:
+                fd.write(output)
+                if companion_output:
+                    fd.write(b"*****\n")
+                    fd.write(companion_output)
+                epilogue = get_log_epilogue(runtime, bm_with_heapsize)
+                fd.write(epilogue.encode("ascii"))
+        finally:
+            if fd:
+                fd.close()
         if runtime.is_oom(output):
             # if OOM is detected, we exit the loop regardless the exit statussour
             log("x ")
@@ -68,10 +96,12 @@ def run_bm_with_retry(
 
 def minheap_one_bm(
     suite: BenchmarkSuite,
+    config: str,
     runtime: Runtime,
     bm: Benchmark,
     heap: int,
     minheap_dir: Path,
+    log_dir: Optional[Path],
     attempts: int,
 ) -> float:
     lo = 2
@@ -84,7 +114,7 @@ def minheap_one_bm(
         print(size_str, end="", flush=True)
         bm_with_heapsize = bm.attach_modifiers(heapsize)
         result = run_bm_with_retry(
-            suite, runtime, bm_with_heapsize, minheap_dir, attempts
+            suite, config, runtime, bm_with_heapsize, mid, minheap_dir, log_dir, attempts
         )
         if result is ContinueSearch.Abort:
             return float("inf")
@@ -103,6 +133,7 @@ def minheap_one_bm(
 def run_with_persistence(
     result: Dict[str, Any],
     minheap_dir: Path,
+    log_dir: Optional[Path],
     result_file: Optional[Path],
     attempts: int,
 ):
@@ -131,7 +162,7 @@ def run_with_persistence(
                     b.get_runtime_specific_modifiers(runtime)
                 )
                 minheap = minheap_one_bm(
-                    suite, runtime, mod_b, maxheap, minheap_dir, attempts
+                    suite, c, runtime, mod_b, maxheap, minheap_dir, log_dir, attempts
                 )
                 print("minheap {}".format(minheap))
                 result[c_encoded][suite_name][b.name] = minheap
@@ -174,7 +205,6 @@ def run(args):
         return False
     global configuration
     configuration = Configuration.from_file(Path(os.getcwd()), args.get("CONFIG"))
-    configuration.resolve_class()
     result_file = args.get("RESULT")
     if result_file.exists():
         with result_file.open() as fd:
@@ -186,11 +216,29 @@ def run(args):
     attempts = configuration.get("attempts")
     if args.get("attempts"):
         attempts = args.get("attempts")
+    configuration.resolve_class()
+    log_dir: Optional[Path] = None
+    log_dir_base = args.get("log_dir")
+    if log_dir_base is not None:
+        prefix = args.get("id_prefix")
+        run_id = getid()
+        if prefix:
+            run_id = "{}-{}".format(prefix, run_id)
+        print("Run id: {}".format(run_id))
+        log_dir = log_dir_base / run_id
+        if not is_dry_run():
+            log_dir.mkdir(parents=True, exist_ok=True)
+            with (log_dir / "minheap_args.yml").open("w") as fd:
+                yaml.dump(args, fd)
+            with (log_dir / "minheap.yml").open("w") as fd:
+                configuration.save_to_file(fd)
     with tempfile.TemporaryDirectory(prefix="minheap-") as minheap_dir:
         logging.info("Temporary directory: {}".format(minheap_dir))
         if is_dry_run():
-            run_with_persistence(result, Path(minheap_dir), None, attempts)
+            run_with_persistence(result, Path(minheap_dir), None, None, attempts)
         else:
-            run_with_persistence(result, Path(minheap_dir), result_file, attempts)
+            run_with_persistence(
+                result, Path(minheap_dir), log_dir, result_file, attempts
+            )
     print_best(result)
     return True
