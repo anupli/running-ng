@@ -13,21 +13,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
 
@@ -37,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex.js";
+            window.path_to_searchindex_js = "searchindex-0d8b3b89.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc.js"></script>
+        <script src="toc-768924a2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -54,7 +53,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -83,12 +82,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -103,39 +102,39 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
@@ -143,47 +142,47 @@
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
 <p><code>running-ng</code> is a collection of scripts that help people run workloads in a methodologically sound settings.</p>
 <h2 id="disclaimer"><a class="header" href="#disclaimer">Disclaimer</a></h2>
-<p>At this stage, the focus of this project is driven by the internal use of members from <a href="https://users.cecs.anu.edu.au/~steveb/">Steve Blackburn</a>'s lab.
+<p>At this stage, the focus of this project is driven by the internal use of members from <a href="https://users.cecs.anu.edu.au/~steveb/">Steve Blackburn</a>’s lab.
 If you are a member of the lab, you know what to do if you encounter any issue, and you can ignore the below.</p>
-<p>If you are a member of the public, please kindly note that the project is open-source and documented on a "good-faith" basis.
+<p>If you are a member of the public, please kindly note that the project is open-source and documented on a “good-faith” basis.
 We might not have the time to consider your features requests.
-Please don't be offended if we ignore these.
+Please don’t be offended if we ignore these.
 Having said that, you are very welcomed to use it, and we will be very pleased if this helps anyone.
 In particular, we are grateful if you report bugs you found with steps to reproduce it.</p>
 <h2 id="-warning"><a class="header" href="#-warning">⚠️ Warning</a></h2>
@@ -194,7 +193,7 @@ However, there are probably few wrinkles to be ironed out.
 Please file any bug or feature request on <a href="https://github.com/caizixian/running-ng/issues">the issue tracker</a>.</p>
 <p>You are also welcome to implement new features and/or fix bugs by opening <a href="https://github.com/caizixian/running-ng/pulls">pull requests</a>.
 But before you do so, please discuss with <a href="https://github.com/steveblackburn">Steve</a> first for major design changes.
-For non-user-facing changes, please discuss with the <a href="intro.html#maintainers">maintainers</a> first.</p>
+For non-user-facing changes, please discuss with the <a href="#maintainers">maintainers</a> first.</p>
 <h2 id="history"><a class="header" href="#history">History</a></h2>
 <p>The predecessor of <code>running-ng</code> is <code>running</code>, a set of scripts written in Perl, dating back to 2005.
 However, the type of workloads we are evaluation has changed a bit, and we want a new set of scripts that fit our needs better.</p>
@@ -204,13 +203,14 @@ Zixian coauthored the framework with <a href="https://github.com/john5f35">John 
 It features <a href="https://gitlab.anu.edu.au/mu/mu-perf-benchmarks/-/tree/master/mubench">a web frontend</a> for displaying results.
 You can see the live instance <a href="https://squirrel.anu.edu.au/mubench/">here</a>.</p>
 <p><code>menthol</code> is a benchmarking framework built for running benchmarks in high-performance computing (HPC) settings.
-Zixian built it for his <a href="https://www.zcai.org/cv#chapel-scnc2101-2018">research project</a> about evaluating Chapel's performance in 2018.
+Zixian built it for his <a href="https://www.zcai.org/cv#chapel-scnc2101-2018">research project</a> about evaluating Chapel’s performance in 2018.
 The framework can run benchmarks in different languages on either single node or on a cluster through PBS job scheduler.</p>
 <h2 id="maintainers"><a class="header" href="#maintainers">Maintainers</a></h2>
 <ul>
 <li><a href="https://www.zcai.org">Zixian Cai</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
 <p><code>pip3 install --user -U running-ng</code></p>
 <p>The base configuration files can be usually be found in paths like <code>~/.local/lib/python3.6/site-packages/running/config/base</code>.
 The exact path might differ depending on your Python version, etc.</p>
@@ -222,7 +222,7 @@ On a typical Linux installation, <code>running</code> is installed to <code>~/.l
 <pre><code class="language-bash"># Add the following to ~/.bashrc
 PATH=$PATH:$HOME/.local/bin
 </code></pre>
-<p>You don't need to use <code>export</code>.
+<p>You don’t need to use <code>export</code>.
 Generally, <code>$PATH</code> already exists and is exported to child processes.</p>
 <p>Please check whether your <code>~/.bash_profile</code> or <code>~/.profile</code> <code>source</code>s <code>~/.bashrc</code>.
 If not, when you use a login shell (e.g., in the case of tmux), the content of <code>~/.bashrc</code> might not be applied.</p>
@@ -234,17 +234,18 @@ fi
 <p>If you are a moma user, please change these dotfiles on <code>squirrel.moma</code>, and then run <code>sudo /moma-admin/config/update_self.fish</code>.
 Note that you should run this command using a SSH session on a standard terminal instead of using the integrated terminal in VSCode Remote.
 Please check <a href="https://squirrel.anu.edu.au/#customization">here</a> for how to setup a UNIX password for <code>sudo</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="quickstart"><a class="header" href="#quickstart">Quickstart</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="quickstart"><a class="header" href="#quickstart">Quickstart</a></h1>
 <p>This guide will show you how to use <code>running-ng</code> to compare two different builds of JVMs.</p>
 <p><strong>Note that for each occurrence in the form <code>/path/to/*</code>, you need to replace it with the real path of the respective item in the filesystem.</strong></p>
 <h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
-<p>Please follow the <a href="./install.html">installation guide</a> to install <code>running-ng</code>.
+<p>Please follow the <a href="#installation">installation guide</a> to install <code>running-ng</code>.
 You will need Python 3.6+.</p>
 <p>Then, create a file <code>two_builds.yml</code> with the following content.</p>
 <pre><code class="language-yaml">includes:
   - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
 </code></pre>
-<p>The <a href="./references/index.html">YAML file</a> represents a dictionary (key-value pairs) that defines the experiments you are running.
+<p>The <a href="#configuration-file-syntax">YAML file</a> represents a dictionary (key-value pairs) that defines the experiments you are running.
 The <code>includes</code> directive here will populate the dictionary with some default values shipped with <code>running-ng</code>.</p>
 <p><strong>If you use moma machines, please substitute <code>runbms.yml</code> with <code>runbms-anu.yml</code>.</strong></p>
 <h2 id="prepare-benchmarks"><a class="header" href="#prepare-benchmarks">Prepare Benchmarks</a></h2>
@@ -272,7 +273,7 @@ The <code>includes</code> directive here will populate the dictionary with some 
     - xalan
     - zxing
 </code></pre>
-<p>This specify a list of benchmarks used in this experiment from the <a href="./references/suite.html">benchmark suite</a> <code>dacapochopin-29a657f</code>.
+<p>This specify a list of benchmarks used in this experiment from the <a href="#benchmark-suite">benchmark suite</a> <code>dacapochopin-29a657f</code>.
 The benchmark suite is defined in <code>$RUNNING_NG_PACKAGE_DATA/base/dacapo.yml</code>.
 By default, the minimum heap sizes of <code>dacapochopin-29a657f</code> benchmarks are measured with AdoptOpenJDK 15 using G1 GC.
 If you are using OpenJDK 11 or 17, you can override the value of <code>suites.dacapochopin-29a657f.minheap</code> to <code>temurin-17-G1</code> or <code>temurin-11-G1</code>.
@@ -298,7 +299,7 @@ Add the following to <code>two_builds.yml</code>.</p>
     release: 11
     home: "/path/to/build2/jdk" # make sure /path/to/build2/jdk/bin/java exists
 </code></pre>
-<p>This defines two builds of <a href="./references/runtime.html">runtimes</a>.</p>
+<p>This defines two builds of <a href="#runtime">runtimes</a>.</p>
 <p>I recommend that you use absolute paths for the builds, although relative paths will work, and will be relative to where you run <code>running</code>.</p>
 <p>I strongly recommend you rename the builds (both the name in the configuration file and the folder name) to something more sensible, preferably with the commit hash for easy troubleshooting and performance debugging later.</p>
 <h2 id="prepare-probes"><a class="header" href="#prepare-probes">Prepare Probes</a></h2>
@@ -312,7 +313,7 @@ Add the following to <code>two_builds.yml</code>.</p>
     type: JVMArg
     val: "-Djava.library.path=/path/to/probes/out -Dprobes=RustMMTk"
 </code></pre>
-<p>This defines two <a href="./references/modifier.html">modifiers</a>, which will be used later to modify the JVM command line arguments.</p>
+<p>This defines two <a href="#modifier">modifiers</a>, which will be used later to modify the JVM command line arguments.</p>
 <p>Please only use absolute paths for all the above.</p>
 <h2 id="prepare-configs"><a class="header" href="#prepare-configs">Prepare Configs</a></h2>
 <p>Finally, add he following to <code>two_builds.yml</code>.</p>
@@ -320,13 +321,13 @@ Add the following to <code>two_builds.yml</code>.</p>
   - "build1|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes"
   - "build2|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes"
 </code></pre>
-<p>The syntax is described <a href="./references/index.html#configs">here</a>.</p>
+<p>The syntax is described <a href="#configs">here</a>.</p>
 <h2 id="sanity-checks"><a class="header" href="#sanity-checks">Sanity Checks</a></h2>
 <p>The basic form of usage looks like this.</p>
 <pre><code class="language-console">running runbms /path/to/log two_builds.yml 8
 </code></pre>
 <p>That is, run the experiments as specified by <code>two_builds.yml</code>, store the results in <code>/path/to/log</code>, and explore eight different heap sizes (with careful arrangement of which size to run first and which to run later).</p>
-<p>See <a href="./commands/runbms.html">here</a> for a complete reference of <code>runbms</code>.</p>
+<p>See <a href="#runbms">here</a> for a complete reference of <code>runbms</code>.</p>
 <h3 id="dry-run"><a class="header" href="#dry-run">Dry run</a></h3>
 <p>A dry run (by supplying <code>-d</code> to <code>running</code> <strong>NOT</strong> <code>runbms</code>) allows you to see the commands to be executed.</p>
 <pre><code class="language-console">running -d runbms /path/to/log two_builds.yml 8 -i 1
@@ -336,18 +337,20 @@ Add the following to <code>two_builds.yml</code>.</p>
 <p>Now, actually run the experiment, but only for one invocation (by supplying <code>-i 1</code> to <code>runbms</code>).</p>
 <pre><code class="language-console">running runbms /path/to/log two_builds.yml 8 -i 1
 </code></pre>
-<p>This allows you to see any issue before wasting several days only realizing that something didn't work.</p>
+<p>This allows you to see any issue before wasting several days only realizing that something didn’t work.</p>
 <h2 id="run-it"><a class="header" href="#run-it">Run It</a></h2>
 <p>Once you are happy with everything, run the experiments.</p>
 <pre><code class="language-console">running runbms /path/to/log two_builds.yml 8 -p "two_builds"
 </code></pre>
-<p>Don't forget to give the results folder a prefix so that you can later tell what the experiment was for.</p>
+<p>Don’t forget to give the results folder a prefix so that you can later tell what the experiment was for.</p>
 <h3 id="analysing-results"><a class="header" href="#analysing-results">Analysing Results</a></h3>
 <p>This is outside the scope of this quickstart guide.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="basics"><a class="header" href="#basics">Basics</a></h1>
-<p><em>Briefly talk about how basic concepts fit together here...</em></p>
-<p>Before diving into the details, please read <a href="basics/./design.html">the design principles</a> to help you better understand why things are organized in such way.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="design-principles"><a class="header" href="#design-principles">Design Principles</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="basics"><a class="header" href="#basics">Basics</a></h1>
+<p><em>Briefly talk about how basic concepts fit together here…</em></p>
+<p>Before diving into the details, please read <a href="#design-principles">the design principles</a> to help you better understand why things are organized in such way.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="design-principles"><a class="header" href="#design-principles">Design Principles</a></h1>
 <h2 id="sound-methodology"><a class="header" href="#sound-methodology">Sound methodology</a></h2>
 <p>Sound methodology is crucial for the type of performance analysis work we do.
 Please see the documentation for each of the command for details.
@@ -355,7 +358,7 @@ We also try to include sensible default values in the base configuration files.<
 <h2 id="reproducibility"><a class="header" href="#reproducibility">Reproducibility</a></h2>
 <p>It should be easy to reproduce a set of experiments.
 To this end, various commands will save as much metadata with the results.
-For example, <a href="basics/../commands/runbms.html"><code>runbms</code></a> saves the flattened configuration file and command line arguments in the results folder.
+For example, <a href="#runbms"><code>runbms</code></a> saves the flattened configuration file and command line arguments in the results folder.
 For each log, basic information about the execution environment, such as <code>uname</code>, the model name of the CPU, and frequencies of CPU cores, is saved as well.</p>
 <h2 id="extensibility"><a class="header" href="#extensibility">Extensibility</a></h2>
 <p>Broadly, the project consists of two parts: the core and the commands.
@@ -367,15 +370,16 @@ For example, people might want to run multiple sets of experiments with minor tw
 This is also crucial to the first point that people can get a set of sensible default values by including base configuration files shipped with the project.</p>
 <h2 id="human-readable-syntax"><a class="header" href="#human-readable-syntax">Human-readable syntax</a></h2>
 <p>We use YAML as the format for the configuration files.
-Please read the <a href="basics/../references/index.html">syntax reference</a> for more details.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="configuration-file-syntax"><a class="header" href="#configuration-file-syntax">Configuration File Syntax</a></h1>
+Please read the <a href="#configuration-file-syntax">syntax reference</a> for more details.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="configuration-file-syntax"><a class="header" href="#configuration-file-syntax">Configuration File Syntax</a></h1>
 <p>The configuration file is in YAML format.
 You can find a good YAML tutorial
 <a href="https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html">here</a>.
 Below is the documentation for all the top-level keys that are common to all
 commands.</p>
 <h2 id="benchmarks"><a class="header" href="#benchmarks"><code>benchmarks</code></a></h2>
-<p>A YAML list of benchmarks to run in each specified <a href="references/index.html#suites">benchmark suite</a>.</p>
+<p>A YAML list of benchmarks to run in each specified <a href="#suites">benchmark suite</a>.</p>
 <p>For example:</p>
 <pre><code class="language-yaml">benchmarks:
   dacapo2006:
@@ -387,7 +391,7 @@ commands.</p>
 <p>specifies <code>running</code> to run the <code>eclipse</code> benchmark from the <code>dacapo2006</code>
 benchmark suite; and the <code>avrora</code> and <code>fop</code> benchmarks from the <code>dacapobach</code>
 benchmark suite. These benchmark suites have to be defined previously (usually
-through an <a href="references/index.html#includes"><code>includes</code> key</a>).</p>
+through an <a href="#includes"><code>includes</code> key</a>).</p>
 <p>Note that each benchmark of a benchmark suite can either be a string or a suite-specific dictionary.
 For example, for the DaCapo benchmark suite, the following two snippets are equivalent.</p>
 <pre><code class="language-yaml">benchmarks:
@@ -400,8 +404,8 @@ For example, for the DaCapo benchmark suite, the following two snippets are equi
 </code></pre>
 <h2 id="configs"><a class="header" href="#configs"><code>configs</code></a></h2>
 <p>A YAML list of configuration strings to be used to run the benchmarks. These are
-specified as a <a href="references/index.html#runtimes"><code>runtime</code></a> followed by a <code>'|'</code> separated list of
-<a href="references/./modifier.html">modifiers</a>, i.e. <code>"&lt;runtime&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;"</code>.</p>
+specified as a <a href="#runtimes"><code>runtime</code></a> followed by a <code>'|'</code> separated list of
+<a href="#modifier">modifiers</a>, i.e. <code>"&lt;runtime&gt;|&lt;modifier&gt;|...|&lt;modifier&gt;"</code>.</p>
 <p>For example:</p>
 <pre><code class="language-yaml">configs:
   - "openjdk11|ms|s|c2"
@@ -410,10 +414,10 @@ specified as a <a href="references/index.html#runtimes"><code>runtime</code></a>
 <p>specifies <code>running</code> to use the <code>openjdk11</code> <code>runtime</code> with <code>ms</code>, <code>s</code>, and <code>c2</code>
 modifiers; and the <code>openjdk15</code> <code>runtime</code> with the <code>ms</code>, and <code>s</code> modifiers. In
 the example above, we assume that both the <code>runtimes</code> and modifiers have been
-previously defined (in either the current configuration file or in an <a href="references/index.html#includes"><code>includes</code>
+previously defined (in either the current configuration file or in an <a href="#includes"><code>includes</code>
 file</a>).</p>
 <p>Each segment in the configuration strings can have whitespaces in them,
-so that it's easier for multi-line editing.</p>
+so that it’s easier for multi-line editing.</p>
 <p>For example:</p>
 <pre><code class="language-yaml">configs:
   - "openjdk8 |foo-1 |bar|buzz"
@@ -445,10 +449,10 @@ For example, in a global <code>pip</code> installation, <code>$RUNNING_NG_PACKAG
 <p>Under construction 🚧.</p>
 <h2 id="modifiers"><a class="header" href="#modifiers"><code>modifiers</code></a></h2>
 <p>A YAML dictionary of program arguments or environment variables that are to be
-used with <a href="references/index.html#configs">config strings</a>. Cannot use <code>-</code> in the key for a modifier.
+used with <a href="#configs">config strings</a>. Cannot use <code>-</code> in the key for a modifier.
 Each modifier requires a <code>type</code> key with other keys being specific to that
 <code>type</code>. For more information regarding the different <code>type</code>s of modifiers,
-please refer to <a href="references/./modifier.html">this page</a>.</p>
+please refer to <a href="#modifier">this page</a>.</p>
 <p><strong>Warning preview feature ⚠️</strong>. We can exclude certain benchmarks from using a
 specific modifier by using an <code>excludes</code> key along with a YAML list of benchmarks
 to be excluded from each benchmark suite.</p>
@@ -465,7 +469,7 @@ to be excluded from each benchmark suite.</p>
         - eclipse
 </code></pre>
 <p>specifies two modifiers, <code>s</code> and <code>c2</code>, both of <code>type</code>
-<a href="references/./modifier.html#JVMArg"><code>JVMArg</code></a> with their respective values. Here, the
+<a href="#JVMArg"><code>JVMArg</code></a> with their respective values. Here, the
 <code>eclipse</code> benchmark from the <code>dacapo2006</code> benchmark suite has been excluded from
 the <code>c2</code> modifier.</p>
 <p><strong>Warning preview feature ⚠️</strong>. Similarly, we can attach the modifier only to
@@ -500,8 +504,8 @@ from the <code>dacapo2006</code> benchmark suite, no other benchmark will run wi
 modifier (not even <code>fop</code> even though it appears in the <code>includes</code>).</p>
 <h3 id="value-options"><a class="header" href="#value-options">Value Options</a></h3>
 <p>These are special modifiers whose values can be specified through their use in a
-<a href="references/index.html#configs">configuration string</a>. Concrete values are specified as <code>-</code> separated
-values after the modifier's name in a configuration string. These values will be
+<a href="#configs">configuration string</a>. Concrete values are specified as <code>-</code> separated
+values after the modifier’s name in a configuration string. These values will be
 indexed by the modifier through syntax similar to Python format strings.</p>
 <p>This is best understood via an example:</p>
 <pre><code class="language-yaml">modifiers:
@@ -515,20 +519,21 @@ indexed by the modifier through syntax similar to Python format strings.</p>
 configs:
   - "openjdk11|env_var-42-43"
 </code></pre>
-<p>specifies to run the <code>openjdk11</code> <a href="references/index.html#runtimes"><code>runtime</code></a> with the environment
+<p>specifies to run the <code>openjdk11</code> <a href="#runtimes"><code>runtime</code></a> with the environment
 variable <code>FOO42</code> set to <code>43</code>. Note that value options are not limited only to
 environment variables, and can be used for all modifier <code>type</code>s.</p>
 <h2 id="runtimes"><a class="header" href="#runtimes"><code>runtimes</code></a></h2>
-<p>A YAML dictionary of runtime definitions that are to be used with <a href="references/index.html#configs">config strings</a>.
+<p>A YAML dictionary of runtime definitions that are to be used with <a href="#configs">config strings</a>.
 Each runtime requires a <code>type</code> key with other keys being specific to that
 <code>type</code>. For more information regarding the different <code>type</code>s of runtimes,
-please refer to <a href="references/./runtime.html">this page</a>.</p>
+please refer to <a href="#runtime">this page</a>.</p>
 <h2 id="suites"><a class="header" href="#suites"><code>suites</code></a></h2>
 <p>A YAML dictionary of benchmark suite definitions that are to be used as keys of <code>benchmarks</code>.
 Each benchmark suite requires a <code>type</code> key with other keys being specific to that
 <code>type</code>. For more information regarding the different <code>type</code>s of benchmark suites,
-please refer to <a href="references/./suite.html">this page</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
+please refer to <a href="#benchmark-suite">this page</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="benchmark-suite"><a class="header" href="#benchmark-suite">Benchmark Suite</a></h1>
 <h2 id="binarybenchmarksuite--preview-"><a class="header" href="#binarybenchmarksuite--preview-"><code>BinaryBenchmarkSuite</code>  (preview ⚠️)</a></h2>
 <p>A <code>BinaryBenchmarkSuite</code> is a suite of programs which can be used to run binary
 benchmarks such as for C/C++ benchmarking.</p>
@@ -582,7 +587,7 @@ First, a single string with <a href="https://docs.python.org/3/library/shlex.htm
 Multiple arguments are space separated.
 This wrapper is used for all benchmarks in the benchmark suite.
 Second, a dictionary of strings with shell-like syntax to specify possibly different wrappers for different benchmarks.
-If a benchmark doesn't have a wrapper in the dictionary, it is treated as <code>null</code>.</p>
+If a benchmark doesn’t have a wrapper in the dictionary, it is treated as <code>null</code>.</p>
 <p><code>companion</code> (preview ⚠️): the syntax is similar to <code>wrapper</code>.
 The companion program will start before the main program.
 The main program will start two seconds after the companion program to make sure the companion is fully initialized.
@@ -702,6 +707,8 @@ An example looks like this.</p>
 <p><code>path</code>: path to the GCBenchmarks folder.
 The value is required.
 Environment variables will be expanded.</p>
+<p><code>timeout</code>: timeout for one invocation of a benchmark in seconds.
+The default value is <code>null</code>.</p>
 <p><code>minheap</code>:  a string that selects one of the <code>minheap_values</code> sets to use.</p>
 <p><code>minheap_values</code>: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering <code>Out of Memory!</code>.
 An example looks like this:</p>
@@ -719,38 +726,49 @@ An example looks like this:</p>
         slow/bigint/pidigits: 198
         slow/rb_tree/rb_tree: 8640
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="runtime"><a class="header" href="#runtime">Runtime</a></h1>
+<h3 id="benchmark-specification-3"><a class="header" href="#benchmark-specification-3">Benchmark Specification</a></h3>
+<p>Benchmarks can be specified either as strings or as dictionaries.</p>
+<p>The keys currently supported in the dictionary form are <code>name</code> and <code>timeout</code>.</p>
+<p>Example:</p>
+<pre><code class="language-yaml">benchmarks:
+  gcbenchmarks:
+    - name: serial/gcbench/gcbench
+      timeout: 30
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="runtime"><a class="header" href="#runtime">Runtime</a></h1>
 <h2 id="jikesrvm"><a class="header" href="#jikesrvm"><code>JikesRVM</code></a></h2>
 <h2 id="nativeexecutable-preview-"><a class="header" href="#nativeexecutable-preview-"><code>NativeExecutable</code> (preview ⚠️)</a></h2>
-<p>A <code>NativeExecutable</code> type specifies <a href="references/../commands/runbms.html"><code>runbms</code></a> to
+<p>A <code>NativeExecutable</code> type specifies <a href="#runbms"><code>runbms</code></a> to
 directly run the benchmarks on native hardware. This is supposed to be used in
 tandem with
-<a href="references/./suite.html#BinaryBenchmarkSuite"><code>BinaryBenchmarkSuite</code></a>.</p>
+<a href="#BinaryBenchmarkSuite"><code>BinaryBenchmarkSuite</code></a>.</p>
 <h2 id="openjdk"><a class="header" href="#openjdk"><code>OpenJDK</code></a></h2>
 <h2 id="d8-preview-"><a class="header" href="#d8-preview-"><code>D8</code> (preview ⚠️)</a></h2>
 <h3 id="keys-6"><a class="header" href="#keys-6">Keys</a></h3>
 <p><code>executable</code>: path to the <code>d8</code> executable.
 Environment variables will be expanded.</p>
 <h2 id="spidermonkey-preview-"><a class="header" href="#spidermonkey-preview-"><code>SpiderMonkey</code> (preview ⚠️)</a></h2>
-<h3 id="keys-7"><a class="header" href="#keys-7">Keys</a></h3>
+<h3 id="keys-1-1"><a class="header" href="#keys-1-1">Keys</a></h3>
 <p><code>executable</code>: path to the <code>js</code> executable.
 Environment variables will be expanded.</p>
 <h2 id="javascriptcore-preview-"><a class="header" href="#javascriptcore-preview-"><code>JavaScriptCore</code> (preview ⚠️)</a></h2>
-<h3 id="keys-8"><a class="header" href="#keys-8">Keys</a></h3>
+<h3 id="keys-2-1"><a class="header" href="#keys-2-1">Keys</a></h3>
 <p><code>executable</code>: path to the <code>jsc</code> executable.
 Environment variables will be expanded.</p>
 <h2 id="juliammtk-preview-"><a class="header" href="#juliammtk-preview-"><code>JuliaMMTK</code> (preview ⚠️)</a></h2>
-<h3 id="keys-9"><a class="header" href="#keys-9">Keys</a></h3>
+<h3 id="keys-3-1"><a class="header" href="#keys-3-1">Keys</a></h3>
 <p><code>executable</code>: path to the <code>julia</code> executable.
 Environment variables will be expanded.</p>
 <h2 id="juliastock-preview-"><a class="header" href="#juliastock-preview-"><code>JuliaStock</code> (preview ⚠️)</a></h2>
 <p>Julia with the stock GC. It does not allow setting a heap size, and will not throw OOM unless killed by the operating system.</p>
-<h3 id="keys-10"><a class="header" href="#keys-10">Keys</a></h3>
+<h3 id="keys-4-1"><a class="header" href="#keys-4-1">Keys</a></h3>
 <p><code>executable</code>: path to the <code>julia</code> executable.
 Environment variables will be expanded.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="modifier"><a class="header" href="#modifier">Modifier</a></h1>
 <h2 id="envvar"><a class="header" href="#envvar"><code>EnvVar</code></a></h2>
-<h3 id="keys-11"><a class="header" href="#keys-11">Keys</a></h3>
+<h3 id="keys-7"><a class="header" href="#keys-7">Keys</a></h3>
 <p><code>var</code>: name of the variable.</p>
 <p><code>val</code>: value of the variable.
 Environment variables will be expanded.</p>
@@ -758,7 +776,7 @@ Environment variables will be expanded.</p>
 <p>Set an environment variable. Might override an environment variable inherited from the parent process.</p>
 <h2 id="jvmarg"><a class="header" href="#jvmarg"><code>JVMArg</code></a></h2>
 <p><code>JVM</code> specific.</p>
-<h3 id="keys-12"><a class="header" href="#keys-12">Keys</a></h3>
+<h3 id="keys-1-2"><a class="header" href="#keys-1-2">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.
 Environment variables will be expanded.</p>
@@ -766,7 +784,7 @@ Environment variables will be expanded.</p>
 <p>Specify arguments to a JVM, as opposed to the program.</p>
 <h2 id="jsarg-preview-"><a class="header" href="#jsarg-preview-"><code>JSArg</code> (preview ⚠️)</a></h2>
 <p><code>JavaScriptRuntime</code> specific.</p>
-<h3 id="keys-13"><a class="header" href="#keys-13">Keys</a></h3>
+<h3 id="keys-2-2"><a class="header" href="#keys-2-2">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.
 Environment variables will be expanded.</p>
@@ -774,7 +792,7 @@ Environment variables will be expanded.</p>
 <p>Specify arguments to a JavaScript runtime (e.g., <code>d8</code>), as opposed to the program.</p>
 <h2 id="jvmclasspathappend"><a class="header" href="#jvmclasspathappend"><code>JVMClasspathAppend</code></a></h2>
 <p><code>JVM</code> specific.</p>
-<h3 id="keys-14"><a class="header" href="#keys-14">Keys</a></h3>
+<h3 id="keys-3-2"><a class="header" href="#keys-3-2">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple classpaths are space separated.
 Environment variables will be expanded.</p>
@@ -782,7 +800,7 @@ Environment variables will be expanded.</p>
 <p>Append a list of classpaths to the existing classpaths.</p>
 <h2 id="jvmclasspathprepend"><a class="header" href="#jvmclasspathprepend"><code>JVMClasspathPrepend</code></a></h2>
 <p><code>JVM</code> specific.</p>
-<h3 id="keys-15"><a class="header" href="#keys-15">Keys</a></h3>
+<h3 id="keys-4-2"><a class="header" href="#keys-4-2">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple classpaths are space separated.
 Environment variables will be expanded.</p>
@@ -792,20 +810,20 @@ Environment variables will be expanded.</p>
 <p>A backward-compatibility alias of <code>JVMClasspathAppend</code>.
 Environment variables will be expanded.</p>
 <h2 id="programarg"><a class="header" href="#programarg"><code>ProgramArg</code></a></h2>
-<h3 id="keys-16"><a class="header" href="#keys-16">Keys</a></h3>
+<h3 id="keys-5-1"><a class="header" href="#keys-5-1">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.
 Environment variables will be expanded.</p>
 <h3 id="description-5"><a class="header" href="#description-5">Description</a></h3>
 <p>Specify arguments to a program, as opposed to the runtime.</p>
 <h2 id="modifierset-preview-"><a class="header" href="#modifierset-preview-"><code>ModifierSet</code> (preview ⚠️)</a></h2>
-<h3 id="keys-17"><a class="header" href="#keys-17">Keys</a></h3>
-<p><code>val</code>: <code>|</code> separated values, with possible value options. See <a href="references/./index.html#value-options">here</a> for details.</p>
+<h3 id="keys-6-1"><a class="header" href="#keys-6-1">Keys</a></h3>
+<p><code>val</code>: <code>|</code> separated values, with possible value options. See <a href="#value-options">here</a> for details.</p>
 <h3 id="description-6"><a class="header" href="#description-6">Description</a></h3>
 <p>Specify a set of modifiers, including other <code>ModifierSet</code>s.
 That is, you can use <code>ModifierSet</code> recursively.</p>
 <h2 id="wrapper-preview-"><a class="header" href="#wrapper-preview-"><code>Wrapper</code> (preview ⚠️)</a></h2>
-<h3 id="keys-18"><a class="header" href="#keys-18">Keys</a></h3>
+<h3 id="keys-7-1"><a class="header" href="#keys-7-1">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.
 Environment variables will be expanded.</p>
@@ -813,7 +831,7 @@ Environment variables will be expanded.</p>
 <p>Specify a wrapper.
 If a wrapper also exist for the benchmark suite you use, this wrapper will follow that.</p>
 <h2 id="companion-preview-"><a class="header" href="#companion-preview-"><code>Companion</code> (preview ⚠️)</a></h2>
-<h3 id="keys-19"><a class="header" href="#keys-19">Keys</a></h3>
+<h3 id="keys-8"><a class="header" href="#keys-8">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.</p>
 <h3 id="description-8"><a class="header" href="#description-8">Description</a></h3>
@@ -821,7 +839,7 @@ Multiple arguments are space separated.</p>
 If a companion program also exist for the benchmark suite you use, this companion program will follow that.</p>
 <h2 id="juliaarg-preview-"><a class="header" href="#juliaarg-preview-"><code>JuliaArg</code> (preview ⚠️)</a></h2>
 <p><code>JuliaMMTk</code> and <code>JuliaStock</code> specific.</p>
-<h3 id="keys-20"><a class="header" href="#keys-20">Keys</a></h3>
+<h3 id="keys-9"><a class="header" href="#keys-9">Keys</a></h3>
 <p><code>val</code>: a single string with <a href="https://docs.python.org/3/library/shlex.html#shlex.split">shell-like syntax</a>.
 Multiple arguments are space separated.
 Environment variables will be expanded.</p>
@@ -830,9 +848,10 @@ Environment variables will be expanded.</p>
 <h3 id="description-9"><a class="header" href="#description-9">Description</a></h3>
 <p>Normally <code>runbms</code> will iterate through a set of heap sizes, either specific multiples of the minheap of each benchmark via <code>-s</code>, or spreading the multiples across 1~<code>heap_range</code> (using <code>N</code> and optionally <code>ns</code>).</p>
 <p>This modifier prevents <code>runbms</code> from applying the heap sizes for certain configs, which is useful, for example, for running <code>NoGC</code> or <code>EpsilonGC</code>.</p>
-<h3 id="keys-21"><a class="header" href="#keys-21">Keys</a></h3>
+<h3 id="keys-10"><a class="header" href="#keys-10">Keys</a></h3>
 <p>No argument is allowed.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="command-references"><a class="header" href="#command-references">Command References</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="command-references"><a class="header" href="#command-references">Command References</a></h1>
 <p>Please see the sections in this chapter for the references for each of the subcommands.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <pre><code class="language-console">running [-h|--help] [-v|--verbose] [-d|--dry-run] [--version] subcommand
@@ -845,8 +864,9 @@ Each of the subcommands that respect is flag will print out the commands to be e
 <p><code>--version</code>: print the version number of <code>running-ng</code>.</p>
 <h2 id="convention"><a class="header" href="#convention">Convention</a></h2>
 <p>For each subcommand, the documentation can roughly be divided into two parts, the command line usage and the keys in the config file.</p>
-<p>Unless otherwise specified, the keys specified <a href="commands/../references/index.html">here</a> are common to all subcommands, with the keys specific to each subcommand documented in their respective documentation.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="runbms"><a class="header" href="#runbms"><code>runbms</code></a></h1>
+<p>Unless otherwise specified, the keys specified <a href="#configuration-file-syntax">here</a> are common to all subcommands, with the keys specific to each subcommand documented in their respective documentation.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="runbms"><a class="header" href="#runbms"><code>runbms</code></a></h1>
 <p>This subcommand runs benchmarks with different configs, possibly with varying heap sizes.</p>
 <h2 id="usage-1"><a class="header" href="#usage-1">Usage</a></h2>
 <pre><code class="language-console">runbms [-h|--help] [-i|--invocations INVOCATIONS] [-s|--slice SLICE] [-p|--id-prefix ID_PREFIX] [-m|--minheap-multiplier MINHEAP_MULTIPLIER] [--skip-oom SKIP_OOM] [--skip-timeout SKIP_TIMEOUT] [--resume RESUME] [--workdir WORKDIR] [--skip-log-compression] [--exit-on-failure CODE] [--randomize-configs] LOG_DIR CONFIG [N] [n ...]
@@ -881,17 +901,17 @@ This is required.</p>
 This is required.</p>
 <p><code>N</code>: the number of different heap sizes to explore.
 Must be powers of two.
-Explore heap sizes denoted by 0, 1, ..., and <code>N</code> (<code>N + 1</code> different sizes in total).
+Explore heap sizes denoted by 0, 1, …, and <code>N</code> (<code>N + 1</code> different sizes in total).
 The heap size 0 represents <code>1.0 * minheap</code>, and the heap size <code>N</code> represents <code>heap_range * minheap</code> (by default, <code>6.0 * minheap</code>).
 If <code>N</code> is omitted, then the script will run benchmarks without explicit explicitly setting heap sizes, unless you specify <code>-s</code> or use a modifier that sets the heap size.</p>
 <p><code>n</code>: the heap sizes to explore.
-Instead of exploring 0, 1, ..., and <code>N</code>, only explore the <code>n</code>s specified.</p>
-<h2 id="keys-22"><a class="header" href="#keys-22">Keys</a></h2>
+Instead of exploring 0, 1, …, and <code>N</code>, only explore the <code>n</code>s specified.</p>
+<h2 id="keys-11"><a class="header" href="#keys-11">Keys</a></h2>
 <p><code>invocations</code>: see above.</p>
 <p><code>minheap_multiplier</code>: see above.</p>
 <p><code>heap_range</code>: the heap size relative to the minheap when <code>n = N</code>.</p>
-<p><code>spread_factor</code>: changes how 0, 1, ..., and <code>N</code> are spread out.
-When <code>spread_factor</code> is zero, the differences between 0, 1, ..., and <code>N</code> are the same.
+<p><code>spread_factor</code>: changes how 0, 1, …, and <code>N</code> are spread out.
+When <code>spread_factor</code> is zero, the differences between 0, 1, …, and <code>N</code> are the same.
 The larger the <code>spread_factor</code> is, the coarser the spacing is at the end relative to start.
 Please do <strong>NOT</strong> change this unless you understand how it works.</p>
 <p><code>remote_host</code>: the remote host to <code>rsync</code> the results to.
@@ -901,7 +921,7 @@ Must be a dictionary, similar to how modifiers are declared.</p>
 <h2 id="plugins-preview-"><a class="header" href="#plugins-preview-">Plugins (preview ⚠️)</a></h2>
 <h3 id="zulip"><a class="header" href="#zulip"><code>Zulip</code></a></h3>
 <p>Zulip integration for notifying when experiments start or end.
-No message will be sent if it'a dry run.</p>
+No message will be sent if it’a dry run.</p>
 <p>Here is an example.</p>
 <pre><code class="language-yaml">plugins:
   zulip:
@@ -910,9 +930,9 @@ No message will be sent if it'a dry run.</p>
       type: private
       to: ["your user id here"]
 </code></pre>
-<h4 id="keys-23"><a class="header" href="#keys-23">Keys</a></h4>
+<h4 id="keys-1-3"><a class="header" href="#keys-1-3">Keys</a></h4>
 <p><code>request</code>: please follow the <a href="https://zulip.com/api/send-message">Zulip API documentation</a>.
-Note that you don't need to put in <code>content</code> here.
+Note that you don’t need to put in <code>content</code> here.
 Please contact the administrators of your organization for your user ID.
 If you use a bot user and want to post to a channel, please <a href="https://github.com/zulip/zulip/issues/13658#issuecomment-573959765">subscribe the bot user to the channel so that messages can be edited</a>.</p>
 <p><code>config_file</code>: an optional string to the path of config file.
@@ -920,7 +940,7 @@ If not specified, the default is <code>~/.zuliprc</code>.
 Please make sure that this file can only be accessed by you (e.g., <code>chmod 600 ~/.zuliprc</code>).
 If you are a moma user, please create this file on <code>squirrel</code>, and it will then be synced to other machines.
 Please follow the Zulip documentation for the <a href="https://zulip.com/api/configuring-python-bindings">syntax</a> of the config file and for <a href="https://zulip.com/api/api-keys">obtaining an API key</a>.
-If you can't create a new bot, please contact the administrators of your organization.</p>
+If you can’t create a new bot, please contact the administrators of your organization.</p>
 <h3 id="copyfile"><a class="header" href="#copyfile"><code>CopyFile</code></a></h3>
 <p>Copying files from the working directory.</p>
 <p>Here is an example.</p>
@@ -930,10 +950,10 @@ If you can't create a new bot, please contact the administrators of your organiz
     patterns:
       - "scratch/dacapo-latency-*.csv"
 </code></pre>
-<h4 id="keys-24"><a class="header" href="#keys-24">Keys</a></h4>
+<h4 id="keys-2-3"><a class="header" href="#keys-2-3">Keys</a></h4>
 <p><code>patterns</code>: a list of patterns following the Python 3 <code>pathlib.Path.glob</code> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">syntax</a>.
 Files matched the patterns will be copied to <code>LOG_DIR</code> where different subfolders will be created for each invocation.</p>
-<p><code>skip_failed</code>: don't copy files from failed runs. The default value is true.</p>
+<p><code>skip_failed</code>: don’t copy files from failed runs. The default value is true.</p>
 <h2 id="interpreting-the-outputs"><a class="header" href="#interpreting-the-outputs">Interpreting the Outputs</a></h2>
 <p>Under construction 🚧.</p>
 <h3 id="console-outputs"><a class="header" href="#console-outputs">Console Outputs</a></h3>
@@ -948,10 +968,11 @@ Second, the difference between sizes are smaller for smaller sizes and larger fo
 <p>Under construction 🚧.</p>
 <h3 id="continuously-monitor-your-experiments"><a class="header" href="#continuously-monitor-your-experiments">Continuously Monitor Your Experiments</a></h3>
 <p>The results are <code>rsync</code>ed to <code>remote_host</code> once all invocations for a benchmark at a heap size are finished.
-You shouldn't log into the experiment machine so not to disturb the experiments.
+You shouldn’t log into the experiment machine so not to disturb the experiments.
 You should log into the remote host and check the <code>LOG_DIR</code> there and see the new results that came in.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="minheap"><a class="header" href="#minheap"><code>minheap</code></a></h1>
-<p>This subcommand runs benchmarks with different <a href="commands/../references/index.html">configs</a>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="minheap"><a class="header" href="#minheap"><code>minheap</code></a></h1>
+<p>This subcommand runs benchmarks with different <a href="#configuration-file-syntax">configs</a>
 while varying heap sizes in a binary search fashion in order to determine the
 minimum heap required to run each benchmark.</p>
 <p>The result is stored in a YAML file.
@@ -968,7 +989,7 @@ temurin-17.openjdk_common.hotspot_gc-Parallel:
     batik: 235
 </code></pre>
 <p>At the end of each run, <code>minheap</code> will print out the configuration that achieves the smallest minheap size for most benchmarks.
-The minheap values for that configuration will be printed out, which can then be used to populate the minheap values a benchmark suite, such as a <a href="commands/../references/suite.html#dacapo">DaCapo benchmark suite</a>.
+The minheap values for that configuration will be printed out, which can then be used to populate the minheap values a benchmark suite, such as a <a href="#dacapo">DaCapo benchmark suite</a>.
 An example is as follows.</p>
 <pre><code class="language-console">temurin-17.openjdk_common.hotspot_gc-G1 obtained the most number of smallest minheap sizes: 8
 Minheap configuration to be copied to runbms config files
@@ -1004,16 +1025,20 @@ This is required.</p>
 This file contains both the interim results and the final result.
 An interrupted execution can be resumed by using the same <code>RESULT</code> path.
 This is required.</p>
-<h2 id="keys-25"><a class="header" href="#keys-25">Keys</a></h2>
+<h2 id="keys-12"><a class="header" href="#keys-12">Keys</a></h2>
 <p><code>maxheap</code>: the upper bound of the search.</p>
 <p><code>attempts</code> (preview ⚠️): for a particular heap size, if an invocation passes or fails with OOM (timeout treated as OOM), the binary search will continue with the next appropriate heap size.
 If an invocation crashes and if the total number of invocations has not exceeded <code>ATTEMPTS</code>, the same heap size will be repeated.
 If all <code>ATTEMPTS</code> invocations crash, the binary search for this config will stop, and <code>minheap</code> will report <code>inf</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="fillin"><a class="header" href="#fillin"><code>fillin</code></a></h1>
-<div style="break-before: page; page-break-before: always;"></div><p>Here are some recipes for common tasks.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="whole-process-performance-event-monitoring"><a class="header" href="#whole-process-performance-event-monitoring">Whole-Process Performance Event Monitoring</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="fillin"><a class="header" href="#fillin"><code>fillin</code></a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="cookbook"><a href="#cookbook" class="header">Cookbook</a></h1>
+<p>Here are some recipes for common tasks.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="whole-process-performance-event-monitoring"><a class="header" href="#whole-process-performance-event-monitoring">Whole-Process Performance Event Monitoring</a></h1>
 <h2 id="jvmti"><a class="header" href="#jvmti">JVMTI</a></h2>
-<p>Please clone and build <a href="cookbook/../quickstart.html#prepare-probes"><code>probes</code></a>, and then build <a href="https://github.com/caizixian/distillation"><code>distillation</code></a>.
+<p>Please clone and build <a href="#prepare-probes"><code>probes</code></a>, and then build <a href="https://github.com/caizixian/distillation"><code>distillation</code></a>.
 You might need to change the paths referred in the <code>Makefile</code>s to match your environment.</p>
 <p>Under the <code>distillation</code> folder, you will find a JVMTI agent, <code>libperf_statistics.so</code>.
 You can check the source code <a href="https://github.com/caizixian/distillation/blob/master/perf_statistics.c">here</a>.
@@ -1058,7 +1083,7 @@ We will reuse the <code>RustMMTk</code> probe here, as the callback functions in
     val: "probes|probes_cp|jvmti|jvmti_env|perf"
 </code></pre>
 <h2 id="mmtk"><a class="header" href="#mmtk">MMTk</a></h2>
-<p>Please clone and build <a href="cookbook/../quickstart.html#prepare-probes"><code>probes</code></a>.
+<p>Please clone and build <a href="#prepare-probes"><code>probes</code></a>.
 You will need to build <code>mmtk-core</code> with the <code>perf_counter</code> feature.</p>
 <p>First, you need to let the DaCapo benchmark inform the start and the end of a benchmark iteration.</p>
 <pre><code class="language-yaml">modifiers:
@@ -1085,7 +1110,7 @@ In most cases, you want to use <code>0,-1</code>, that is measuring the calling 
 For some events, such as RAPL, only package-wide measurement is supported, and you will have to adjust the values accordingly.</p>
 <p><strong>Note that you might have to increase the value of <code>MAX_PHASES</code> in <code>crate::util::statistics::stats</code> to a larger value, e.g., <code>1 &lt;&lt; 14</code>, so that the array storing the per-phase value will not overflow.</strong></p>
 <h1 id="work-packet-performance-event-monitoring"><a class="header" href="#work-packet-performance-event-monitoring">Work-Packet Performance Event Monitoring</a></h1>
-<p>It's similar to the whole-process performance event monitoring for MMTk.
+<p>It’s similar to the whole-process performance event monitoring for MMTk.
 Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVENTS</code>.</p>
 <h1 id="machine-specific-known-problems"><a class="header" href="#machine-specific-known-problems">Machine-Specific Known Problems</a></h1>
 <p>On Xeon D-1540 Broadwell, the <code>PERF_COUNT_HW_CACHE_LL:MISS</code> event is always zero.</p>
@@ -1103,8 +1128,10 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </code></pre>
 <p>On AMD machines, the <code>PERF_COUNT_HW_CACHE_LL:MISS</code> event fails to open.
 <code>perf_event_open</code> syscall fails with <code>No such file or directory</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="frequently-asked-questions"><a class="header" href="#frequently-asked-questions">Frequently Asked Questions</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="frequently-asked-questions"><a class="header" href="#frequently-asked-questions">Frequently Asked Questions</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
 <h2 id="unreleased"><a class="header" href="#unreleased">Unreleased</a></h2>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
 <h4 id="commands"><a class="header" href="#commands">Commands</a></h4>
@@ -1153,9 +1180,9 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h4 id="base-configurations-1"><a class="header" href="#base-configurations-1">Base Configurations</a></h4>
 <ul>
 <li>Environment variables are expanded when resolving paths of runtimes and benchmark suites.</li>
-<li><code>--add-exports java.base/jdk.internal.ref=ALL-UNNAMED</code> is no longer automatically added when running DaCapo benchmarks on &gt;= JDK 9. This approach doesn't scale now we have more workarounds specific to different JDK versions. This is also too opaque and not clear how it's implemented. New modifiers are introduced to address this issue.</li>
+<li><code>--add-exports java.base/jdk.internal.ref=ALL-UNNAMED</code> is no longer automatically added when running DaCapo benchmarks on &gt;= JDK 9. This approach doesn’t scale now we have more workarounds specific to different JDK versions. This is also too opaque and not clear how it’s implemented. New modifiers are introduced to address this issue.</li>
 </ul>
-<h4 id="modifiers-2"><a class="header" href="#modifiers-2">Modifiers</a></h4>
+<h4 id="modifiers-1-1"><a class="header" href="#modifiers-1-1">Modifiers</a></h4>
 <ul>
 <li><code>EnvVar</code> <code>val</code> is expanded using the outside environment prior to benchmark execution.</li>
 </ul>
@@ -1187,11 +1214,11 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v040-2023-08-17"><a class="header" href="#v040-2023-08-17"><a href="https://github.com/anupli/running-ng/releases/tag/v0.4.0"><code>v0.4.0</code> (2023-08-17)</a></a></h2>
 <h3 id="added-3"><a class="header" href="#added-3">Added</a></h3>
-<h4 id="modifiers-3"><a class="header" href="#modifiers-3">Modifiers</a></h4>
+<h4 id="modifiers-2"><a class="header" href="#modifiers-2">Modifiers</a></h4>
 <ul>
 <li><code>JuliaArg</code></li>
 </ul>
-<h4 id="runtimes-2"><a class="header" href="#runtimes-2">Runtimes</a></h4>
+<h4 id="runtimes-1-1"><a class="header" href="#runtimes-1-1">Runtimes</a></h4>
 <ul>
 <li><code>JuliaMMTK</code></li>
 <li><code>JuliaStock</code></li>
@@ -1207,7 +1234,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h3 id="changed-3"><a class="header" href="#changed-3">Changed</a></h3>
 <h4 id="base-configurations-2"><a class="header" href="#base-configurations-2">Base Configurations</a></h4>
 <ul>
-<li><code>runbms</code>: don't sync to <code>squirrel.moma</code> for the default <code>runbms.yml</code>. <strong>moma machine users should use <code>runbms-anu.yml</code> for the old behaviour.</strong></li>
+<li><code>runbms</code>: don’t sync to <code>squirrel.moma</code> for the default <code>runbms.yml</code>. <strong>moma machine users should use <code>runbms-anu.yml</code> for the old behaviour.</strong></li>
 </ul>
 <h3 id="fixed-6"><a class="header" href="#fixed-6">Fixed</a></h3>
 <ul>
@@ -1221,7 +1248,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h3 id="fixed-7"><a class="header" href="#fixed-7">Fixed</a></h3>
 <h4 id="benchmark-suites-3"><a class="header" href="#benchmark-suites-3">Benchmark Suites</a></h4>
 <ul>
-<li><code>DaCapo</code>: don't explicitly pass <code>-s default</code> to DaCapo unless the user requests so by setting the <code>size</code> key of <code>DaCapo</code> or overriding the sizes for individual benchmarks using the <a href="./references/suite.html#benchmark-specification">benchmark specification syntax</a>. This is so that users can override the size via <code>ProgramArg</code>.</li>
+<li><code>DaCapo</code>: don’t explicitly pass <code>-s default</code> to DaCapo unless the user requests so by setting the <code>size</code> key of <code>DaCapo</code> or overriding the sizes for individual benchmarks using the <a href="#benchmark-specification">benchmark specification syntax</a>. This is so that users can override the size via <code>ProgramArg</code>.</li>
 </ul>
 <h2 id="v038-2023-02-21"><a class="header" href="#v038-2023-02-21"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.8"><code>v0.3.8</code> (2023-02-21)</a></a></h2>
 <h3 id="changed-4"><a class="header" href="#changed-4">Changed</a></h3>
@@ -1264,13 +1291,13 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>runbms</code> prints out the logged in users when emitting warnings when the machine has more than one logged in users.</li>
 </ul>
 <h3 id="fixed-11"><a class="header" href="#fixed-11">Fixed</a></h3>
-<h4 id="modifiers-4"><a class="header" href="#modifiers-4">Modifiers</a></h4>
+<h4 id="modifiers-3"><a class="header" href="#modifiers-3">Modifiers</a></h4>
 <ul>
 <li><code>Companion</code>: skip value options expansion if no value option is provided to avoid interpreting bpftrace syntax as replacement fields.</li>
 </ul>
 <h2 id="v032-2022-10-12"><a class="header" href="#v032-2022-10-12"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.2"><code>v0.3.2</code> (2022-10-12)</a></a></h2>
 <h3 id="added-5"><a class="header" href="#added-5">Added</a></h3>
-<h4 id="modifiers-5"><a class="header" href="#modifiers-5">Modifiers</a></h4>
+<h4 id="modifiers-4"><a class="header" href="#modifiers-4">Modifiers</a></h4>
 <ul>
 <li><code>Companion</code></li>
 </ul>
@@ -1299,7 +1326,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h2 id="v030-2022-03-19"><a class="header" href="#v030-2022-03-19"><a href="https://github.com/anupli/running-ng/releases/tag/v0.3.0"><code>v0.3.0</code> (2022-03-19)</a></a></h2>
 <h3 id="added-7"><a class="header" href="#added-7">Added</a></h3>
-<h4 id="modifiers-6"><a class="header" href="#modifiers-6">Modifiers</a></h4>
+<h4 id="modifiers-5"><a class="header" href="#modifiers-5">Modifiers</a></h4>
 <ul>
 <li><code>JVMClasspathAppend</code></li>
 <li><code>JVMClasspathPrepend</code></li>
@@ -1309,7 +1336,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>SPECjvm98</code></li>
 </ul>
 <h3 id="changed-8"><a class="header" href="#changed-8">Changed</a></h3>
-<h4 id="modifiers-7"><a class="header" href="#modifiers-7">Modifiers</a></h4>
+<h4 id="modifiers-6"><a class="header" href="#modifiers-6">Modifiers</a></h4>
 <ul>
 <li><code>JVMClasspath</code> is now an alias of <code>JVMClasspathAppend</code>. This is backward compatible.</li>
 </ul>
@@ -1335,7 +1362,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <h3 id="changed-9"><a class="header" href="#changed-9">Changed</a></h3>
 <h4 id="commands-11"><a class="header" href="#commands-11">Commands</a></h4>
 <ul>
-<li><code>runbms</code> now skips printing CPU frequencies if the system doesn't support it, e.g., when using Docker Desktop on Mac.</li>
+<li><code>runbms</code> now skips printing CPU frequencies if the system doesn’t support it, e.g., when using Docker Desktop on Mac.</li>
 </ul>
 <h3 id="fixed-13"><a class="header" href="#fixed-13">Fixed</a></h3>
 <h4 id="benchmark-suites-7"><a class="header" href="#benchmark-suites-7">Benchmark Suites</a></h4>
@@ -1353,7 +1380,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 </ul>
 <h4 id="commands-12"><a class="header" href="#commands-12">Commands</a></h4>
 <ul>
-<li><code>minheap</code> gains an extra key <code>attempts</code> (can be overridden by <code>--attempts</code>) so that crashes don't cause bogus minheap measurements.</li>
+<li><code>minheap</code> gains an extra key <code>attempts</code> (can be overridden by <code>--attempts</code>) so that crashes don’t cause bogus minheap measurements.</li>
 <li><code>minheap</code> stores results in a YAML file, which is also used to resume an interrupted execution.</li>
 <li><code>minheap</code> prints the minheap values of the best config at the ends.</li>
 <li><code>runbms</code> gains an extra argument, <code>--resume</code>, to resume an interrupted execution from a log folder.</li>
@@ -1365,13 +1392,13 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>runbms</code> outputs a warning message if more than one users are logged in.</li>
 <li><code>runbms</code> uses uppercase letters if there are more than 26 configs.</li>
 </ul>
-<h4 id="modifiers-8"><a class="header" href="#modifiers-8">Modifiers</a></h4>
+<h4 id="modifiers-7"><a class="header" href="#modifiers-7">Modifiers</a></h4>
 <ul>
 <li><code>ModifierSet</code></li>
 <li><code>Wrapper</code></li>
 <li><code>JSArg</code></li>
 </ul>
-<h4 id="runtimes-3"><a class="header" href="#runtimes-3">Runtimes</a></h4>
+<h4 id="runtimes-2"><a class="header" href="#runtimes-2">Runtimes</a></h4>
 <ul>
 <li><code>D8</code></li>
 <li><code>SpiderMonkey</code></li>
@@ -1383,7 +1410,7 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>DaCapo</code> gains an extra key <code>size</code>, which is used to specify the size of the input.</li>
 <li><code>DaCapo</code> now allows individual benchmark to override the timing iteration, input size, and timeout of the suite.</li>
 <li><code>SPECjbb2015</code>: basic support for running SPECjbb 2015 in composite mode.</li>
-<li><code>Octane</code>: basic support for running Octane using Wenyu's wrapper script.</li>
+<li><code>Octane</code>: basic support for running Octane using Wenyu’s wrapper script.</li>
 </ul>
 <h3 id="changed-10"><a class="header" href="#changed-10">Changed</a></h3>
 <h4 id="benchmark-suites-9"><a class="header" href="#benchmark-suites-9">Benchmark Suites</a></h4>
@@ -1420,14 +1447,14 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>minheap</code></li>
 <li><code>runbms</code></li>
 </ul>
-<h4 id="modifiers-9"><a class="header" href="#modifiers-9">Modifiers</a></h4>
+<h4 id="modifiers-8"><a class="header" href="#modifiers-8">Modifiers</a></h4>
 <ul>
 <li><code>JVMArg</code></li>
 <li><code>JVMClasspath</code></li>
 <li><code>EnvVar</code></li>
 <li><code>ProgramArg</code></li>
 </ul>
-<h4 id="runtimes-4"><a class="header" href="#runtimes-4">Runtimes</a></h4>
+<h4 id="runtimes-3"><a class="header" href="#runtimes-3">Runtimes</a></h4>
 <ul>
 <li><code>NativeExecutable</code></li>
 <li><code>OpenJDK</code></li>
@@ -1461,6 +1488,11 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 
         </div>
 
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
 
 
@@ -1469,13 +1501,13 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
         </script>
 
 
-        <script src="elasticlunr.min.js"></script>
-        <script src="mark.min.js"></script>
-        <script src="searcher.js"></script>
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
 
-        <script src="clipboard.min.js"></script>
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
 
