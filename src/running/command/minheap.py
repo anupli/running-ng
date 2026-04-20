@@ -223,7 +223,6 @@ def run(args):
     attempts = configuration.get("attempts")
     if args.get("attempts"):
         attempts = args.get("attempts")
-    configuration.resolve_class()
     log_dir: Optional[Path] = None
     log_dir_base = args.get("log_dir")
     if log_dir_base is not None:
@@ -240,6 +239,7 @@ def run(args):
                 yaml.dump(args, fd)
             with (run_log_dir / "minheap.yml").open("w") as fd:
                 configuration.save_to_file(fd)
+    configuration.resolve_class()
     with tempfile.TemporaryDirectory(prefix="minheap-") as minheap_dir:
         logging.info("Temporary directory: {}".format(minheap_dir))
         if is_dry_run():
