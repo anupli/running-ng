@@ -47,13 +47,19 @@ dacapochopin-69a704e:
 
 ## Usage
 ```console
-minheap [-h] [-a|--attempts ATTEMPTS] CONFIG RESULT
+minheap [-h] [-a|--attempts ATTEMPTS] [--log-dir LOG_DIR] [-p|--id-prefix ID_PREFIX] CONFIG RESULT
 ```
 
 `-h`: print help message.
 
 `-a`  (preview ⚠️): set the number of attempts.
 Overrides `attempts` in the config file.
+
+`--log-dir`: if specified, persist per-run benchmark logs under `LOG_DIR/RUN_ID/` using the same run-id layout and log filename format as `runbms`.
+`minheap_args.yml` and `minheap.yml` are also stored in that run directory.
+If omitted, `minheap` keeps using a temporary working directory and does not preserve benchmark logs after exit.
+
+`-p`: add a prefix to the generated run directory name, matching `runbms`.
 
 `CONFIG`: the path to the configuration file.
 This is required.
