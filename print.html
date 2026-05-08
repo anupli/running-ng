@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0d8b3b89.js";
+            window.path_to_searchindex_js = "searchindex-bbd00ecd.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-768924a2.js"></script>
@@ -1141,6 +1141,9 @@ Just use <code>MMTK_WORK_PERF_EVENTS</code> instead of <code>MMTK_PHASE_PERF_EVE
 <li><code>runbms</code> gains an extra argument, <code>--randomize-configs</code>, to randomize the order of configs for each invocation to help distinguish between system-related noise and configuration-specific issues.</li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
+<ul>
+<li>Build system migrated to <a href="https://docs.astral.sh/uv/">uv</a>. The build backend is now <code>uv_build</code> (was <code>setuptools</code>), and dev tooling (<code>pytest</code>, <code>mypy</code>, <code>types-PyYAML</code>, <code>black</code>) has moved from the <code>tests</code> extra into the PEP 735 <code>dev</code> dependency group. The <code>zulip</code> extra is unchanged. To install for development: <code>uv sync --group dev --extra zulip</code> (replaces <code>pip install -e .[zulip,tests]</code>).</li>
+</ul>
 <h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
