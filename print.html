@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bbd00ecd.js";
+            window.path_to_searchindex_js = "searchindex-1de9a91a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-768924a2.js"></script>
@@ -1014,11 +1014,15 @@ dacapochopin-69a704e:
   zxing: 97
 </code></pre>
 <h2 id="usage-2"><a class="header" href="#usage-2">Usage</a></h2>
-<pre><code class="language-console">minheap [-h] [-a|--attempts ATTEMPTS] CONFIG RESULT
+<pre><code class="language-console">minheap [-h] [-a|--attempts ATTEMPTS] [--log-dir LOG_DIR] [-p|--id-prefix ID_PREFIX] CONFIG RESULT
 </code></pre>
 <p><code>-h</code>: print help message.</p>
 <p><code>-a</code>  (preview ⚠️): set the number of attempts.
 Overrides <code>attempts</code> in the config file.</p>
+<p><code>--log-dir</code>: if specified, persist per-run benchmark logs under <code>LOG_DIR/RUN_ID/</code> using the same run-id layout and log filename format as <code>runbms</code>.
+<code>minheap_args.yml</code> and <code>minheap.yml</code> are also stored in that run directory.
+If omitted, <code>minheap</code> keeps using a temporary working directory and does not preserve benchmark logs after exit.</p>
+<p><code>-p</code>: add a prefix to the generated run directory name, matching <code>runbms</code>.</p>
 <p><code>CONFIG</code>: the path to the configuration file.
 This is required.</p>
 <p><code>RESULT</code>: where to store the results.
