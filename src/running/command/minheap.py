@@ -54,12 +54,12 @@ def run_bm_with_retry(
     log(" ")
     for _ in range(attempts):
         fd: Optional[BinaryIO] = None
-        if log_dir is not None and not is_dry_run():
-            log_path = log_dir / get_filename(bm_with_heapsize, None, heapsize, config)
-            fd = log_path.open("ab")
-            prologue = get_log_prologue(runtime, bm_with_heapsize)
-            fd.write(prologue.encode("ascii"))
         try:
+            if log_dir is not None and not is_dry_run():
+                log_path = log_dir / get_filename(bm_with_heapsize, None, heapsize, config)
+                fd = log_path.open("ab")
+                prologue = get_log_prologue(runtime, bm_with_heapsize)
+                fd.write(prologue.encode("ascii"))
             output, companion_output, subprocess_exit = bm_with_heapsize.run(
                 runtime, cwd=minheap_dir
             )
