@@ -1,12 +1,14 @@
+import enum
+import functools
+import gzip
+import os
+import re
+from collections.abc import Callable
 from copy import deepcopy
 from pathlib import Path
-import gzip
-import enum
-from typing import Any, Callable, Dict, List
-import functools
-import re
+from typing import Any
+
 from running.config import Configuration
-import os
 
 MMTk_HEADER = (
     "============================ MMTk Statistics Totals ============================"
@@ -32,7 +34,7 @@ def setup_parser(subparsers):
 
 
 def filter_stats(predicate: Callable[[str], bool]):
-    def inner(stats: Dict[str, float]):
+    def inner(stats: dict[str, float]):
         return {k: v for (k, v) in stats.items() if predicate(k)}
 
     return inner
@@ -41,7 +43,7 @@ def filter_stats(predicate: Callable[[str], bool]):
 def reduce_stats(pattern: str, new_column: str, func):
     compiled = re.compile(pattern)
 
-    def inner(stats: Dict[str, float]):
+    def inner(stats: dict[str, float]):
         to_reduce = [v for (k, v) in stats.items() if compiled.match(k)]
         if not to_reduce:
             return stats
@@ -53,17 +55,17 @@ def reduce_stats(pattern: str, new_column: str, func):
 
 
 def sum_work_perf_event(event_name):
-    pattern = "work\\.\\w+\\.{}\\.total".format(event_name)
-    new_column = "work.{}.total".format(event_name)
+    pattern = f"work\\.\\w+\\.{event_name}\\.total"
+    new_column = f"work.{event_name}.total"
     return reduce_stats(pattern, new_column, lambda x, y: x + y)
 
 
 def ratio_work_perf_event(event_name: str):
-    pattern = "work\\.\\w+\\.{}\\.total".format(event_name)
-    aggregated_column = "work.{}.total".format(event_name)
+    pattern = f"work\\.\\w+\\.{event_name}\\.total"
+    aggregated_column = f"work.{event_name}.total"
     compiled = re.compile(pattern)
 
-    def inner(stats: Dict[str, float]):
+    def inner(stats: dict[str, float]):
         new_stats = deepcopy(stats)
         for k, v in stats.items():
             if compiled.match(k):
@@ -75,35 +77,35 @@ def ratio_work_perf_event(event_name: str):
 
 
 def ratio_event(event_name: str):
-    def inner(stats: Dict[str, float]):
+    def inner(stats: dict[str, float]):
         new_stats = deepcopy(stats)
-        stw_key = "{}.stw".format(event_name)
-        other_key = "{}.other".format(event_name)
+        stw_key = f"{event_name}.stw"
+        other_key = f"{event_name}.other"
         if stw_key in stats and other_key in stats:
             gc = stats[stw_key]
             mu = stats[other_key]
             total = gc + mu
-            new_stats["{}.ratio".format(stw_key)] = gc / total
-            new_stats["{}.ratio".format(other_key)] = mu / total
+            new_stats[f"{stw_key}.ratio"] = gc / total
+            new_stats[f"{other_key}.ratio"] = mu / total
         return new_stats
 
     return inner
 
 
-def calc_ipc(stats: Dict[str, float]):
+def calc_ipc(stats: dict[str, float]):
     new_stats = deepcopy(stats)
     for phase in ["mu", "gc"]:
-        inst = stats.get("PERF_COUNT_HW_INSTRUCTIONS.{}".format(phase))
-        cycles = stats.get("PERF_COUNT_HW_CPU_CYCLES.{}".format(phase))
+        inst = stats.get(f"PERF_COUNT_HW_INSTRUCTIONS.{phase}")
+        cycles = stats.get(f"PERF_COUNT_HW_CPU_CYCLES.{phase}")
         if inst is not None and cycles is not None:
             if cycles == 0:
                 assert inst == 0
                 continue
-            new_stats["INSTRUCTIONS_PER_CYCLE.{}".format(phase)] = inst / cycles
+            new_stats[f"INSTRUCTIONS_PER_CYCLE.{phase}"] = inst / cycles
     return new_stats
 
 
-def calc_work_ipc(stats: Dict[str, float]):
+def calc_work_ipc(stats: dict[str, float]):
     pattern = "work\\.\\w+\\.PERF_COUNT_HW_INSTRUCTIONS\\.total"
     compiled = re.compile(pattern)
     new_stats = deepcopy(stats)
@@ -124,11 +126,11 @@ def stat_sort_helper(key: str, value: float):
         return key, -value
 
 
-def process_lines(configuration: Configuration, lines: List[str]):
+def process_lines(configuration: Configuration, lines: list[str]):
     new_lines = []
     editing = EditingMode.NotEditing
     names = []
-    funcs: List[Any]
+    funcs: list[Any]
     funcs = []
     if configuration.get("preprocessing") is None:
         funcs = []

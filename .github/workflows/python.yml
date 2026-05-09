@@ -7,12 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        # 3.10–3.14 covers the default Python in Ubuntu 22.04 through 26.04
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -20,36 +21,87 @@ jobs:
       - name: Test with pytest
         run: |
           for f in tests/test_*.py; do uv run pytest "$f"; done
-  mypy:
+  ty:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"]
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
-          python-version: ${{ matrix.python-version }}
-# https://github.com/python/mypy/issues/10600
+          python-version: "3.14"
       - name: Install dependencies
         run: uv sync --group dev --extra zulip
-      - name: Test with mypy
-        run: uv run mypy --check-untyped-defs src/running
-  black:
+      - name: Type check with ty
+        run: uv run ty check src/running
+  ruff:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"]
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.14"
       - name: Install dependencies
         run: uv sync --group dev --extra zulip
-      - name: Test with black
-        run: uv run black --check src tests
+      - name: Lint with ruff
+        run: uv run ruff check src tests
+      - name: Check formatting with ruff
+        run: uv run ruff format --check src tests
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          python-version: "3.14"
+      - name: Build wheel and sdist
+        run: uv build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+  smoke-test:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-latest]
+    steps:
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Download wheel
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+      - name: Install running-ng
+        run: pip install running_ng-*.whl
+      - name: Download DaCapo
+        run: |
+          curl -sL -o dacapo.zip https://download.dacapobench.org/chopin/dacapo-23.11-MR2-chopin-minimal.zip
+          unzip -q dacapo.zip
+          ls *.jar
+      - name: Run smoke test
+        run: |
+          cat > ci_smoke.yml << EOF
+          includes:
+            - "\$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
+          overrides:
+            "suites.dacapochopin.path": "$PWD/dacapo-23.11-MR2-chopin-minimal.jar"
+            "suites.dacapochopin.timing_iteration": 1
+          runtimes:
+            ci-temurin:
+              type: OpenJDK
+              release: 21
+              home: "$JAVA_HOME"
+          configs:
+            - "ci-temurin|dacapochopin_jdk21"
+          benchmarks:
+            dacapochopin:
+              - fop
+          EOF
+          running runbms /tmp/ci_test ci_smoke.yml -s 2 -i 1 --exit-on-failure

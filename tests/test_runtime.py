@@ -9,7 +9,10 @@ def test_openjdk_path_ennvvar():
                     "type": "OpenJDK",
                     "release": 21,
                     # some bogus environment variable that will not be expanded
-                    "home": "$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI/temurin-21-jdk-amd64",
+                    "home": (
+                        "$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI"
+                        "/temurin-21-jdk-amd64"
+                    ),
                 },
                 "temurin-21": {
                     "type": "OpenJDK",

@@ -1,29 +1,30 @@
-from running.modifier import JVMArg, Modifier, JSArg, EnvVar
-from typing import Any, Dict, List, Union
-from pathlib import Path
 import logging
-from running.util import register
 import os.path
+from pathlib import Path
+from typing import Any
+
+from running.modifier import EnvVar, JSArg, JVMArg, Modifier
+from running.util import register
 
 
-class Runtime(object):
-    CLS_MAPPING: Dict[str, Any]
+class Runtime:
+    CLS_MAPPING: dict[str, Any]
     CLS_MAPPING = {}
 
     def __init__(self, name: str, **kwargs):
         self.name = name
 
     @staticmethod
-    def from_config(name: str, config: Dict[str, str]) -> Any:
+    def from_config(name: str, config: dict[str, str]) -> Any:
         return Runtime.CLS_MAPPING[config["type"]](name=name, **config)
 
-    def get_executable(self) -> Union[str, Path]:
+    def get_executable(self) -> str | Path:
         raise NotImplementedError
 
-    def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
+    def get_heapsize_modifiers(self, size: int) -> list[Modifier]:
         raise NotImplementedError
 
-    def is_oom(self, _output: bytes) -> bool:
+    def is_oom(self, output: bytes) -> bool:
         raise NotImplementedError
 
 
@@ -32,10 +33,10 @@ class DummyRuntime(Runtime):
         super().__init__(name="dummy")
         self.executable = executable
 
-    def get_executable(self) -> Union[str, Path]:
+    def get_executable(self) -> str | Path:
         return self.executable
 
-    def is_oom(self, _output: bytes) -> bool:
+    def is_oom(self, output: bytes) -> bool:
         return False
 
 
@@ -44,10 +45,10 @@ class NativeExecutable(Runtime):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get_executable(self) -> Union[str, Path]:
+    def get_executable(self) -> str | Path:
         return ""
 
-    def is_oom(self, _output: bytes) -> bool:
+    def is_oom(self, output: bytes) -> bool:
         return False
 
 
@@ -59,13 +60,13 @@ class JVM(Runtime):
         raise NotImplementedError
 
     def __str__(self):
-        return "JVM {}".format(self.name)
+        return f"JVM {self.name}"
 
-    def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
-        size_str = "{}M".format(size)
+    def get_heapsize_modifiers(self, size: int) -> list[Modifier]:
+        size_str = f"{size}M"
         heapsize = JVMArg(
-            name="heap{}".format(size_str),
-            val="-Xms{} -Xmx{}".format(size_str, size_str),
+            name=f"heap{size_str}",
+            val=f"-Xms{size_str} -Xmx{size_str}",
         )
         return [heapsize]
 
@@ -93,17 +94,17 @@ class OpenJDK(JVM):
         self.home: Path
         self.home = Path(os.path.expandvars(kwargs["home"]))
         if not self.home.exists():
-            logging.warning("OpenJDK home {} doesn't exist".format(self.home))
+            logging.warning(f"OpenJDK home {self.home} doesn't exist")
         self.executable = self.home / "bin" / "java"
         if not self.executable.exists():
-            logging.warning("{} not found in OpenJDK home".format(self.executable))
+            logging.warning(f"{self.executable} not found in OpenJDK home")
         self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
         return self.executable
 
     def __str__(self):
-        return "{} OpenJDK {} {}".format(super().__str__(), self.release, self.home)
+        return f"{super().__str__()} OpenJDK {self.release} {self.home}"
 
 
 @register(Runtime)
@@ -113,17 +114,17 @@ class JikesRVM(JVM):
         self.home: Path
         self.home = Path(os.path.expandvars(kwargs["home"]))
         if not self.home.exists():
-            logging.warning("JikesRVM home {} doesn't exist".format(self.home))
+            logging.warning(f"JikesRVM home {self.home} doesn't exist")
         self.executable = self.home / "rvm"
         if not self.home.exists():
-            logging.warning("{} not found in JikesRVM home".format(self.executable))
+            logging.warning(f"{self.executable} not found in JikesRVM home")
         self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
         return self.executable
 
     def __str__(self):
-        return "{} JikesRVM {}".format(super().__str__(), self.home)
+        return f"{super().__str__()} JikesRVM {self.home}"
 
 
 class JavaScriptRuntime(Runtime):
@@ -133,7 +134,7 @@ class JavaScriptRuntime(Runtime):
         self.executable = Path(os.path.expandvars(kwargs["executable"]))
         if not self.executable.exists():
             logging.warning(
-                "JavaScriptRuntime executable {} doesn't exist".format(self.executable)
+                f"JavaScriptRuntime executable {self.executable} doesn't exist"
             )
         self.executable = self.executable.absolute()
 
@@ -144,22 +145,27 @@ class JavaScriptRuntime(Runtime):
 @register(Runtime)
 class D8(JavaScriptRuntime):
     def __str__(self):
-        return "{} d8 {}".format(super().__str__(), self.executable)
+        return f"{super().__str__()} d8 {self.executable}"
 
-    def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
-        size_str = "{}".format(size)
+    def get_heapsize_modifiers(self, size: int) -> list[Modifier]:
+        size_str = f"{size}"
         heapsize = JSArg(
-            name="heap{}".format(size_str),
-            val="--initial-heap-size={} --max-heap-size={}".format(size_str, size_str),
+            name=f"heap{size_str}",
+            val=f"--initial-heap-size={size_str} --max-heap-size={size_str}",
         )
         return [heapsize]
 
     def is_oom(self, output: bytes) -> bool:
-        # The format is "Fatal javascript OOM in ..." or "Fatal JavaScript out of memory"
+        # The format is "Fatal javascript OOM in ..."
+        # or "Fatal JavaScript out of memory"
         # such as "Fatal javascript OOM in Reached heap limit"
-        # or "Fatal javascript OOM in Ineffective mark-compacts near heap limit"
+        # or "Fatal javascript OOM in Ineffective mark-compacts
+        #     near heap limit"
         # or "Fatal JavaScript out of memory: Reached heap limit"
-        for pattern in [b"Fatal javascript OOM in", b"Fatal JavaScript out of memory"]:
+        for pattern in [
+            b"Fatal javascript OOM in",
+            b"Fatal JavaScript out of memory",
+        ]:
             if pattern in output:
                 return True
         return False
@@ -168,14 +174,12 @@ class D8(JavaScriptRuntime):
 @register(Runtime)
 class SpiderMonkey(JavaScriptRuntime):
     def __str__(self):
-        return "{} SpiderMonkey {}".format(super().__str__(), self.executable)
+        return f"{super().__str__()} SpiderMonkey {self.executable}"
 
-    def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
-        size_str = "{}".format(size)
+    def get_heapsize_modifiers(self, size: int) -> list[Modifier]:
+        size_str = f"{size}"
         # FIXME doesn't seem to be working
-        heapsize = JSArg(
-            name="heap{}".format(size_str), val="--available-memory={}".format(size_str)
-        )
+        heapsize = JSArg(name=f"heap{size_str}", val=f"--available-memory={size_str}")
         return [heapsize]
 
     def is_oom(self, output: bytes) -> bool:
@@ -186,14 +190,12 @@ class SpiderMonkey(JavaScriptRuntime):
 @register(Runtime)
 class JavaScriptCore(JavaScriptRuntime):
     def __str__(self):
-        return "{} JavaScriptCore {}".format(super().__str__(), self.executable)
+        return f"{super().__str__()} JavaScriptCore {self.executable}"
 
-    def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
-        size_str = "{}".format(size)
+    def get_heapsize_modifiers(self, size: int) -> list[Modifier]:
+        size_str = f"{size}"
         # FIXME doesn't seem to be working
-        heapsize = JSArg(
-            name="heap{}".format(size_str), val="--gcMaxHeapSize={}".format(size_str)
-        )
+        heapsize = JSArg(name=f"heap{size_str}", val=f"--gcMaxHeapSize={size_str}")
         return [heapsize]
 
     def is_oom(self, output: bytes) -> bool:
@@ -207,31 +209,27 @@ class Julia(Runtime):
         self.executable: Path
         self.executable = Path(os.path.expandvars(kwargs["executable"]))
         if not self.executable.exists():
-            logging.warning("Julia executable {} doesn't exist".format(self.executable))
+            logging.warning(f"Julia executable {self.executable} doesn't exist")
         self.executable = self.executable.absolute()
 
     def get_executable(self) -> Path:
         return self.executable
 
     def __str__(self):
-        return "Julia {} {}".format(self.name, self.executable)
+        return f"Julia {self.name} {self.executable}"
 
 
 @register(Runtime)
 class JuliaMMTK(Julia):
-    def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
+    def get_heapsize_modifiers(self, size: int) -> list[Modifier]:
         # size in MB
-        size_str = "{}".format(size)
-        min = EnvVar(
-            name="minheap{}".format(size_str), var="MMTK_MIN_HSIZE", val=size_str
-        )
-        max = EnvVar(
-            name="maxheap{}".format(size_str), var="MMTK_MAX_HSIZE", val=size_str
-        )
+        size_str = f"{size}"
+        min = EnvVar(name=f"minheap{size_str}", var="MMTK_MIN_HSIZE", val=size_str)
+        max = EnvVar(name=f"maxheap{size_str}", var="MMTK_MAX_HSIZE", val=size_str)
         return [min, max]
 
     def __str__(self):
-        return "{} with MMTk".format(super().__str__())
+        return f"{super().__str__()} with MMTk"
 
     def is_oom(self, output: bytes) -> bool:
         return b"Out of Memory!" in output
@@ -239,11 +237,11 @@ class JuliaMMTK(Julia):
 
 @register(Runtime)
 class JuliaStock(Julia):
-    def get_heapsize_modifiers(self, size: int) -> List[Modifier]:
+    def get_heapsize_modifiers(self, size: int) -> list[Modifier]:
         return []
 
     def __str__(self):
-        return "{} stock version".format(super().__str__())
+        return f"{super().__str__()} stock version"
 
     def is_oom(self, output: bytes) -> bool:
         return False

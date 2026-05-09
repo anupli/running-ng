@@ -9,9 +9,10 @@ uv tool install running-ng
 pipx install running-ng
 ```
 
-There are two [extras](https://peps.python.org/pep-0508/#extras) available.
+There is one [extra](https://peps.python.org/pep-0508/#extras) available.
 - `zulip`: dependencies for the `Zulip` `runbms` plugin, useful for users.
-- `tests`: dependencies for running tests, useful for package developers.
+
+Dev dependencies (`pytest`, `ruff`, `ty`) are in the `dev` [dependency group](https://peps.python.org/pep-0735/) — see **Development setup** below.
 
 To install with the `zulip` extra, append `[zulip]` to the package name, e.g. `uv tool install 'running-ng[zulip]'` or `pipx install 'running-ng[zulip]'`.
 
@@ -20,11 +21,11 @@ This project uses [`uv`](https://docs.astral.sh/uv/). Install `uv` first, then:
 ```bash
 uv sync --group dev --extra zulip
 ```
-This creates a `.venv/` and installs all runtime, optional (`zulip`), and dev (`pytest`, `mypy`, `black`) dependencies pinned in `uv.lock`.
+This creates a `.venv/` and installs all runtime, optional (`zulip`), and dev (`pytest`, `ruff`, `ty`, `types-PyYAML`) dependencies pinned in `uv.lock`.
 
-Run any tool inside the project environment with `uv run`, e.g. `uv run running <subcommand>`, `uv run pytest`, `uv run mypy --check-untyped-defs src/running`, `uv run black src tests`.
+Run any tool inside the project environment with `uv run`, e.g. `uv run running <subcommand>`, `uv run pytest`, `uv run ruff check src tests`, `uv run ty check src/running`.
 
-- To make a distribution archives, run `uv build`.
+- To build distribution archives, run `uv build`.
 - To install to user `site-packages`, run `pip install dist/running_ng-<VERSION>-py3-none-any.whl` (or `uv tool install dist/running_ng-<VERSION>-py3-none-any.whl`).
 - To upload to PyPI, run `uv publish dist/*<VERSION>*` (you can also still use `twine upload --repository running-ng dist/*<VERSION>*`).
 

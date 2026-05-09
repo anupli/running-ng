@@ -1,20 +1,22 @@
-from typing import Optional, TYPE_CHECKING
+import copy
+import logging
+from datetime import datetime, timedelta
+from typing import TYPE_CHECKING
+
 import zulip
+
+from running.command.runbms import hfac_str
 from running.plugin.runbms import RunbmsPlugin
+from running.suite import is_dry_run
 from running.util import (
     Moma,
-    register,
     MomaReservationStatus,
     config_index_to_chr,
-    get_logged_in_users,
-    system,
     detect_rogue_processes,
+    get_logged_in_users,
+    register,
+    system,
 )
-import logging
-import copy
-from running.suite import is_dry_run
-from running.command.runbms import hfac_str
-from datetime import datetime, timedelta
 
 if TYPE_CHECKING:
     from running.benchmark import Benchmark
@@ -45,21 +47,21 @@ class Zulip(RunbmsPlugin):
 
     def send_message(self, content):
         message_data = copy.deepcopy(self.request)
-        message_data["content"] = "{}\n{}{}{}{}\n".format(
-            self.run_id,
-            self.get_reservation_message(),
-            self.get_user_warnings(),
-            self.get_rogue_process_warnings(),
-            content,
+        message_data["content"] = (
+            f"{self.run_id}\n"
+            f"{self.get_reservation_message()}"
+            f"{self.get_user_warnings()}"
+            f"{self.get_rogue_process_warnings()}"
+            f"{content}\n"
         )
         try:
             result = self.client.send_message(message_data=message_data)
             if result["result"] != "success":
-                logging.warning("Zulip send_message failed\n{}".format(result))
+                logging.warning(f"Zulip send_message failed\n{result}")
             else:
                 self.last_message_id = result["id"]
                 self.last_message_content = message_data["content"]
-        except:
+        except Exception:
             logging.exception("Unhandled Zulip send_message exception")
 
     def modify_message(self, content):
@@ -70,48 +72,44 @@ class Zulip(RunbmsPlugin):
         try:
             result = self.client.update_message(request)
             if result["result"] != "success":
-                logging.warning("Zulip update_message failed\n{}".format(result))
+                logging.warning(f"Zulip update_message failed\n{result}")
             else:
                 self.last_message_content = content
-        except:
+        except Exception:
             logging.exception("Unhandled Zulip update_message exception")
 
     def __str__(self) -> str:
-        return "Zulip {}".format(self.name)
+        return f"Zulip {self.name}"
 
-    def start_hfac(self, hfac: Optional[float]):
+    def start_hfac(self, hfac: float | None):
         if self.nop:
             return
         self.send_message(
             "hfac {} started".format(hfac_str(hfac) if hfac is not None else "None")
         )
 
-    def end_hfac(self, hfac: Optional[float]):
+    def end_hfac(self, hfac: float | None):
         if self.nop:
             return
         self.send_message(
             "hfac {} ended".format(hfac_str(hfac) if hfac is not None else "None")
         )
 
-    def start_benchmark(
-        self, _hfac: Optional[float], _size: Optional[int], bm: "Benchmark"
-    ):
+    def start_benchmark(self, hfac: float | None, size: int | None, bm: "Benchmark"):
         if self.nop:
             return
-        self.send_message("benchmark {} started".format(bm.name))
+        self.send_message(f"benchmark {bm.name} started")
 
-    def end_benchmark(
-        self, _hfac: Optional[float], _size: Optional[int], bm: "Benchmark"
-    ):
+    def end_benchmark(self, hfac: float | None, size: int | None, bm: "Benchmark"):
         if self.nop:
             return
-        self.send_message("benchmark {} ended".format(bm.name))
+        self.send_message(f"benchmark {bm.name} ended")
 
     def start_invocation(
         self,
-        _hfac: Optional[float],
-        _size: Optional[int],
-        _bm: "Benchmark",
+        hfac: float | None,
+        size: int | None,
+        bm: "Benchmark",
         invocation: int,
     ):
         if self.nop:
@@ -121,33 +119,33 @@ class Zulip(RunbmsPlugin):
 
     def end_invocation(
         self,
-        _hfac: Optional[float],
-        _size: Optional[int],
-        _bm: "Benchmark",
-        _invocation: int,
+        hfac: float | None,
+        size: int | None,
+        bm: "Benchmark",
+        invocation: int,
     ):
         if self.nop:
             return
 
     def start_config(
         self,
-        _hfac: Optional[float],
-        _size: Optional[int],
-        _bm: "Benchmark",
-        _invocation: int,
-        _config: str,
-        _config_index: int,
+        hfac: float | None,
+        size: int | None,
+        bm: "Benchmark",
+        invocation: int,
+        config: str,
+        config_index: int,
     ):
         if self.nop:
             return
 
     def end_config(
         self,
-        _hfac: Optional[float],
-        _size: Optional[int],
-        _bm: "Benchmark",
-        _invocation: int,
-        _config: str,
+        hfac: float | None,
+        size: int | None,
+        bm: "Benchmark",
+        invocation: int,
+        config: str,
         config_index: int,
         passed: bool,
     ):
@@ -170,15 +168,21 @@ class Zulip(RunbmsPlugin):
         elif reservation.status is MomaReservationStatus.NOT_RESERVED:
             return "# ** Warning: machine not reserved. **\n"
         elif reservation.status is MomaReservationStatus.RESERVED_BY_OTHERS:
-            return "# ** Warning: machine reserved by {}, ends at {}. **\n".format(
-                reservation.user, reservation.end
+            return (
+                f"# ** Warning: machine reserved by"
+                f" {reservation.user},"
+                f" ends at {reservation.end}. **\n"
             )
         elif reservation.status is MomaReservationStatus.RESERVED_BY_ME:
             assert reservation.end is not None
             delta = reservation.end - datetime.now()
             if delta < RESERVATION_WARNING_THRESHOLD:
-                return "# ** Warning: less than {} hours of reservation left. Current reservation ends at {}. **\n".format(
-                    RESERVATION_WARNING_HOURS, reservation.end
+                return (
+                    f"# ** Warning: less than"
+                    f" {RESERVATION_WARNING_HOURS}"
+                    f" hours of reservation left."
+                    f" Current reservation ends"
+                    f" at {reservation.end}. **\n"
                 )
             else:
                 return ""
@@ -203,8 +207,10 @@ class Zulip(RunbmsPlugin):
 
         warning = "# ** Warning: High CPU usage processes detected: **\n"
         for pid, user, cpu_percent, command in rogue_processes:
-            warning += "- Process {} (PID: {}, User: {}) using {:.1f}% CPU\n".format(
-                command, pid, user, cpu_percent
+            warning += (
+                f"- Process {command}"
+                f" (PID: {pid}, User: {user})"
+                f" using {cpu_percent:.1f}% CPU\n"
             )
 
         return warning

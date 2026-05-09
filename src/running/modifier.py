@@ -1,13 +1,14 @@
-from typing import Any, Dict, List, TYPE_CHECKING
-from running.util import register, smart_quote, split_quoted, parse_modifier_strs
 import copy
+from typing import TYPE_CHECKING, Any
+
+from running.util import parse_modifier_strs, register, smart_quote, split_quoted
 
 if TYPE_CHECKING:
     from running.config import Configuration
 
 
-class Modifier(object):
-    CLS_MAPPING: Dict[str, Any]
+class Modifier:
+    CLS_MAPPING: dict[str, Any]
     CLS_MAPPING = {}
 
     def __init__(self, value_opts=None, **kwargs):
@@ -15,9 +16,8 @@ class Modifier(object):
         self.value_opts = value_opts
         if "-" in self.name:
             raise ValueError(
-                "Modifier {} has - in its name. - is reserved for value options.".format(
-                    self.name
-                )
+                f"Modifier {self.name} has - in its name."
+                " - is reserved for value options."
             )
         self.__original_kwargs = kwargs
         self._kwargs = copy.deepcopy(kwargs)
@@ -29,12 +29,12 @@ class Modifier(object):
                 if type(v) is not str:
                     continue
                 try:
-                    self._kwargs[k] = v.format(*value_opts)
+                    self._kwargs[k] = v.format(*self.value_opts)
                 except IndexError:
                     pass
 
     @staticmethod
-    def from_config(name: str, config: Dict[str, str]) -> Any:
+    def from_config(name: str, config: dict[str, str]) -> Any:
         return Modifier.CLS_MAPPING[config["type"]](name=name, **config)
 
     def apply_value_opts(self, value_opts):
@@ -55,7 +55,7 @@ class Modifier(object):
         return True
 
     def __str__(self) -> str:
-        return "Modifier {}".format(self.name)
+        return f"Modifier {self.name}"
 
 
 @register(Modifier)
@@ -64,7 +64,7 @@ class ModifierSet(Modifier):
         super().__init__(value_opts, **kwargs)
         self.val = self._kwargs["val"].split("|")
 
-    def flatten(self, configuration: "Configuration") -> List[Modifier]:
+    def flatten(self, configuration: "Configuration") -> list[Modifier]:
         return parse_modifier_strs(configuration, self.val)
 
     def __str__(self) -> str:
@@ -78,7 +78,7 @@ class JVMArg(Modifier):
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} JVMArg {}".format(super().__str__(), self.val)
+        return f"{super().__str__()} JVMArg {self.val}"
 
 
 @register(Modifier)
@@ -88,7 +88,7 @@ class JVMClasspathAppend(Modifier):
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} JVMClasspathAppend {}".format(super().__str__(), self.val)
+        return f"{super().__str__()} JVMClasspathAppend {self.val}"
 
 
 @register(Modifier)
@@ -104,7 +104,7 @@ class JVMClasspathPrepend(Modifier):
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} JVMClasspathPrepend {}".format(super().__str__(), self.val)
+        return f"{super().__str__()} JVMClasspathPrepend {self.val}"
 
 
 @register(Modifier)
@@ -113,23 +113,19 @@ class EnvVar(Modifier):
         super().__init__(value_opts, **kwargs)
         if "var" not in self._kwargs:
             raise ValueError(
-                "Please specify the name of the environment variable for modifier {}".format(
-                    self.name
-                )
+                "Please specify the name of the environment"
+                f" variable for modifier {self.name}"
             )
         if "val" not in self._kwargs:
             raise ValueError(
-                "Please specify the value for the environment variable for modifier {}".format(
-                    self.name
-                )
+                "Please specify the value for the environment"
+                f" variable for modifier {self.name}"
             )
         self.var = self._kwargs["var"]
         self.val = self._kwargs["val"]
 
     def __str__(self) -> str:
-        return "{} EnvVar {}={}".format(
-            super().__str__(), self.var, smart_quote(self.val)
-        )
+        return f"{super().__str__()} EnvVar {self.var}={smart_quote(self.val)}"
 
 
 @register(Modifier)
@@ -139,7 +135,7 @@ class ProgramArg(Modifier):
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} ProgramArg {}".format(super().__str__(), self.val)
+        return f"{super().__str__()} ProgramArg {self.val}"
 
 
 @register(Modifier)
@@ -149,7 +145,7 @@ class Wrapper(Modifier):
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} Wrapper {}".format(super().__str__(), self.val)
+        return f"{super().__str__()} Wrapper {self.val}"
 
 
 @register(Modifier)
@@ -159,7 +155,7 @@ class JSArg(Modifier):
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} JSArg {}".format(super().__str__(), self.val)
+        return f"{super().__str__()} JSArg {self.val}"
 
 
 @register(Modifier)
@@ -169,7 +165,7 @@ class Companion(Modifier):
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} Companion {}".format(super().__str__(), self.val)
+        return f"{super().__str__()} Companion {self.val}"
 
 
 @register(Modifier)
@@ -179,7 +175,7 @@ class JuliaArg(Modifier):
         self.val = split_quoted(self._kwargs["val"])
 
     def __str__(self) -> str:
-        return "{} JuliaArg {}".format(super().__str__(), self.val)
+        return f"{super().__str__()} JuliaArg {self.val}"
 
 
 @register(Modifier)
@@ -188,4 +184,4 @@ class NoImplicitHeapsizeModifier(Modifier):
         super().__init__(value_opts, **kwargs)
 
     def __str__(self) -> str:
-        return "{} NoImplicitHeapsizeModifier".format(super().__str__())
+        return f"{super().__str__()} NoImplicitHeapsizeModifier"

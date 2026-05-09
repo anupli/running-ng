@@ -1,6 +1,13 @@
 from running.benchmark import JavaBenchmark
-from running.modifier import *
 from running.config import Configuration
+from running.modifier import (
+    EnvVar,
+    JVMArg,
+    JVMClasspath,
+    JVMClasspathAppend,
+    JVMClasspathPrepend,
+    ProgramArg,
+)
 from running.runtime import OpenJDK
 from running.util import dont_emit_heapsize_modifier
 

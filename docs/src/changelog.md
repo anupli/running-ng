@@ -7,11 +7,13 @@
 - `runbms` gains an extra argument, `--randomize-configs`, to randomize the order of configs for each invocation to help distinguish between system-related noise and configuration-specific issues.
 
 ### Changed
-- Build system migrated to [uv](https://docs.astral.sh/uv/). The build backend is now `uv_build` (was `setuptools`), and dev tooling (`pytest`, `mypy`, `types-PyYAML`, `black`) has moved from the `tests` extra into the PEP 735 `dev` dependency group. The `zulip` extra is unchanged. To install for development: `uv sync --group dev --extra zulip` (replaces `pip install -e .[zulip,tests]`).
+- Build system migrated to [uv](https://docs.astral.sh/uv/). The build backend is now `uv_build` (was `setuptools`), and dev tooling (`pytest`, `ruff`, `ty`) has moved from the `tests` extra into the PEP 735 `dev` dependency group. The `zulip` extra is unchanged. To install for development: `uv sync --group dev --extra zulip` (replaces `pip install -e .[zulip,tests]`).
+- Dev tooling migrated from `black` + `mypy` to `ruff` + `ty` ([Astral](https://astral.sh/) toolchain).
 
 ### Deprecated
 
 ### Removed
+- Dropped Python 3.7–3.9 support for both users and developers. Python ≥3.10 is now required (Ubuntu 22.04+). This is needed for PEP 604 (`X | Y` union syntax) used throughout the codebase, and because several dependencies resolve to versions with known security vulnerabilities when constrained to Python <3.10.
 
 ### Fixed
 

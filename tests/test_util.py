@@ -1,10 +1,12 @@
+# ruff: noqa: E501, W291 — embedded top(1) output must preserve original formatting
 from pathlib import Path
+
 from running.config import Configuration
 from running.util import (
+    detect_rogue_processes,
     parse_config_str,
     smart_quote,
     split_quoted,
-    detect_rogue_processes,
 )
 
 
@@ -45,11 +47,12 @@ def test_issue104():
 
 def test_detect_rogue_processes():
     # Test with no rogue processes
-    top_output_normal = """top - 03:18:43 up 4 min,  1 user,  load average: 0.55, 0.35, 0.15
+    top_output_normal = """\
+top - 03:18:43 up 4 min,  1 user,  load average: 0.55, 0.35, 0.15
 Tasks: 181 total,   1 running, 180 sleeping,   0 stopped,   0 zombie
-%Cpu(s):  0.0 us,  2.2 sy,  0.0 ni, 97.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
-MiB Mem :  15995.6 total,  13333.4 free,   1396.1 used,   1616.3 buff/cache     
-MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  14599.5 avail Mem 
+%Cpu(s):  0.0 us,  2.2 sy,  0.0 ni, 97.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  15995.6 total,  13333.4 free,   1396.1 used,   1616.3 buff/cache
+MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  14599.5 avail Mem
 
     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
    3524 runner    20   0   12340   5384   3336 R  10.0   0.0   0:00.01 top -bcn 1 -w512
@@ -59,11 +62,12 @@ MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  14599.5 avail Mem
     assert len(rogue_processes) == 0
 
     # Test with one rogue process
-    top_output_rogue = """top - 03:18:43 up 4 min,  1 user,  load average: 0.55, 0.35, 0.15
+    top_output_rogue = """\
+top - 03:18:43 up 4 min,  1 user,  load average: 0.55, 0.35, 0.15
 Tasks: 181 total,   1 running, 180 sleeping,   0 stopped,   0 zombie
-%Cpu(s):  0.0 us,  2.2 sy,  0.0 ni, 97.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
-MiB Mem :  15995.6 total,  13333.4 free,   1396.1 used,   1616.3 buff/cache     
-MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  14599.5 avail Mem 
+%Cpu(s):  0.0 us,  2.2 sy,  0.0 ni, 97.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  15995.6 total,  13333.4 free,   1396.1 used,   1616.3 buff/cache
+MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  14599.5 avail Mem
 
     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
    1234 user      20   0  123456   7890   4567 S  85.3   0.1   0:12.34 rust-analyzer

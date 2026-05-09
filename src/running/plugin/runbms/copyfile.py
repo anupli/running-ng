@@ -1,11 +1,12 @@
 import os
+import shutil
 import stat
-from typing import List, Optional, TYPE_CHECKING
-from running.plugin.runbms import RunbmsPlugin
+from typing import TYPE_CHECKING
+
 from running.command.runbms import get_filename_no_ext
+from running.plugin.runbms import RunbmsPlugin
 from running.suite import is_dry_run
 from running.util import register
-import shutil
 
 if TYPE_CHECKING:
     from running.benchmark import Benchmark
@@ -22,7 +23,7 @@ class CopyFile(RunbmsPlugin):
         super().__init__(**kwargs)
         self.nop: bool
         self.nop = is_dry_run()
-        self.patterns: List[str]
+        self.patterns: list[str]
         self.patterns = kwargs.get("patterns", [])
         if type(self.patterns) is not list:
             raise TypeError("patterns of CopyFile must be a list")
@@ -31,33 +32,29 @@ class CopyFile(RunbmsPlugin):
             raise TypeError("skip_failed of CopyFile must be a bool")
 
     def __str__(self) -> str:
-        return "CopyFile {}".format(self.name)
+        return f"CopyFile {self.name}"
 
-    def start_hfac(self, hfac: Optional[float]):
+    def start_hfac(self, hfac: float | None):
         if self.nop:
             return
 
-    def end_hfac(self, _hfac: Optional[float]):
+    def end_hfac(self, hfac: float | None):
         if self.nop:
             return
 
-    def start_benchmark(
-        self, _hfac: Optional[float], _size: Optional[int], bm: "Benchmark"
-    ):
+    def start_benchmark(self, hfac: float | None, size: int | None, bm: "Benchmark"):
         if self.nop:
             return
 
-    def end_benchmark(
-        self, _hfac: Optional[float], _size: Optional[int], bm: "Benchmark"
-    ):
+    def end_benchmark(self, hfac: float | None, size: int | None, bm: "Benchmark"):
         if self.nop:
             return
 
     def start_invocation(
         self,
-        _hfac: Optional[float],
-        _size: Optional[int],
-        _bm: "Benchmark",
+        hfac: float | None,
+        size: int | None,
+        bm: "Benchmark",
         invocation: int,
     ):
         if self.nop:
@@ -65,34 +62,34 @@ class CopyFile(RunbmsPlugin):
 
     def end_invocation(
         self,
-        _hfac: Optional[float],
-        _size: Optional[int],
-        _bm: "Benchmark",
-        _invocation: int,
+        hfac: float | None,
+        size: int | None,
+        bm: "Benchmark",
+        invocation: int,
     ):
         if self.nop:
             return
 
     def start_config(
         self,
-        _hfac: Optional[float],
-        _size: Optional[int],
-        _bm: "Benchmark",
-        _invocation: int,
+        hfac: float | None,
+        size: int | None,
+        bm: "Benchmark",
+        invocation: int,
         config: str,
-        _config_index: int,
+        config_index: int,
     ):
         if self.nop:
             return
 
     def end_config(
         self,
-        hfac: Optional[float],
-        size: Optional[int],
+        hfac: float | None,
+        size: int | None,
         bm: "Benchmark",
         invocation: int,
         config: str,
-        _config_index: int,
+        config_index: int,
         passed: bool,
     ):
         if self.nop:
@@ -101,9 +98,7 @@ class CopyFile(RunbmsPlugin):
             raise ValueError("runbms_dir should be set")
         if self.log_dir is None:
             raise ValueError("log_dir should be set")
-        folder_name = "{}.{}".format(
-            get_filename_no_ext(bm, hfac, size, config), invocation
-        )
+        folder_name = f"{get_filename_no_ext(bm, hfac, size, config)}.{invocation}"
         if self.skip_failed and (not passed):
             # Do nothing if we skip failed invocation and the current invocation
             # didn't pass

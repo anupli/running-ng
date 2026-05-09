@@ -1,15 +1,29 @@
 import logging
+import os
 import subprocess
 import sys
-from time import sleep
-from typing import Callable, Sequence, TypeVar, List, Optional, Tuple, Union, Dict
-from running.runtime import D8, JavaScriptCore, Runtime, DummyRuntime, SpiderMonkey
-from running.modifier import *
-from running.util import smart_quote, split_quoted
-from pathlib import Path
+from collections.abc import Callable, Sequence
 from copy import deepcopy
-import os
 from enum import Enum
+from pathlib import Path
+from time import sleep
+from typing import TypeVar
+
+from running.modifier import (
+    Companion,
+    EnvVar,
+    JSArg,
+    JuliaArg,
+    JVMArg,
+    JVMClasspathAppend,
+    JVMClasspathPrepend,
+    Modifier,
+    ModifierSet,
+    ProgramArg,
+    Wrapper,
+)
+from running.runtime import D8, DummyRuntime, JavaScriptCore, Runtime, SpiderMonkey
+from running.util import smart_quote, split_quoted
 
 COMPANION_WAIT_START = 2.0
 
@@ -24,25 +38,25 @@ class SubprocessrExit(Enum):
 B = TypeVar("B", bound="Benchmark")
 
 
-class Benchmark(object):
+class Benchmark:
     def __init__(
         self,
         suite_name: str,
         name: str,
-        wrapper: Optional[str] = None,
-        timeout: Optional[int] = None,
-        override_cwd: Optional[Path] = None,
-        companion: Optional[str] = None,
-        runtime_specific_modifiers_strategy: Optional[
-            Callable[[Runtime], Sequence[Modifier]]
-        ] = None,
+        wrapper: str | None = None,
+        timeout: int | None = None,
+        override_cwd: Path | None = None,
+        companion: str | None = None,
+        runtime_specific_modifiers_strategy: (
+            Callable[[Runtime], Sequence[Modifier]] | None
+        ) = None,
         **kwargs,
     ):
         self.name = name
         self.suite_name = suite_name
-        self.env_args: Dict[str, str]
+        self.env_args: dict[str, str]
         self.env_args = {}
-        self.wrapper: List[str]
+        self.wrapper: list[str]
         if wrapper is not None:
             self.wrapper = split_quoted(wrapper)
         else:
@@ -52,7 +66,8 @@ class Benchmark(object):
         else:
             self.companion = []
         self.timeout = timeout
-        # ignore the current working directory provided by commands like runbms or minheap
+        # ignore the current working directory provided by
+        # commands like runbms or minheap
         # certain benchmarks expect to be invoked from certain directories
         self.override_cwd = override_cwd
         self.runtime_specific_modifiers_strategy: Callable[
@@ -68,14 +83,14 @@ class Benchmark(object):
     def get_env_str(self) -> str:
         return " ".join(
             [
-                "{}={}".format(k, smart_quote(os.path.expandvars(v)))
+                f"{k}={smart_quote(os.path.expandvars(v))}"
                 for (k, v) in self.env_args.items()
             ]
         )
 
-    def get_full_args(self, _runtime: Runtime) -> List[Union[str, Path]]:
+    def get_full_args(self, runtime: Runtime) -> list[str | Path]:
         # makes a copy because the subclass might change the list
-        # also to type check https://mypy.readthedocs.io/en/stable/common_issues.html#variance
+        # also for type variance (covariant list copy)
         return list(self.wrapper)
 
     def get_runtime_specific_modifiers(self, runtime: Runtime) -> Sequence[Modifier]:
@@ -86,13 +101,13 @@ class Benchmark(object):
         for m in modifiers:
             if not m.should_attach(self.suite_name, self.name):
                 continue
-            elif type(m) == Wrapper:
+            elif type(m) is Wrapper:
                 b.wrapper.extend(m.val)
-            elif type(m) == Companion:
+            elif type(m) is Companion:
                 b.companion.extend(m.val)
-            elif type(m) == EnvVar:
+            elif type(m) is EnvVar:
                 b.env_args[m.var] = m.val
-            elif type(m) == ModifierSet:
+            elif type(m) is ModifierSet:
                 logging.warning("ModifierSet should have been flattened")
         return b
 
@@ -108,8 +123,8 @@ class Benchmark(object):
         )
 
     def run(
-        self, runtime: Runtime, cwd: Optional[Path] = None
-    ) -> Tuple[bytes, bytes, SubprocessrExit]:
+        self, runtime: Runtime, cwd: Path | None = None
+    ) -> tuple[bytes, bytes, SubprocessrExit]:
         from running import suite
 
         if suite.is_dry_run():
@@ -124,7 +139,7 @@ class Benchmark(object):
             env_args = os.environ.copy()
             env_args.update(env_args_to_add)
             companion_out = b""
-            stdout: Optional[bytes]
+            stdout: bytes | None
             if self.companion:
                 companion_p = subprocess.Popen(
                     self.companion, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -158,7 +173,9 @@ class Benchmark(object):
                         companion_out += companion_stdout
                     except subprocess.TimeoutExpired:
                         logging.warning(
-                            "Companion program not exited after 10 seconds timeout. Trying to kill ..."
+                            "Companion program not exited after"
+                            " 10 seconds timeout."
+                            " Trying to kill ..."
                         )
                         try:
                             companion_p.kill()
@@ -171,7 +188,7 @@ class Benchmark(object):
 
 
 class BinaryBenchmark(Benchmark):
-    def __init__(self, program: Path, program_args: List[Union[str, Path]], **kwargs):
+    def __init__(self, program: Path, program_args: list[str | Path], **kwargs):
         super().__init__(**kwargs)
         self.program = program
         self.program_args = program_args
@@ -185,18 +202,18 @@ class BinaryBenchmark(Benchmark):
         for m in modifiers:
             if not m.should_attach(self.suite_name, self.name):
                 continue
-            elif type(m) == ProgramArg:
+            elif type(m) is ProgramArg:
                 bb.program_args.extend(m.val)
-            elif type(m) == JVMArg:
+            elif type(m) is JVMArg:
                 logging.warning("JVMArg not respected by BinaryBenchmark")
-            elif isinstance(m, JVMClasspathAppend) or type(m) == JVMClasspathPrepend:
+            elif isinstance(m, JVMClasspathAppend) or type(m) is JVMClasspathPrepend:
                 logging.warning("JVMClasspath not respected by BinaryBenchmark")
-            elif type(m) == JSArg:
+            elif type(m) is JSArg:
                 logging.warning("JSArg not respected by BinaryBenchmark")
         return bb
 
-    def get_full_args(self, _runtime: Runtime) -> List[Union[str, Path]]:
-        cmd = super().get_full_args(_runtime)
+    def get_full_args(self, runtime: Runtime) -> list[str | Path]:
+        cmd = super().get_full_args(runtime)
         cmd.append(self.program)
         cmd.extend(self.program_args)
         return cmd
@@ -204,14 +221,14 @@ class BinaryBenchmark(Benchmark):
 
 class JavaBenchmark(Benchmark):
     def __init__(
-        self, jvm_args: List[str], program_args: List[str], cp: List[str], **kwargs
+        self, jvm_args: list[str], program_args: list[str], cp: list[str], **kwargs
     ):
         super().__init__(**kwargs)
         self.jvm_args = jvm_args
         self.program_args = program_args
         self.cp = cp
 
-    def get_classpath_args(self) -> List[str]:
+    def get_classpath_args(self) -> list[str]:
         return ["-cp", ":".join(self.cp)] if self.cp else []
 
     def __str__(self) -> str:
@@ -222,19 +239,19 @@ class JavaBenchmark(Benchmark):
         for m in modifiers:
             if not m.should_attach(self.suite_name, self.name):
                 continue
-            if type(m) == JVMArg:
+            if type(m) is JVMArg:
                 jb.jvm_args.extend(m.val)
-            elif type(m) == ProgramArg:
+            elif type(m) is ProgramArg:
                 jb.program_args.extend(m.val)
             elif isinstance(m, JVMClasspathAppend):
                 jb.cp.extend(m.val)
-            elif type(m) == JVMClasspathPrepend:
+            elif type(m) is JVMClasspathPrepend:
                 jb.cp = m.val + jb.cp
-            elif type(m) == JSArg:
+            elif type(m) is JSArg:
                 logging.warning("JSArg not respected by JavaBenchmark")
         return jb
 
-    def get_full_args(self, runtime: Runtime) -> List[Union[str, Path]]:
+    def get_full_args(self, runtime: Runtime) -> list[str | Path]:
         cmd = super().get_full_args(runtime)
         cmd.append(runtime.get_executable())
         cmd.extend(self.jvm_args)
@@ -245,7 +262,7 @@ class JavaBenchmark(Benchmark):
 
 class JavaScriptBenchmark(Benchmark):
     def __init__(
-        self, js_args: List[str], program: str, program_args: List[str], **kwargs
+        self, js_args: list[str], program: str, program_args: list[str], **kwargs
     ):
         super().__init__(**kwargs)
         self.js_args = js_args
@@ -260,17 +277,17 @@ class JavaScriptBenchmark(Benchmark):
         for m in modifiers:
             if not m.should_attach(self.suite_name, self.name):
                 continue
-            if type(m) == ProgramArg:
+            if type(m) is ProgramArg:
                 jb.program_args.extend(m.val)
-            elif type(m) == JVMArg:
+            elif type(m) is JVMArg:
                 logging.warning("JVMArg not respected by JavaScriptBenchmark")
-            elif isinstance(m, JVMClasspathAppend) or type(m) == JVMClasspathPrepend:
+            elif isinstance(m, JVMClasspathAppend) or type(m) is JVMClasspathPrepend:
                 logging.warning("JVMClasspath not respected by JavaScriptBenchmark")
-            elif type(m) == JSArg:
+            elif type(m) is JSArg:
                 jb.js_args.extend(m.val)
         return jb
 
-    def get_full_args(self, runtime: Runtime) -> List[Union[str, Path]]:
+    def get_full_args(self, runtime: Runtime) -> list[str | Path]:
         cmd = super().get_full_args(runtime)
         cmd.append(runtime.get_executable())
         cmd.extend(self.js_args)
@@ -283,9 +300,9 @@ class JavaScriptBenchmark(Benchmark):
             pass
         else:
             raise TypeError(
-                "{} is of type {}, and not a valid runtime for JavaScriptBenchmark".format(
-                    runtime, type(runtime)
-                )
+                f"{runtime} is of type {type(runtime)},"
+                " and not a valid runtime"
+                " for JavaScriptBenchmark"
             )
         cmd.extend(self.program_args)
         return cmd
@@ -293,7 +310,11 @@ class JavaScriptBenchmark(Benchmark):
 
 class JuliaBenchmark(Benchmark):
     def __init__(
-        self, julia_args: List[str], suite_path: Path, program_args: List[str], **kwargs
+        self,
+        julia_args: list[str],
+        suite_path: Path,
+        program_args: list[str],
+        **kwargs,
     ):
         super().__init__(**kwargs)
         self.julia_args = julia_args
@@ -306,17 +327,17 @@ class JuliaBenchmark(Benchmark):
     def attach_modifiers(self, modifiers: Sequence[Modifier]) -> "JuliaBenchmark":
         jb = super().attach_modifiers(modifiers)
         for m in modifiers:
-            if type(m) == JuliaArg:
+            if type(m) is JuliaArg:
                 jb.julia_args.extend(m.val)
-            elif type(m) == ProgramArg:
+            elif type(m) is ProgramArg:
                 jb.program_args.extend(m.val)
         return jb
 
-    def get_full_args(self, runtime: Runtime) -> List[Union[str, Path]]:
+    def get_full_args(self, runtime: Runtime) -> list[str | Path]:
         cmd = super().get_full_args(runtime)
         cmd.append(runtime.get_executable())
         cmd.extend(self.julia_args)
-        cmd.append("--project={}".format(self.suite_path))
+        cmd.append(f"--project={self.suite_path}")
         cmd.append(str(self.suite_path / "run_benchmarks.jl"))
         cmd.extend(self.name.split("/"))
         cmd.extend(["-n", "1"])  # one run

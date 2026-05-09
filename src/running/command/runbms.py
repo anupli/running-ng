@@ -1,40 +1,36 @@
 import logging
-from typing import (
-    DefaultDict,
-    Dict,
-    List,
-    Any,
-    Optional,
-    Set,
-    Tuple,
-    BinaryIO,
-    TYPE_CHECKING,
-)
-from running.suite import BenchmarkSuite, is_dry_run
-from running.benchmark import Benchmark, SubprocessrExit
-from running.config import Configuration
+import math
+import os
+import random
+import socket
+import subprocess
+import sys
+import tempfile
+from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    BinaryIO,
+)
+
+import yaml
+
+from running.benchmark import Benchmark, SubprocessrExit
+from running.command.fillin import fillin
+from running.config import Configuration
+from running.runtime import Runtime
+from running.suite import BenchmarkSuite, is_dry_run
 from running.util import (
-    parse_config_str,
-    system,
-    get_logged_in_users,
     config_index_to_chr,
     config_str_encode,
-    dont_emit_heapsize_modifier,
     detect_rogue_processes,
+    dont_emit_heapsize_modifier,
+    get_logged_in_users,
+    parse_config_str,
+    system,
 )
-import socket
-from datetime import datetime
-from running.runtime import Runtime
-import tempfile
-import subprocess
-import os
-from running.command.fillin import fillin
-import math
-import yaml
-from collections import defaultdict
-import sys
-import random
 
 if TYPE_CHECKING:
     from running.plugin.runbms import RunbmsPlugin
@@ -42,14 +38,14 @@ from running.__version__ import __VERSION__
 
 configuration: Configuration
 minheap_multiplier: float
-remote_host: Optional[str]
-skip_oom: Optional[int]
-skip_timeout: Optional[int]
+remote_host: str | None
+skip_oom: int | None
+skip_timeout: int | None
 skip_log_compression: bool = False
 randomize_configs: bool = False
-plugins: Dict[str, Any]
-resume: Optional[str]
-exit_on_failure_code: Optional[int] = None
+plugins: dict[str, Any]
+resume: str | None
+exit_on_failure_code: int | None = None
 
 
 def setup_parser(subparsers):
@@ -89,7 +85,7 @@ def getid() -> str:
     host = socket.gethostname()
     now = datetime.now()
     timestamp = now.strftime("%Y-%m-%d-%a-%H%M%S")
-    return "{}-{}".format(host, timestamp)
+    return f"{host}-{timestamp}"
 
 
 def spread(spread_factor: int, N: int, n: int) -> float:
@@ -146,8 +142,8 @@ def get_heapsize(hfac: float, minheap: int) -> int:
 
 
 def get_hfacs(
-    heap_range: int, spread_factor: int, N: int, ns: List[int]
-) -> List[float]:
+    heap_range: int, spread_factor: int, N: int, ns: list[int]
+) -> list[float]:
     start = 1.0
     end = float(heap_range)
     divisor = spread(spread_factor, N, N) / (end - start)
@@ -155,8 +151,8 @@ def get_hfacs(
 
 
 def run_benchmark_with_config(
-    c: str, b: Benchmark, runbms_dir: Path, size: Optional[int], fd: Optional[BinaryIO]
-) -> Tuple[bytes, SubprocessrExit]:
+    c: str, b: Benchmark, runbms_dir: Path, size: int | None, fd: BinaryIO | None
+) -> tuple[bytes, SubprocessrExit]:
     runtime, mods = parse_config_str(configuration, c)
     mod_b = b.attach_modifiers(mods)
     mod_b = mod_b.attach_modifiers(b.get_runtime_specific_modifiers(runtime))
@@ -178,7 +174,7 @@ def run_benchmark_with_config(
 
 
 def get_filename_no_ext(
-    bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str
+    bm: Benchmark, hfac: float | None, size: int | None, config: str
 ) -> str:
     # If we have / in benchmark names, replace with -.
     safe_bm_name = bm.name.replace("/", "-")
@@ -194,15 +190,15 @@ def get_filename_no_ext(
 
 
 def get_filename(
-    bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str
+    bm: Benchmark, hfac: float | None, size: int | None, config: str
 ) -> str:
     return get_filename_no_ext(bm, hfac, size, config) + ".log"
 
 
 def get_filename_completed(
-    bm: Benchmark, hfac: Optional[float], size: Optional[int], config: str
+    bm: Benchmark, hfac: float | None, size: int | None, config: str
 ) -> str:
-    return "{}.gz".format(get_filename(bm, hfac, size, config))
+    return f"{get_filename(bm, hfac, size, config)}.gz"
 
 
 def get_log_epilogue(runtime: Runtime, bm: Benchmark) -> str:
@@ -210,7 +206,7 @@ def get_log_epilogue(runtime: Runtime, bm: Benchmark) -> str:
 
 
 def hz_to_ghz(hzstr: str) -> str:
-    return "{:.2f} GHz".format(int(hzstr) / 1000 / 1000)
+    return f"{int(hzstr) / 1000 / 1000:.2f} GHz"
 
 
 def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
@@ -218,14 +214,14 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     output += "mkdir -p PLOTTY_WORKAROUND; timedrun; "
     output += bm.to_string(runtime)
     output += "\n"
-    output += "running-ng v{}\n".format(__VERSION__)
+    output += f"running-ng v{__VERSION__}\n"
     output += system("date") + "\n"
     output += system("w") + "\n"
     output += system("vmstat 1 2") + "\n"
     output += system("top -bcn 1 -w512 |head -n 12") + "\n"
     output += "Environment variables: \n"
     for k, v in sorted(os.environ.items()):
-        output += "\t{}={}\n".format(k, v)
+        output += f"\t{k}={v}\n"
     output += "OS: "
     output += system("uname -a")
     output += "CPU: "
@@ -236,26 +232,18 @@ def get_log_prologue(runtime: Runtime, bm: Benchmark) -> str:
     has_cpufreq = Path("/sys/devices/system/cpu/cpu0/cpufreq").is_dir()
     if has_cpufreq:
         for i in range(0, int(cores)):
-            output += "Frequency of cpu {}: ".format(i)
+            output += f"Frequency of cpu {i}: "
             output += hz_to_ghz(
-                system(
-                    "cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_cur_freq".format(
-                        i
-                    )
-                )
+                system(f"cat /sys/devices/system/cpu/cpu{i}/cpufreq/scaling_cur_freq")
             )
             output += "\n"
-            output += "Governor of cpu {}: ".format(i)
+            output += f"Governor of cpu {i}: "
             output += system(
-                "cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_governor".format(i)
+                f"cat /sys/devices/system/cpu/cpu{i}/cpufreq/scaling_governor"
             )
-            output += "Scaling_min_freq of cpu {}: ".format(i)
+            output += f"Scaling_min_freq of cpu {i}: "
             output += hz_to_ghz(
-                system(
-                    "cat /sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq".format(
-                        i
-                    )
-                )
+                system(f"cat /sys/devices/system/cpu/cpu{i}/cpufreq/scaling_min_freq")
             )
             output += "\n"
     return output
@@ -265,15 +253,15 @@ def run_one_benchmark(
     invocations: int,
     suite: BenchmarkSuite,
     bm: Benchmark,
-    hfac: Optional[float],
-    configs: List[str],
+    hfac: float | None,
+    configs: list[str],
     runbms_dir: Path,
     log_dir: Path,
 ):
-    p: "RunbmsPlugin"
+    p: RunbmsPlugin
     bm_name = bm.name
     print(bm_name, end=" ")
-    size: Optional[int]  # heap size measured in MB
+    size: int | None  # heap size measured in MB
     if hfac is not None:
         print(hfac_str(hfac), end=" ")
         size = get_heapsize(hfac, suite.get_minheap(bm))
@@ -282,11 +270,11 @@ def run_one_benchmark(
         size = None
     for p in plugins.values():
         p.start_benchmark(hfac, size, bm)
-    oomed_count: DefaultDict[str, int]
+    oomed_count: defaultdict[str, int]
     oomed_count = defaultdict(int)
-    timeout_count: DefaultDict[str, int]
+    timeout_count: defaultdict[str, int]
     timeout_count = defaultdict(int)
-    logged_in_users: Set[str]
+    logged_in_users: set[str]
     logged_in_users = get_logged_in_users()
     if len(logged_in_users) > 1:
         logging.warning(
@@ -298,9 +286,9 @@ def run_one_benchmark(
     rogue_processes = detect_rogue_processes(top_output)
     for pid, user, cpu_percent, command in rogue_processes:
         logging.warning(
-            "High CPU usage process detected: {} (PID: {}, User: {}) using {:.1f}% CPU".format(
-                command, pid, user, cpu_percent
-            )
+            f"High CPU usage process detected: {command}"
+            f" (PID: {pid}, User: {user})"
+            f" using {cpu_percent:.1f}% CPU"
         )
     ever_ran = [False] * len(configs)
     for i in range(0, invocations):
@@ -334,7 +322,7 @@ def run_one_benchmark(
                     print(config_index_to_chr(j), end="", flush=True)
                     continue
             log_filename = get_filename(bm, hfac, size, c)
-            logging.debug("Running with log filename {}".format(log_filename))
+            logging.debug(f"Running with log filename {log_filename}")
             runtime, _ = parse_config_str(configuration, c)
             if is_dry_run():
                 output, exit_status = run_benchmark_with_config(
@@ -390,14 +378,14 @@ def run_one_benchmark(
 
 def run_one_hfac(
     invocations: int,
-    hfac: Optional[float],
-    suites: Dict[str, BenchmarkSuite],
-    benchmarks: Dict[str, List[Benchmark]],
-    configs: List[str],
+    hfac: float | None,
+    suites: dict[str, BenchmarkSuite],
+    benchmarks: dict[str, list[Benchmark]],
+    configs: list[str],
     runbms_dir: Path,
     log_dir: Path,
 ):
-    p: "RunbmsPlugin"
+    p: RunbmsPlugin
     for p in plugins.values():
         p.start_hfac(hfac)
     for suite_name, bms in benchmarks.items():
@@ -414,20 +402,20 @@ def run_one_hfac(
 def ensure_remote_dir(log_dir):
     if not is_dry_run() and remote_host is not None:
         log_dir = log_dir.resolve()
-        system("ssh {} mkdir -p {}".format(remote_host, log_dir))
+        system(f"ssh {remote_host} mkdir -p {log_dir}")
 
 
 def rsync(log_dir):
     if not is_dry_run() and remote_host is not None:
         log_dir = log_dir.resolve()
-        system("rsync -ae ssh {}/ {}:{}".format(log_dir, remote_host, log_dir))
+        system(f"rsync -ae ssh {log_dir}/ {remote_host}:{log_dir}")
 
 
 def run(args):
     if args.get("which") != "runbms":
         return False
     with tempfile.TemporaryDirectory(prefix="runbms-") as runbms_dir:
-        logging.info("Temporary directory: {}".format(runbms_dir))
+        logging.info(f"Temporary directory: {runbms_dir}")
         if args.get("workdir"):
             args.get("workdir").mkdir(parents=True, exist_ok=True)
             runbms_dir = str(args.get("workdir").resolve())
@@ -440,8 +428,8 @@ def run(args):
             prefix = args.get("id_prefix")
             run_id = getid()
             if prefix:
-                run_id = "{}-{}".format(prefix, run_id)
-        print("Run id: {}".format(run_id))
+                run_id = f"{prefix}-{run_id}"
+        print(f"Run id: {run_id}")
         log_dir = args.get("LOG_DIR") / run_id
         if not is_dry_run():
             log_dir.mkdir(parents=True, exist_ok=True)

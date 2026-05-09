@@ -1,9 +1,9 @@
 from running.command.log_preprocessor import (
+    calc_work_ipc,
     filter_stats,
+    ratio_work_perf_event,
     reduce_stats,
     sum_work_perf_event,
-    calc_work_ipc,
-    ratio_work_perf_event,
 )
 
 

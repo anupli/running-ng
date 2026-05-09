@@ -1,8 +1,9 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from datetime import datetime, timedelta
+from unittest.mock import patch
+
 from running.plugin.runbms.zulip import Zulip
 from running.util import MomaReservationStatus, MomaReservaton
-from datetime import datetime, timedelta
 
 
 class TestZulipWarnings(unittest.TestCase):

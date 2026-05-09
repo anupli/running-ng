@@ -5,7 +5,7 @@ This guide will show you how to use `running-ng` to compare two different builds
 
 ## Installation
 Please follow the [installation guide](./install.md) to install `running-ng`.
-You will need Python 3.6+.
+You will need Python 3.10+.
 
 Then, create a file `two_builds.yml` with the following content.
 ```yaml

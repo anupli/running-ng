@@ -1,7 +1,9 @@
-from running.command.runbms import spread, setup_parser
-import pytest
 import argparse
 import random
+
+import pytest
+
+from running.command.runbms import setup_parser, spread
 
 
 def test_spread_0():
@@ -24,8 +26,9 @@ def test_spread_1():
 
 def test_exit_on_failure_flag_available():
     """Test that the --exit-on-failure flag is available in the argument parser."""
-    from running.command.runbms import setup_parser
     import argparse
+
+    from running.command.runbms import setup_parser
 
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
@@ -71,54 +74,13 @@ def test_randomize_configs_arg_parsing():
 
     # Test without the flag
     args = parser.parse_args(["runbms", "/tmp/log", "/tmp/config.yml"])
-    assert args.randomize_configs == False
+    assert args.randomize_configs is False
 
     # Test with the flag
     args = parser.parse_args(
         ["runbms", "--randomize-configs", "/tmp/log", "/tmp/config.yml"]
     )
-    assert args.randomize_configs == True
-
-
-def test_exit_on_failure_flag_parsing():
-    """Test that the --exit-on-failure flag is parsed correctly."""
-    from running.command.runbms import setup_parser
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers()
-    setup_parser(subparsers)
-
-    # Test that the flag is recognized and sets the correct default value
-    args = parser.parse_args(["runbms", "/tmp/logs", "/tmp/config.yml"])
-    assert hasattr(args, "exit_on_failure")
-    assert args.exit_on_failure is None
-
-    # Test that the flag can be set without argument (defaults to 1)
-    args = parser.parse_args(
-        ["runbms", "/tmp/logs", "/tmp/config.yml", "--exit-on-failure"]
-    )
-    assert args.exit_on_failure == 1
-
-    # Test that the flag can be set with custom argument
-    args = parser.parse_args(
-        ["runbms", "/tmp/logs", "/tmp/config.yml", "--exit-on-failure", "42"]
-    )
-    assert args.exit_on_failure == 42
-
-
-def test_global_variables_initialization():
-    """Test that the new global variables are properly initialized."""
-    from running.command import runbms
-
-    # Test that the new global variables exist
-    assert hasattr(runbms, "exit_on_failure_code")
-
-    # Test default values (these are module-level globals)
-    # Note: These might be modified by other tests, so we just check they exist
-    assert runbms.exit_on_failure_code is None or isinstance(
-        runbms.exit_on_failure_code, int
-    )
+    assert args.randomize_configs is True
 
 
 def test_config_randomization_logic():

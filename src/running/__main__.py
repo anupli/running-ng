@@ -1,12 +1,12 @@
 #!/usr/env/bin python3
-import logging
 import argparse
+import importlib.resources
+import logging
+import os
 
 from running.__version__ import __VERSION__
-from running.command import fillin, runbms, minheap, log_preprocessor
+from running.command import fillin, log_preprocessor, minheap, runbms
 from running.suite import set_dry_run
-import importlib.resources
-import os
 
 logger = logging.getLogger(__name__)
 
@@ -18,9 +18,7 @@ def setup_parser():
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="change logging level to DEBUG"
     )
-    parser.add_argument(
-        "--version", action="version", version="running {}".format(__VERSION__)
-    )
+    parser.add_argument("--version", action="version", version=f"running {__VERSION__}")
     parser.add_argument("-d", "--dry-run", action="store_true", help="dry run")
     subparsers = parser.add_subparsers()
     for m in MODULES:
@@ -33,7 +31,7 @@ def main():
     args = vars(parsers.parse_args())
 
     # Config root logger
-    if args.get("verbose") == True:
+    if args.get("verbose"):
         log_level = logging.DEBUG
     else:
         log_level = logging.INFO
@@ -42,8 +40,9 @@ def main():
         level=log_level,
     )
 
-    if args.get("dry_run") == True:
+    if args.get("dry_run"):
         set_dry_run(True)
+    assert __package__ is not None
     with importlib.resources.path(__package__, "config") as config_path:
         os.environ["RUNNING_NG_PACKAGE_DATA"] = str(config_path)
         for m in MODULES:

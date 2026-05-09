@@ -1,11 +1,11 @@
-from typing import Optional, Iterable, Callable
 import subprocess
+from collections.abc import Callable, Iterable
 
 
 def fillin(
     callback: Callable[[int, Iterable[int]], None],
     levels: int,
-    start: Optional[int] = None,
+    start: int | None = None,
 ):
     """Fill the parameter space
 

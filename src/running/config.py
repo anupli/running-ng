@@ -1,13 +1,15 @@
-from typing import Any, Dict
-import yaml
-from running.suite import BenchmarkSuite
-from running.runtime import Runtime
-from running.modifier import Modifier
-from pathlib import Path
-import functools
 import copy
+import functools
 import logging
 import os
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from running.modifier import Modifier
+from running.runtime import Runtime
+from running.suite import BenchmarkSuite
 
 
 def load_class(cls, config):
@@ -21,8 +23,8 @@ KEY_CLASS_MAPPING = {
 }
 
 
-class Configuration(object):
-    def __init__(self, kv_pairs: Dict[str, Any]):
+class Configuration:
+    def __init__(self, kv_pairs: dict[str, Any]):
         assert "includes" not in kv_pairs
         assert "overrides" not in kv_pairs
         self.__items = kv_pairs
@@ -56,8 +58,7 @@ class Configuration(object):
         return self.__items.get(name)
 
     def override(self, selector: str, new_value: Any):
-        current: Any  # Union[Dict[str, Any], List[Any]]
-        current = self.__items
+        current: Any = self.__items
         parts = list(selector.split("."))
         for index, p in enumerate(parts):
             if index == len(parts) - 1:
@@ -84,10 +85,10 @@ class Configuration(object):
                 else:
                     if type(new_values[k]) is not dict:
                         raise TypeError(
-                            "Key `{}` has been defined in one of the "
-                            "included files, and the value of `{}`, {}, "
+                            f"Key `{k}` has been defined in one of the "
+                            f"included files, and the value of `{k}`, {repr(v)}, "
                             "is not an array or a dictionary. "
-                            "Please use overrides instead.".format(k, k, repr(v))
+                            "Please use overrides instead."
                         )
                     new_values[k].update(copy.deepcopy(other.__items[k]))
             else:
@@ -101,35 +102,29 @@ class Configuration(object):
                 config = yaml.safe_load(fd)
                 return config
             except yaml.YAMLError as e:
-                raise SyntaxError(
-                    "Not able to parse the configuration file, {}".format(e)
-                )
+                raise SyntaxError(f"Not able to parse the configuration file, {e}")
 
     @staticmethod
     def from_file(in_folder: Path, p: str) -> "Configuration":
         expand_p = os.path.expandvars(p)
         logging.info(
-            "Loading config {}, expanding to {}, relative to {}".format(
-                p, expand_p, in_folder
-            )
+            f"Loading config {p}, expanding to {expand_p}, relative to {in_folder}"
         )
         path = Path(expand_p)
         if path.is_absolute():
             logging.info("    is absolute")
         else:
             path = in_folder.joinpath(p)
-            logging.info("    resolved to {}".format(path))
+            logging.info(f"    resolved to {path}")
         if not path.exists():
-            raise ValueError("Configuration not found at path '{}'".format(path))
+            raise ValueError(f"Configuration not found at path '{path}'")
         if not path.is_file():
-            raise ValueError("Configuration at path '{}' is not a file".format(path))
+            raise ValueError(f"Configuration at path '{path}' is not a file")
         with path.open("r") as fd:
             try:
                 config = yaml.safe_load(fd)
             except yaml.YAMLError as e:
-                raise SyntaxError(
-                    "Not able to parse the configuration file, {}".format(e)
-                )
+                raise SyntaxError(f"Not able to parse the configuration file, {e}")
         if config is None:
             raise ValueError("Parsed configuration file is None")
         if "includes" in config:
@@ -147,7 +142,8 @@ class Configuration(object):
         else:
             if "overrides" in config:
                 raise KeyError(
-                    'You specified "overrides" but not "includes". This does not make sense.'
+                    'You specified "overrides" but not "includes".'
+                    " This does not make sense."
                 )
             final_config = Configuration(config)
         return final_config

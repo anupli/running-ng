@@ -1,5 +1,6 @@
-from running.config import Configuration
 import pytest
+
+from running.config import Configuration
 
 
 def test_override():

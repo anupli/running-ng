@@ -84,7 +84,10 @@ def test_dacapo_path_ennvvar():
                     "type": "DaCapo",
                     "release": "2006",
                     # some bogus environment variable that will not be expanded
-                    "path": "$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI/dacapo-2006-10-MR2.jar",
+                    "path": (
+                        "$DAHKDLHDIWHEIUWHEIWEHIJHDJKAGDKJADGUQDGIQUWDGI"
+                        "/dacapo-2006-10-MR2.jar"
+                    ),
                     "timing_iteration": 3,
                 },
                 "dacapo2006": {

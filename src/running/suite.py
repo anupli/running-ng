@@ -1,15 +1,16 @@
+import logging
+import os.path
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any
+
 from running.benchmark import (
-    JavaBenchmark,
-    BinaryBenchmark,
     Benchmark,
+    BinaryBenchmark,
+    JavaBenchmark,
     JavaScriptBenchmark,
     JuliaBenchmark,
 )
-import logging
 from running.util import register, split_quoted
-import os.path
 
 __DRY_RUN = False
 DEFAULT_MINHEAP = 4096
@@ -25,10 +26,10 @@ def set_dry_run(val: bool):
     __DRY_RUN = val
 
 
-def parse_timing_iteration(t: Optional[str], suite_name: str) -> Union[str, int]:
+def parse_timing_iteration(t: str | None, suite_name: str) -> str | int:
     if not t:
         raise KeyError(
-            "You need to specify the timing_iteration for a {} suite".format(suite_name)
+            f"You need to specify the timing_iteration for a {suite_name} suite"
         )
     assert t is not None
     try:
@@ -38,42 +39,42 @@ def parse_timing_iteration(t: Optional[str], suite_name: str) -> Union[str, int]
         return t
 
 
-class BenchmarkSuite(object):
-    CLS_MAPPING: Dict[str, Any]
+class BenchmarkSuite:
+    CLS_MAPPING: dict[str, Any]
     CLS_MAPPING = {}
 
     def __init__(self, name: str, **kwargs):
         self.name = name
 
     def __str__(self) -> str:
-        return "Benchmark Suite {}".format(self.name)
+        return f"Benchmark Suite {self.name}"
 
     @staticmethod
-    def from_config(name: str, config: Dict[str, str]) -> Any:
+    def from_config(name: str, config: dict[str, str]) -> Any:
         return BenchmarkSuite.CLS_MAPPING[config["type"]](name=name, **config)
 
-    def get_benchmark(self, _bm_spec: Union[str, Dict[str, Any]]) -> Any:
+    def get_benchmark(self, bm_spec: str | dict[str, Any]) -> Any:
         raise NotImplementedError()
 
-    def get_minheap(self, _bm: Benchmark) -> int:
+    def get_minheap(self, bm: Benchmark) -> int:
         raise NotImplementedError
 
-    def is_passed(self, _output: bytes) -> bool:
+    def is_passed(self, output: bytes) -> bool:
         raise NotImplementedError
 
 
 @register(BenchmarkSuite)
 class BinaryBenchmarkSuite(BenchmarkSuite):
-    def __init__(self, programs: Dict[str, Dict[str, str]], **kwargs):
+    def __init__(self, programs: dict[str, dict[str, str]], **kwargs):
         super().__init__(**kwargs)
-        self.programs: Dict[str, Dict[str, Any]]
+        self.programs: dict[str, dict[str, Any]]
         self.programs = {
             k: {"path": Path(v["path"]), "args": split_quoted(v["args"])}
             for k, v in programs.items()
         }
         self.timeout = kwargs.get("timeout")
 
-    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> "BinaryBenchmark":
+    def get_benchmark(self, bm_spec: str | dict[str, Any]) -> "BinaryBenchmark":
         assert type(bm_spec) is str
         bm_name = bm_spec
         return BinaryBenchmark(
@@ -89,7 +90,7 @@ class BinaryBenchmarkSuite(BenchmarkSuite):
         assert isinstance(bm, BinaryBenchmark)
         return 0
 
-    def is_passed(self, _output: bytes) -> bool:
+    def is_passed(self, output: bytes) -> bool:
         # FIXME no generic way to know
         return True
 
@@ -98,7 +99,7 @@ class JavaBenchmarkSuite(BenchmarkSuite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get_minheap(self, _bm: Benchmark) -> int:
+    def get_minheap(self, bm: Benchmark) -> int:
         raise NotImplementedError()
 
 
@@ -109,31 +110,26 @@ class DaCapo(JavaBenchmarkSuite):
         self.release: str
         self.release = kwargs["release"]
         if self.release not in ["2006", "9.12", "evaluation", "23.11"]:
-            raise ValueError("DaCapo release {} not recognized".format(self.release))
+            raise ValueError(f"DaCapo release {self.release} not recognized")
         self.path: Path
         self.path = Path(os.path.expandvars(kwargs["path"]))
         if not self.path.exists():
-            logging.warning("DaCapo jar {} not found".format(self.path))
-        self.minheap: Optional[str]
+            logging.warning(f"DaCapo jar {self.path} not found")
+        self.minheap: str | None
         self.minheap = kwargs.get("minheap")
-        self.minheap_values: Dict[str, Dict[str, int]]
+        self.minheap_values: dict[str, dict[str, int]]
         self.minheap_values = kwargs.get("minheap_values", {})
         if not isinstance(self.minheap_values, dict):
-            raise TypeError(
-                "The minheap_values of {} should be a dictionary".format(self.name)
-            )
+            raise TypeError(f"The minheap_values of {self.name} should be a dictionary")
         if self.minheap:
             if not isinstance(self.minheap, str):
                 raise TypeError(
-                    "The minheap of {} should be a string that selects from a minheap_values".format(
-                        self.name
-                    )
+                    f"The minheap of {self.name} should be a"
+                    " string that selects from a minheap_values"
                 )
             if self.minheap not in self.minheap_values:
                 raise KeyError(
-                    "{} is not a valid entry of {}.minheap_values".format(
-                        self.name, self.name
-                    )
+                    f"{self.name} is not a valid entry of {self.name}.minheap_values"
                 )
         self.timing_iteration = parse_timing_iteration(
             kwargs.get("timing_iteration"), "DaCapo"
@@ -143,24 +139,25 @@ class DaCapo(JavaBenchmarkSuite):
             and self.timing_iteration != "converge"
         ):
             raise TypeError(
-                "The timing iteration of the DaCapo benchmark suite `{}` is {}, which neither an integer nor 'converge'".format(
-                    self.path, repr(self.timing_iteration)
-                )
+                f"The timing iteration of the DaCapo benchmark"
+                f" suite `{self.path}` is"
+                f" {repr(self.timing_iteration)}, which neither"
+                " an integer nor 'converge'"
             )
-        self.callback: Optional[str]
+        self.callback: str | None
         self.callback = kwargs.get("callback")
-        self.timeout: Optional[int]
+        self.timeout: int | None
         self.timeout = kwargs.get("timeout")
-        self.wrapper: Optional[Union[Dict[str, str], str]]
+        self.wrapper: dict[str, str] | str | None
         self.wrapper = kwargs.get("wrapper")
-        self.companion: Optional[Union[Dict[str, str], str]]
+        self.companion: dict[str, str] | str | None
         self.companion = kwargs.get("companion")
         # user overriding the default size for the entire suite
-        self.size: Optional[str]
+        self.size: str | None
         self.size = kwargs.get("size")
 
     def __str__(self) -> str:
-        return "{} DaCapo {} {}".format(super().__str__(), self.release, self.path)
+        return f"{super().__str__()} DaCapo {self.release} {self.path}"
 
     @staticmethod
     def parse_timing_iteration(v: Any):
@@ -169,14 +166,13 @@ class DaCapo(JavaBenchmarkSuite):
         except ValueError:
             if v != "converge":
                 raise TypeError(
-                    "The timing iteration {} is neither an integer nor 'converge'".format(
-                        repr(v)
-                    )
+                    f"The timing iteration {repr(v)} is neither"
+                    " an integer nor 'converge'"
                 )
             timing_iteration = v
         return timing_iteration
 
-    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> "JavaBenchmark":
+    def get_benchmark(self, bm_spec: str | dict[str, Any]) -> "JavaBenchmark":
         timing_iteration = self.timing_iteration
         timeout = self.timeout
         size = self.size
@@ -187,7 +183,9 @@ class DaCapo(JavaBenchmarkSuite):
             assert type(bm_spec) is dict
             if "bm_name" not in bm_spec or "name" not in bm_spec:
                 raise KeyError(
-                    "When a dictionary is used to speicfy a benchmark, you need to provide both `name` and `bm_name`"
+                    "When a dictionary is used to specify a"
+                    " benchmark, you need to provide both"
+                    " `name` and `bm_name`"
                 )
             bm_name = bm_spec["bm_name"]
             name = bm_spec["name"]
@@ -237,45 +235,45 @@ class DaCapo(JavaBenchmarkSuite):
         assert isinstance(bm, JavaBenchmark)
         name = bm.name
         if not self.minheap:
-            logging.warning("No minheap_value of {} is selected".format(self))
+            logging.warning(f"No minheap_value of {self} is selected")
             return DEFAULT_MINHEAP
         minheap = self.minheap_values[self.minheap]
         if name not in minheap:
-            logging.warning("Minheap for {} of {} not set".format(name, self))
+            logging.warning(f"Minheap for {name} of {self} not set")
             return DEFAULT_MINHEAP
         return minheap[name]
 
     def is_passed(self, output: bytes) -> bool:
         return b"PASSED" in output
 
-    def get_wrapper(self, bm_name: str) -> Optional[str]:
+    def get_wrapper(self, bm_name: str) -> str | None:
         if self.wrapper is None:
             return None
-        elif type(self.wrapper) == str:
+        elif type(self.wrapper) is str:
             return self.wrapper
-        elif type(self.wrapper) == dict:
+        elif type(self.wrapper) is dict:
             return self.wrapper.get(bm_name)
         else:
             raise TypeError(
-                "wrapper of {} must be either null, "
+                f"wrapper of {self.name} must be either null, "
                 "a string (the same wrapper for all benchmarks), "
                 "or a dictionary (different wrappers for"
-                "differerent benchmarks)".format(self.name)
+                "differerent benchmarks)"
             )
 
-    def get_companion(self, bm_name: str) -> Optional[str]:
+    def get_companion(self, bm_name: str) -> str | None:
         if self.companion is None:
             return None
-        elif type(self.companion) == str:
+        elif type(self.companion) is str:
             return self.companion
-        elif type(self.companion) == dict:
+        elif type(self.companion) is dict:
             return self.companion.get(bm_name)
         else:
             raise TypeError(
-                "companion of {} must be either null, "
+                f"companion of {self.name} must be either null, "
                 "a string (the same companion for all benchmarks), "
                 "or a dictionary (different companions for"
-                "differerent benchmarks)".format(self.name)
+                "differerent benchmarks)"
             )
 
 
@@ -286,19 +284,17 @@ class SPECjbb2015(JavaBenchmarkSuite):
         self.release: str
         self.release = kwargs["release"]
         if self.release not in ["1.03"]:
-            raise ValueError(
-                "SPECjbb2015 release {} not recognized".format(self.release)
-            )
+            raise ValueError(f"SPECjbb2015 release {self.release} not recognized")
         self.path: Path
         self.path = Path(os.path.expandvars(kwargs["path"])).resolve()
         self.propsfile = (self.path / ".." / "config" / "specjbb2015.props").resolve()
         if not self.path.exists():
-            logging.info("SPECjbb2015 jar {} not found".format(self.path))
+            logging.info(f"SPECjbb2015 jar {self.path} not found")
 
     def __str__(self) -> str:
-        return "{} SPECjbb2015 {} {}".format(super().__str__(), self.release, self.path)
+        return f"{super().__str__()} SPECjbb2015 {self.release} {self.path}"
 
-    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> "JavaBenchmark":
+    def get_benchmark(self, bm_spec: str | dict[str, Any]) -> "JavaBenchmark":
         assert type(bm_spec) is str
         if bm_spec != "composite":
             raise ValueError("Only composite mode is supported for now")
@@ -320,7 +316,7 @@ class SPECjbb2015(JavaBenchmarkSuite):
             name="composite",
         )
 
-    def get_minheap(self, _bm: Benchmark) -> int:
+    def get_minheap(self, bm: Benchmark) -> int:
         return 2048  # SPEC recommends running with minimum 2GB of heap
 
     def is_passed(self, output: bytes) -> bool:
@@ -335,11 +331,11 @@ class Octane(BenchmarkSuite):
         self.path: Path
         self.path = Path(os.path.expandvars(kwargs["path"])).resolve()
         if not self.path.exists():
-            logging.info("Octane folder {} not found".format(self.path))
+            logging.info(f"Octane folder {self.path} not found")
         self.wrapper: Path
         self.wrapper = Path(kwargs["wrapper"]).resolve()
         if not self.wrapper.exists():
-            logging.info("Octane folder {} not found".format(self.wrapper))
+            logging.info(f"Octane folder {self.wrapper} not found")
         timing_iteration = parse_timing_iteration(
             kwargs.get("timing_iteration"), "Octane"
         )
@@ -348,36 +344,29 @@ class Octane(BenchmarkSuite):
             raise TypeError("timing_iteration for Octane has to be an integer")
         else:
             self.timing_iteration = timing_iteration
-        self.minheap: Optional[str]
+        self.minheap: str | None
         self.minheap = kwargs.get("minheap")
-        self.minheap_values: Dict[str, Dict[str, int]]
+        self.minheap_values: dict[str, dict[str, int]]
         self.minheap_values = kwargs.get("minheap_values", {})
         if not isinstance(self.minheap_values, dict):
-            raise TypeError(
-                "The minheap_values of {} should be a dictionary".format(self.name)
-            )
+            raise TypeError(f"The minheap_values of {self.name} should be a dictionary")
         if self.minheap:
             if not isinstance(self.minheap, str):
                 raise TypeError(
-                    "The minheap of {} should be a string that selects from a minheap_values".format(
-                        self.name
-                    )
+                    f"The minheap of {self.name} should be a"
+                    " string that selects from a minheap_values"
                 )
             if self.minheap not in self.minheap_values:
                 raise KeyError(
-                    "{} is not a valid entry of {}.minheap_values".format(
-                        self.name, self.name
-                    )
+                    f"{self.name} is not a valid entry of {self.name}.minheap_values"
                 )
-        self.timeout: Optional[int]
+        self.timeout: int | None
         self.timeout = kwargs.get("timeout")
 
     def __str__(self) -> str:
-        return "{} Octane {}".format(super().__str__(), self.path)
+        return f"{super().__str__()} Octane {self.path}"
 
-    def get_benchmark(
-        self, bm_spec: Union[str, Dict[str, Any]]
-    ) -> "JavaScriptBenchmark":
+    def get_benchmark(self, bm_spec: str | dict[str, Any]) -> "JavaScriptBenchmark":
         assert type(bm_spec) is str
 
         program_args = [str(self.path), bm_spec, str(self.timing_iteration)]
@@ -394,11 +383,11 @@ class Octane(BenchmarkSuite):
         assert isinstance(bm, JavaScriptBenchmark)
         name = bm.name
         if not self.minheap:
-            logging.warning("No minheap_value of {} is selected".format(self))
+            logging.warning(f"No minheap_value of {self} is selected")
             return DEFAULT_MINHEAP
         minheap = self.minheap_values[self.minheap]
         if name not in minheap:
-            logging.warning("Minheap for {} of {} not set".format(name, self))
+            logging.warning(f"Minheap for {name} of {self} not set")
             return DEFAULT_MINHEAP
         return minheap[name]
 
@@ -413,16 +402,14 @@ class SPECjvm98(JavaBenchmarkSuite):
         self.release: str
         self.release = kwargs["release"]
         if self.release not in ["1.03_05"]:
-            raise ValueError("SPECjvm98 release {} not recognized".format(self.release))
+            raise ValueError(f"SPECjvm98 release {self.release} not recognized")
         self.path: Path
         self.path = Path(os.path.expandvars(kwargs["path"])).resolve()
 
         if not self.path.exists():
-            logging.info("SPECjvm98 {} not found".format(self.path))
+            logging.info(f"SPECjvm98 {self.path} not found")
         if not (self.path / "SpecApplication.class").exists():
-            logging.info(
-                "SpecApplication.class not found under SPECjvm98 {}".format(self.path)
-            )
+            logging.info(f"SpecApplication.class not found under SPECjvm98 {self.path}")
         timing_iteration = parse_timing_iteration(
             kwargs.get("timing_iteration"), "SPECjvm98"
         )
@@ -433,13 +420,13 @@ class SPECjvm98(JavaBenchmarkSuite):
             self.timing_iteration = timing_iteration
 
     def __str__(self) -> str:
-        return "{} SPECjvm98 {} {}".format(super().__str__(), self.release, self.path)
+        return f"{super().__str__()} SPECjvm98 {self.release} {self.path}"
 
-    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> "JavaBenchmark":
+    def get_benchmark(self, bm_spec: str | dict[str, Any]) -> "JavaBenchmark":
         assert type(bm_spec) is str
         program_args = [
             "SpecApplication",
-            "-i{}".format(self.timing_iteration),
+            f"-i{self.timing_iteration}",
             bm_spec,
         ]
         return JavaBenchmark(
@@ -451,7 +438,7 @@ class SPECjvm98(JavaBenchmarkSuite):
             override_cwd=self.path,
         )
 
-    def get_minheap(self, _bm: Benchmark) -> int:
+    def get_minheap(self, bm: Benchmark) -> int:
         # FIXME allow user to measure and specify minimum heap sizes
         return 32  # SPEC recommends running with minimum 32MB of heap
 
@@ -467,46 +454,41 @@ class JuliaGCBenchmarks(BenchmarkSuite):
         self.path: Path
         self.path = Path(os.path.expandvars(kwargs["path"]))
         if not self.path.exists():
-            logging.warning("JuliaGCBenchmarks does not exist at {}".format(self.path))
-        self.minheap: Optional[str]
+            logging.warning(f"JuliaGCBenchmarks does not exist at {self.path}")
+        self.minheap: str | None
         self.minheap = kwargs.get("minheap")
-        self.minheap_values: Dict[str, Dict[str, int]]
+        self.minheap_values: dict[str, dict[str, int]]
         self.minheap_values = kwargs.get("minheap_values", {})
         if not isinstance(self.minheap_values, dict):
-            raise TypeError(
-                "The minheap_values of {} should be a dictionary".format(self.name)
-            )
+            raise TypeError(f"The minheap_values of {self.name} should be a dictionary")
         if self.minheap:
             if not isinstance(self.minheap, str):
                 raise TypeError(
-                    "The minheap of {} should be a string that selects from a minheap_values".format(
-                        self.name
-                    )
+                    f"The minheap of {self.name} should be a"
+                    " string that selects from a minheap_values"
                 )
             if self.minheap not in self.minheap_values:
                 raise KeyError(
-                    "{} is not a valid entry of {}.minheap_values".format(
-                        self.name, self.name
-                    )
+                    f"{self.name} is not a valid entry of {self.name}.minheap_values"
                 )
-        self.timeout: Optional[int]
+        self.timeout: int | None
         self.timeout = kwargs.get("timeout")
 
     def __str__(self) -> str:
-        return "{} JuliaGCBenchmarks {}".format(super().__str__(), self.path)
+        return f"{super().__str__()} JuliaGCBenchmarks {self.path}"
 
     def get_minheap(self, bm: Benchmark) -> int:
         name = bm.name
         if not self.minheap:
-            logging.warning("No minheap_value of {} is selected".format(self))
+            logging.warning(f"No minheap_value of {self} is selected")
             return DEFAULT_MINHEAP
         minheap = self.minheap_values[self.minheap]
         if name not in minheap:
-            logging.warning("Minheap for {} of {} not set".format(name, self))
+            logging.warning(f"Minheap for {name} of {self} not set")
             return DEFAULT_MINHEAP
         return minheap[name]
 
-    def get_benchmark(self, bm_spec: Union[str, Dict[str, Any]]) -> "JuliaBenchmark":
+    def get_benchmark(self, bm_spec: str | dict[str, Any]) -> "JuliaBenchmark":
         timeout = self.timeout
         if type(bm_spec) is str:
             name = bm_spec
@@ -514,7 +496,8 @@ class JuliaGCBenchmarks(BenchmarkSuite):
             assert type(bm_spec) is dict
             if "name" not in bm_spec:
                 raise KeyError(
-                    "When a dictionary is used to specify a benchmark, you need to provide `name`"
+                    "When a dictionary is used to specify a"
+                    " benchmark, you need to provide `name`"
                 )
             name = bm_spec["name"]
             if "timeout" in bm_spec:

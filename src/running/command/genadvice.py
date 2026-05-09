@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-import sys
+import glob
+import gzip
 import os
 import shutil
-import gzip
-import re
-import glob
 import subprocess
-import itertools
+import sys
 
 ADVICE_EXTS = ["ca", "dc", "ec"]
 advice_folder = sys.argv[1]
@@ -21,7 +19,7 @@ JikesRVM_FOOTER = (
 
 
 def extract_blocks(lines, header, footer):
-    lines = [l.decode("ascii") for l in lines]
+    lines = [line.decode("ascii") for line in lines]
     i = 0
     blocks = []
     while i < len(lines):
@@ -47,7 +45,7 @@ def cleanse(filename):
 
 
 def select_best_invocation(scenario):
-    filename = "{}.log.gz".format(scenario)
+    filename = f"{scenario}.log.gz"
     metrics = []
     with gzip.open(os.path.join(advice_folder, filename)) as log_file:
         stats_blocks = extract_blocks(log_file, JikesRVM_HEADER, JikesRVM_FOOTER)
@@ -57,7 +55,7 @@ def select_best_invocation(scenario):
     if not metrics:
         print("No metric is found")
         return -1
-    print("Metrics for {}: {}".format(scenario, metrics))
+    print(f"Metrics for {scenario}: {metrics}")
     _, idx = min([(val, idx) for (idx, val) in enumerate(metrics)])
     return idx
 
@@ -67,11 +65,11 @@ def select_advice_file(scenario, best_invocation):
         return
     benchmark_name = scenario.split(".")[0]
     for ext in ADVICE_EXTS:
-        src = "{}.{}.{}".format(scenario, best_invocation, ext)
+        src = f"{scenario}.{best_invocation}.{ext}"
         src = os.path.join(advice_folder, src)
-        dst = "{}.{}".format(benchmark_name, ext)
+        dst = f"{benchmark_name}.{ext}"
         dst = os.path.join(advice_folder, dst)
-        print("Copying {} to {}".format(src, dst))
+        print(f"Copying {src} to {dst}")
         shutil.copyfile(src, dst)
         cleanse(dst)
 
@@ -79,11 +77,11 @@ def select_advice_file(scenario, best_invocation):
 def main():
     scenario_logs = glob.glob(os.path.join(advice_folder, "*.log.gz"))
     scenarios = [os.path.basename(s).replace(".log.gz", "") for s in scenario_logs]
-    print("Found scenarios {}".format(scenarios))
+    print(f"Found scenarios {scenarios}")
     for scenario in scenarios:
-        print("Processing scenario {}".format(scenario))
+        print(f"Processing scenario {scenario}")
         best_invocation = select_best_invocation(scenario)
-        print("Best invocation for scenario {} is {}".format(scenario, best_invocation))
+        print(f"Best invocation for scenario {scenario} is {best_invocation}")
         select_advice_file(scenario, best_invocation)
 
 

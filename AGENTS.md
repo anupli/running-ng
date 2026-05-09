@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding agents when working with code in this repository.
 
 ## Project
 
@@ -8,28 +8,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Common commands
 
-Setup (this project uses `uv` — see [pyproject.toml](pyproject.toml) and [uv.lock](uv.lock); the `dev` dependency group covers `pytest`/`mypy`/`black`):
-
-```bash
-uv sync --group dev --extra zulip
-```
-
-Tests, type-check, formatter — these are exactly what CI runs ([.github/workflows/python.yml](.github/workflows/python.yml)):
+See [README.md](README.md) for setup and build instructions. Below are the commands agents need most.
 
 ```bash
 # tests — CI runs each file separately because they share global state
 for f in tests/test_*.py; do uv run pytest "$f"; done
 # single test file / single test
 uv run pytest tests/test_runbms.py
-uv run pytest tests/test_runbms.py::test_spread
+uv run pytest tests/test_runbms.py::test_spread_0
 
-uv run mypy --check-untyped-defs src/running
-uv run black --check src tests
+uv run ty check src/running
+uv run ruff check src tests
+uv run ruff format --check src tests
 ```
 
-Run the CLI from a checkout: `uv run running <subcommand>` (or `uv run python -m running <subcommand>`). Subcommands are `runbms`, `minheap`, `fillin`, `preproc` (see [src/running/__main__.py](src/running/__main__.py)).
+### Pre-commit workflow
 
-Build a wheel: `uv build`. The build backend is `uv_build` and the version is set directly in [pyproject.toml](pyproject.toml).
+Before committing, run:
+```bash
+uv run ruff format src tests       # auto-format
+uv run ruff check --fix src tests  # lint + auto-fix
+uv run ty check src/running        # type check
+for f in tests/test_*.py; do uv run pytest "$f"; done  # tests
+```
+
+The `running` CLI has subcommands: `runbms`, `minheap`, `fillin`, `preproc` (see [src/running/__main__.py](src/running/__main__.py)). Run from a checkout with `uv run running <subcommand>`.
 
 ## Architecture
 
@@ -39,8 +42,8 @@ The code splits into a **core** (data model for experiments) and **commands** (u
 
 Each of these is a base class with a `CLS_MAPPING` registry populated by the `@register(ParentClass)` decorator from [src/running/util.py](src/running/util.py). To add a new suite/runtime/modifier/plugin type, define a subclass and decorate it — no other wiring is needed, but the module containing the subclass must be imported during startup so the decorator runs (see the bottom of [src/running/plugin/runbms/__init__.py](src/running/plugin/runbms/__init__.py) for the explicit-import pattern, including the optional-dependency fallback for the Zulip plugin).
 
-- [BenchmarkSuite](src/running/suite.py) — DaCapo, SPECjvm98, SPECjbb2015, JuliaBenchmarkSuite, BinaryBenchmarkSuite, etc. Owns `get_benchmark`, `get_minheap`, `is_passed`.
-- [Runtime](src/running/runtime.py) — OpenJDK, JikesRVM, JavaScriptCore, D8, SpiderMonkey, NativeExecutable, DummyRuntime. Owns `get_executable`, `get_heapsize_modifiers`, `is_oom`.
+- [BenchmarkSuite](src/running/suite.py) — DaCapo, SPECjvm98, SPECjbb2015, Octane, JuliaGCBenchmarks, BinaryBenchmarkSuite, etc. Owns `get_benchmark`, `get_minheap`, `is_passed`.
+- [Runtime](src/running/runtime.py) — OpenJDK, JikesRVM, JavaScriptCore, D8, SpiderMonkey, NativeExecutable, JuliaMMTk, JuliaStock, etc. Owns `get_executable`, `get_heapsize_modifiers`, `is_oom`.
 - [Modifier](src/running/modifier.py) — JVMArg, JVMClasspath, JSArg, EnvVar, ModifierSet, NoImplicitHeapsizeModifier, etc. Modifiers can take `value_opts` (the `-foo-bar` suffix on a config string is `format()`-substituted into the modifier's string fields) and have `includes`/`excludes` filters per (suite, benchmark).
 - [Benchmark](src/running/benchmark.py) — JavaBenchmark, BinaryBenchmark, JavaScriptBenchmark, JuliaBenchmark. Knows how to assemble and run a subprocess command line with a wrapper, companion process, env vars, and a timeout.
 - [RunbmsPlugin](src/running/plugin/runbms/__init__.py) — lifecycle hooks (`start_hfac`/`end_hfac`, `start_benchmark`/`end_benchmark`, `start_invocation`/`end_invocation`, `start_config`/`end_config`) that fire from `runbms`. Built-ins: `CopyFile`, `Zulip`.
@@ -60,7 +63,7 @@ A config like `build1|ms|s|c2|mmtk_gc-SemiSpace|tph|probes_cp|probes` is parsed 
 
 ### `runbms` (the main command)
 
-[src/running/command/runbms.py](src/running/command/runbms.py) is the heart of the tool. The CLI shape is `running runbms LOG_DIR CONFIG N [n ...]`, where `N` controls heap-fraction sampling: with `N` and no explicit `n`s, `runbms` uses `fillin` ([src/running/command/fillin.py](src/running/command/fillin.py)) to choose which fractions of the heap-size space to explore in a logarithmic, ends-then-middles order, so partial runs still cover the space sensibly. The `spread` function biases sampling toward smaller heap sizes (where small changes have outsized effect on GC). For each (hfac, size, benchmark, invocation, config), runbms invokes the benchmark via the runtime, applies modifiers, fires plugin hooks, and writes a per-invocation gzipped log into `LOG_DIR/<run_id>/`. It also persists the flattened config and CLI args alongside the logs for reproducibility.
+[src/running/command/runbms.py](src/running/command/runbms.py) is the heart of the tool. The CLI shape is `running runbms LOG_DIR CONFIG N [n ...]`, where `N` controls heap-fraction sampling: with `N` and no explicit `n`s, `runbms` uses `fillin` ([src/running/command/fillin.py](src/running/command/fillin.py)) to choose which fractions of the heap-size space to explore in a logarithmic, ends-then-middles order, so partial runs still cover the space sensibly. The `spread` function (in `runbms.py`) biases sampling toward smaller heap sizes (where small changes have outsized effect on GC). For each (hfac, size, benchmark, invocation, config), runbms invokes the benchmark via the runtime, applies modifiers, fires plugin hooks, and writes a per-invocation gzipped log into `LOG_DIR/<run_id>/`. It also persists the flattened config and CLI args alongside the logs for reproducibility.
 
 Module-level globals (`configuration`, `minheap_multiplier`, `plugins`, `resume`, etc.) hold runbms state — this is why CI runs each test file in a separate `pytest` invocation rather than discovering the whole `tests/` directory at once.
 
@@ -72,9 +75,9 @@ Module-level globals (`configuration`, `minheap_multiplier`, `plugins`, `resume`
 
 ## Conventions
 
-- `black` formats `src` and `tests`; CI fails on diff. Run it before committing.
-- `mypy --check-untyped-defs src/running` must pass on Python 3.12.
-- Supported Python versions: 3.8 through 3.12 (matrix in CI).
+- `ruff` formats and lints `src` and `tests`; CI fails on diff or lint errors. Run `uv run ruff format src tests && uv run ruff check --fix src tests` before committing.
+- `ty check src/running` must pass (type checking).
+- Supported Python versions: 3.10 through 3.14 (matrix in CI; covers Ubuntu 22.04–26.04).
 - Only `pyyaml` is a hard dependency; `zulip` is optional and gated behind a try/except import in [plugin/runbms/__init__.py](src/running/plugin/runbms/__init__.py) — preserve that pattern for any other optional integration.
 - Base YAML configs shipped with the package live under [src/running/config/base/](src/running/config/base/) and are exposed to user configs via `$RUNNING_NG_PACKAGE_DATA`. Updating these affects every user who `includes:` them.
 - User-facing docs are an mdBook in [docs/](docs/) (`book.toml` + `docs/src/`); update them when changing CLI flags or YAML schema. The mdBook is built and deployed by [.github/workflows/mdbook.yml](.github/workflows/mdbook.yml).
