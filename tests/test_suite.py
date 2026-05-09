@@ -76,6 +76,29 @@ def test_dacapo_timing_iteration():
     assert "-converge" in fop_converge.to_string(DummyRuntime("java"))
 
 
+def test_renaissance():
+    c = Configuration(
+        {
+            "suites": {
+                "renaissance": {
+                    "type": "Renaissance",
+                    "path": "/usr/share/benchmarks/renaissance/renaissance.jar",
+                    "timing_iteration": 5,
+                },
+            },
+            "benchmarks": {
+                "renaissance": ["scrabble"],
+            },
+        }
+    )
+    c.resolve_class()
+    bm = c.get("benchmarks")["renaissance"][0]
+    rendered = bm.to_string(DummyRuntime("java"))
+    assert "-jar /usr/share/benchmarks/renaissance/renaissance.jar" in rendered
+    assert "-r 5" in rendered
+    assert "scrabble" in rendered
+
+
 def test_dacapo_path_ennvvar():
     c = Configuration(
         {

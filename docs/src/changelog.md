@@ -6,6 +6,9 @@
 - `runbms`: new `--exit-on-failure [CODE]` flag to exit with a specified code (default: 1) when any benchmark configuration fails, making it suitable for CI environments.
 - `runbms` gains an extra argument, `--randomize-configs`, to randomize the order of configs for each invocation to help distinguish between system-related noise and configuration-specific issues.
 
+#### Benchmark Suites
+- `Renaissance` (preview ⚠️) — basic support for the [Renaissance benchmark suite](https://renaissance.dev/).
+
 ### Changed
 - Build system migrated to [uv](https://docs.astral.sh/uv/). The build backend is now `uv_build` (was `setuptools`), and dev tooling (`pytest`, `mypy`, `types-PyYAML`, `black`) has moved from the `tests` extra into the PEP 735 `dev` dependency group. The `zulip` extra is unchanged. To install for development: `uv sync --group dev --extra zulip` (replaces `pip install -e .[zulip,tests]`).
 

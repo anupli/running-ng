@@ -111,6 +111,31 @@ benchmarks:
     - {name: eclipse_large, bm_name: eclipse, size: large}
 ```
 
+## `Renaissance` (preview ⚠️)
+[Renaissance benchmark suite](https://renaissance.dev/).
+
+### Keys
+`path`: path to the Renaissance `jar`.
+The value is required.
+Environment variables will be expanded.
+
+`timing_iteration`: number of repetitions, passed to Renaissance as `-r`.
+The value is required and must be an integer.
+
+`minheap`: a string that selects one of the `minheap_values` sets to use.
+
+`minheap_values`: a dictionary containing multiple named sets of minimal heap sizes that is enough for a benchmark from the suite to run without triggering `OutOfMemoryError`.
+Each size is measured in MiB.
+The default value is an empty dictionary.
+The minheap values are used only when running `runbms` with a valid `N` value.
+If the minheap value for a benchmark is not specified, a default of `4096` is used.
+
+`timeout`: timeout for one invocation of a benchmark in seconds.
+The default value is `null`.
+
+### Benchmark Specification
+Only strings are allowed, which should correspond to a benchmark name or group recognized by the Renaissance harness.
+
 ## `SPECjbb2015` (preview ⚠️)
 [SPECjbb2015](https://www.spec.org/jbb2015/).
 
